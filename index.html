@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ኢትዮጵያ ቀን መቁጠሪያ - Ethiopian Calendar & ስንክሳር</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">⛪</div>
+                    <div>
+                        <div class="logo-text">ኢትዮጵያ ቀን መቁጠሪያ</div>
+                        <div class="subtitle">Ethiopian Calendar - ባሕር ሀሳብ & ስንክሳር</div>
+                    </div>
+                </div>
+                <div class="user-controls">
+                    <button class="theme-toggle" id="theme-toggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <div class="user-avatar" id="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home" class="active">Home</a></li>
+                    <li><a href="#today">Today</a></li>
+                    <li><a href="#calendar">Calendar</a></li>
+                    <li><a href="#synaxarium">ስንክሳር</a></li>
+                    <li><a href="#gizae">ግጻዊ</a></li>
+                    <li><a href="#converter">Converter</a></li>
+                    <li><a href="#holidays">Holidays</a></li>
+                    <li><a href="#gallery">Gallery</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- User Panel -->
+    <div class="user-panel" id="user-panel">
+        <div class="user-panel-header">
+            <h2>User Settings</h2>
+            <button class="close-panel" id="close-panel">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="user-info">
+            <div class="user-avatar-large" id="user-avatar-large">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="user-details">
+                <h3 id="user-display-name">Guest User</h3>
+                <p id="user-email">Not logged in</p>
+            </div>
+        </div>
+        
+        <div class="panel-section">
+            <h4><i class="fas fa-cog"></i> Settings</h4>
+            <div class="font-size-controls">
+                <label>Font Size:</label>
+                <button class="font-size-btn" id="font-decrease">A-</button>
+                <button class="font-size-btn" id="font-reset">A</button>
+                <button class="font-size-btn" id="font-increase">A+</button>
+            </div>
+        </div>
+        
+        <div class="panel-section">
+            <h4><i class="fas fa-bell"></i> Notifications</h4>
+            <div class="notifications-list" id="notifications-list">
+                <!-- Notifications will be populated by JavaScript -->
+            </div>
+        </div>
+        
+        <div class="panel-section">
+            <button class="auth-btn" id="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="auth-modal" id="auth-modal">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h2>Welcome to Ethiopian Calendar</h2>
+                <p>Sign in to access all features</p>
+            </div>
+            
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="login-tab">Login</button>
+                <button class="auth-tab" id="signup-tab">Sign Up</button>
+            </div>
+            
+            <div class="auth-form">
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-username">Username</label>
+                        <input type="text" id="login-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="auth-btn">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </form>
+                
+                <form id="signup-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="signup-username">Username</label>
+                        <input type="text" id="signup-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">Email</label>
+                        <input type="email" id="signup-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-confirm">Confirm Password</label>
+                        <input type="password" id="signup-confirm" required>
+                    </div>
+                    <button type="submit" class="auth-btn">
+                        <i class="fas fa-user-plus"></i> Sign Up
+                    </button>
+                </form>
+                
+                <div class="auth-switch">
+                    <p>Don't have an account? <button id="show-signup">Sign up</button></p>
+                    <p>Already have an account? <button id="show-login">Login</button></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <h1>የኢትዮጵያ ቀን መቁጠሪያ</h1>
+        <div class="current-date">
+            <div class="ethiopian-date" id="ethiopian-date">ጥቅምት 23, 2018 እ.ኤ.አ.</div>
+            <div class="gregorian-date" id="gregorian-date">November 2, 2025 G.C.</div>
+            <div class="day-name" id="day-name">እሁድ (Sunday)</div>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- Date Converter -->
+        <section class="card" id="converter">
+            <h2 class="section-title">Date Converter</h2>
+            <div class="converter-options">
+                <div class="converter-option">
+                    <h3><i class="fas fa-exchange-alt"></i> Gregorian to Ethiopian</h3>
+                    <div class="date-input">
+                        <select id="g-day">
+                            <!-- Days will be populated by JavaScript -->
+                        </select>
+                        <select id="g-month">
+                            <!-- Months will be populated by JavaScript -->
+                        </select>
+                        <select id="g-year">
+                            <!-- Years will be populated by JavaScript -->
+                        </select>
+                    </div>
+                    <button id="convert-to-ethiopian"><i class="fas fa-calculator"></i> Convert</button>
+                    <div class="result" id="g-to-e-result"></div>
+                </div>
+                <div class="converter-option">
+                    <h3><i class="fas fa-exchange-alt"></i> Ethiopian to Gregorian</h3>
+                    <div class="date-input">
+                        <select id="e-day">
+                            <!-- Days will be populated by JavaScript -->
+                        </select>
+                        <select id="e-month">
+                            <!-- Months will be populated by JavaScript -->
+                        </select>
+                        <select id="e-year">
+                            <!-- Years will be populated by JavaScript -->
+                        </select>
+                    </div>
+                    <button id="convert-to-gregorian"><i class="fas fa-calculator"></i> Convert</button>
+                    <div class="result" id="e-to-g-result"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Calendar Section -->
+        <section class="card" id="calendar">
+            <h2 class="section-title">የወሩ መቁጠሪያ - Monthly Calendar</h2>
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <div class="calendar-nav">
+                        <button id="prev-month"><i class="fas fa-chevron-left"></i></button>
+                    </div>
+                    <h3 id="current-month-year">መስከረም 2017</h3>
+                    <div class="calendar-nav">
+                        <button id="next-month"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div class="calendar-weekdays">
+                    <div>እሁድ</div>
+                    <div>ሰኞ</div>
+                    <div>ማክሰኞ</div>
+                    <div>ረቡዕ</div>
+                    <div>ሐሙስ</div>
+                    <div>ዓርብ</div>
+                    <div>ቅዳሜ</div>
+                </div>
+                <div class="calendar-days" id="calendar-days">
+                    <!-- Calendar days will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Synaxarium Section -->
+        <section class="card" id="synaxarium">
+            <h2 class="section-title">ስንክሳር - Orthodox Synaxarium</h2>
+            
+            <!-- Today's Saints -->
+            <div style="margin-bottom: 2rem;">
+                <h3 style="color: var(--primary-gold); margin-bottom: 1rem; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-calendar-day"></i> የዛሬ ቅዱሳን - Today's Saints
+                </h3>
+                <div class="saints-list" id="today-saints">
+                    <!-- Today's saints will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Search Saints by Date -->
+            <div class="synaxarium-controls">
+                <div class="control-group">
+                    <label for="month-select">ወር Select Month</label>
+                    <select id="month-select">
+                        <option value="1">መስከረም (September)</option>
+                        <option value="2">ጥቅምት (October)</option>
+                        <option value="3">ኅዳር (November)</option>
+                        <option value="4">ታኅሣሥ (December)</option>
+                        <option value="5">ጥር (January)</option>
+                        <option value="6">የካቲት (February)</option>
+                        <option value="7">መጋቢት (March)</option>
+                        <option value="8">ሚያዝያ (April)</option>
+                        <option value="9">ግንቦት (May)</option>
+                        <option value="10">ሰኔ (June)</option>
+                        <option value="11">ሐምሌ (July)</option>
+                        <option value="12">ነሐሴ (August)</option>
+                        <option value="13">ጳጉሜ (Pagume)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="day-select">ቀን Select Day</label>
+                    <select id="day-select">
+                        <!-- Days will be populated by JavaScript -->
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>&nbsp;</label>
+                    <button id="search-saints"><i class="fas fa-search"></i> Search Saints</button>
+                </div>
+            </div>
+
+            <div class="saints-list" id="saints-results">
+                <!-- Saints will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- ግጻዊ Section -->
+        <section class="card" id="gizae">
+            <h2 class="section-title">ግጻዊ - Daily Readings</h2>
+            
+            <div class="gizae-controls">
+                <div class="control-group">
+                    <label for="gizae-month-select">ወር Select Month</label>
+                    <select id="gizae-month-select">
+                        <option value="1">መስከረም (September)</option>
+                        <option value="2">ጥቅምት (October)</option>
+                        <option value="3">ኅዳር (November)</option>
+                        <option value="4">ታኅሣሥ (December)</option>
+                        <option value="5">ጥር (January)</option>
+                        <option value="6">የካቲት (February)</option>
+                        <option value="7">መጋቢት (March)</option>
+                        <option value="8">ሚያዝያ (April)</option>
+                        <option value="9">ግንቦት (May)</option>
+                        <option value="10">ሰኔ (June)</option>
+                        <option value="11">ሐምሌ (July)</option>
+                        <option value="12">ነሐሴ (August)</option>
+                        <option value="13">ጳጉሜ (Pagume)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="gizae-day-select">ቀን Select Day</label>
+                    <select id="gizae-day-select">
+                        <!-- Days will be populated by JavaScript -->
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>&nbsp;</label>
+                    <button id="search-gizae"><i class="fas fa-search"></i> Search Readings</button>
+                </div>
+            </div>
+
+            <div id="gizae-results">
+                <!-- Daily readings will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Holiday Calculator -->
+        <section class="card" id="holidays">
+            <h2 class="section-title">የባሕረ ሀሳብ በዓላት - Holiday Calculator</h2>
+            <p>Enter an Ethiopian year to calculate the dates of major Orthodox holidays:</p>
+            <div class="calculator-form">
+                <input type="number" id="holiday-year" placeholder="Enter Ethiopian Year (e.g., 2017)" min="1900" max="2100" value="2017">
+                <button id="calculate-holidays"><i class="fas fa-search"></i> Calculate Holidays</button>
+            </div>
+            <div class="holidays-list" id="holidays-list">
+                <!-- Holidays will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section class="card" id="gallery">
+            <h2 class="section-title">ምስሎች - Photo Gallery</h2>
+            <div class="gallery">
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1589561454226-796a8a89a6e9?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Ethiopian Landscape">
+                    <div class="gallery-caption">Beautiful Ethiopian Landscape</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Lalibela Church">
+                    <div class="gallery-caption">Rock-Hewn Churches of Lalibela</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1593081891731-fda0877988da?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Ethiopian Cross">
+                    <div class="gallery-caption">Traditional Ethiopian Cross</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1557840335-85191158e952?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Coffee Ceremony">
+                    <div class="gallery-caption">Traditional Coffee Ceremony</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1592495805155-42a7fd7baf5d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Simien Mountains">
+                    <div class="gallery-caption">Simien Mountains National Park</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1578306158338-9e5affbd0e8e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Ethiopian Culture">
+                    <div class="gallery-caption">Rich Cultural Heritage</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer id="about">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About ባሕር ሀሳብ & ስንክሳር</h3>
+                    <p>The Ethiopian calendar is based on the ancient Coptic calendar and is approximately 7-8 years behind the Gregorian calendar. It has 13 months, with 12 months of 30 days and a 13th month of 5 or 6 days.</p>
+                    <p>ስንክሳር (Synaxarium) contains the commemoration of saints for each day of the year according to the Ethiopian Orthodox Tewahedo Church.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#today">Today's Date</a></li>
+                        <li><a href="#calendar">Calendar</a></li>
+                        <li><a href="#synaxarium">ስንክሳር</a></li>
+                        <li><a href="#gizae">ግጻዊ</a></li>
+                        <li><a href="#converter">Date Converter</a></li>
+                        <li><a href="#holidays">Holiday Calculator</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <p>Email: info@ethiopiancalendar.com</p>
+                    <p>Phone: +251 123 456 789</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2017 እ.ኤ.አ. - ኢትዮጵያ ቀን መቁጠሪያ - All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+
+  <!-- Core functionality -->
+<script src="script.js"></script>
+<!-- ግጻዊ functionality -->
+<script src="ግጻዊ.js"></script>
+<!-- Synaxarium functionality -->
+<script src="ስንክሳር.js"></script>
+<!-- Holidays calculator -->
+<script src="የባሕረ ሀሳብ በዓላት.js"></script>
+</body>
+</html>
