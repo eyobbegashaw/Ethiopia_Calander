@@ -1,6 +1,6 @@
-Here's a comprehensive README file for your Ethiopia_Calendar project:
+ 
 
-```markdown
+ 
 # Ethiopian Calendar 🇪🇹
 
 A web-based Ethiopian calendar application that displays Ethiopian dates, holidays, and special events. This project aims to provide an easy-to-use digital calendar following the Ethiopian calendar system.
@@ -101,17 +101,4 @@ For any questions or suggestions, please open an issue in the GitHub repository.
 
 ---
 
-**Made with ❤️ for the Ethiopian community**
-```
-
-This README provides:
-- Clear project description
-- Feature list
-- Installation instructions
-- Project structure
-- Usage guide
-- Contribution guidelines
-- Author information
-- Professional formatting
-
-You can customize it further based on your specific needs or add more details about the Ethiopian calendar system if you'd like.
+ 
