@@ -1,7 +1,4 @@
- 
-
- 
-# Ethiopian Calendar 🇪🇹
+ # Ethiopian Calendar 🇪🇹
 
 A web-based Ethiopian calendar application that displays Ethiopian dates, holidays, and special events. This project aims to provide an easy-to-use digital calendar following the Ethiopian calendar system.
 
@@ -85,9 +82,10 @@ Contributions are welcome! If you'd like to contribute:
 
 ## 👤 Author
 
-**Eyob Begashaw**
+**Eyob Begashaw** and **Singiten Beshada** 
 
 - GitHub: [@eyobbegashaw](https://github.com/eyobbegashaw)
+- GitHub: [@singiten](https://github.com/singiten)
 
 ## 🙏 Acknowledgments
 
