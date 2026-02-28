@@ -96,7 +96,7 @@ const AuthModal = () => {
     };
 
 const handleGoogleLogin = () => {
-    // ቀጥታ ወደ ባክኤንድህ ይላከው (ይህ በጣም አስተማማኝ ነው)
+    // Direct hardcoded URL to backend - no dynamic variables
     window.location.href = "https://ethiopia-calander.onrender.com/api/auth/google";
 };
 
