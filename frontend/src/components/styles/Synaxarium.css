@@ -1,0 +1,461 @@
+/* Synaxarium.css - Royal Gold & Deep Charcoal Theme */
+
+:root {
+  --charcoal-deep: #1a1a1a;
+  --charcoal-soft: #2a2a2a;
+  --charcoal-light: #333333;
+  --gold-royal: #d4af37;
+  --gold-light: #e6c87c;
+  --gold-deep: #b6942c;
+  --cream-soft: #f5f0e6;
+  --cream-white: #faf7f2;
+  --glass-bg: rgba(42, 42, 42, 0.7);
+  --glass-border: rgba(212, 175, 55, 0.15);
+  --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 15px 40px rgba(0, 0, 0, 0.5);
+  --shadow-gold: 0 5px 20px rgba(212, 175, 55, 0.2);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Main Section */
+#synaxarium {
+  position: relative;
+  overflow: hidden;
+}
+
+#synaxarium::before {
+  content: '✝';
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 8rem;
+  color: var(--gold-royal);
+  opacity: 0.03;
+  pointer-events: none;
+  font-family: serif;
+  transform: rotate(15deg);
+}
+
+/* Today's Saints Section */
+.today-saints-section {
+  margin-bottom: 3rem;
+  animation: glowPulse 4s infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.1); }
+  50% { box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); }
+}
+
+.section-subtitle {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--gold-royal);
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  position: relative;
+  padding-left: 1rem;
+}
+
+.section-subtitle::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 70%;
+  background: linear-gradient(to bottom, var(--gold-royal), var(--gold-light));
+  border-radius: 2px;
+}
+
+.section-subtitle i {
+  font-size: 1.8rem;
+  color: var(--gold-royal);
+}
+
+/* Saints List */
+.saints-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 600px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold-royal) var(--charcoal-soft);
+}
+
+.saints-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.saints-list::-webkit-scrollbar-track {
+  background: var(--charcoal-soft);
+  border-radius: 10px;
+}
+
+.saints-list::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--gold-royal), var(--gold-deep));
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+}
+
+.saints-list::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-light);
+}
+
+/* Saint Item */
+.saint-item {
+  background: linear-gradient(135deg, rgba(42, 42, 42, 0.8), rgba(26, 26, 26, 0.9));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 1.8rem;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  animation: slideIn 0.5s ease-out;
+  animation-fill-mode: both;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.saint-item:nth-child(1) { animation-delay: 0.1s; }
+.saint-item:nth-child(2) { animation-delay: 0.2s; }
+.saint-item:nth-child(3) { animation-delay: 0.3s; }
+.saint-item:nth-child(4) { animation-delay: 0.4s; }
+.saint-item:nth-child(5) { animation-delay: 0.5s; }
+
+.saint-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--gold-royal), transparent);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.saint-item:hover {
+  transform: translateX(8px) translateY(-2px);
+  border-color: var(--gold-royal);
+  box-shadow: var(--shadow-lg), var(--shadow-gold);
+}
+
+.saint-item:hover::before {
+  opacity: 1;
+}
+
+/* Today's Saints Special Styling */
+.saint-item.today-saints {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(42, 42, 42, 0.9));
+  border-left: 4px solid var(--gold-royal);
+  position: relative;
+}
+
+.saint-item.today-saints::after {
+  content: 'Today';
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: var(--gold-royal);
+  color: var(--charcoal-deep);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.3rem 1rem;
+  border-radius: 50px;
+  letter-spacing: 0.5px;
+  box-shadow: var(--shadow-gold);
+}
+
+/* Saint Date */
+.saint-date {
+  font-size: 1.1rem;
+  color: var(--gold-royal);
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.saint-date::before {
+  content: '📅';
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+/* Saint Name */
+.saint-name {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--cream-white);
+  margin-bottom: 1rem;
+  line-height: 1.3;
+  position: relative;
+  display: inline-block;
+}
+
+.saint-name::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: var(--gold-royal);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.saint-item:hover .saint-name::after {
+  width: 60px;
+}
+
+/* Saint Description */
+.saint-description {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--cream-soft);
+  margin-bottom: 1.2rem;
+  font-family: 'Noto Sans Ethiopic', 'Inter', sans-serif;
+  opacity: 0.9;
+}
+
+/* Saint Tags */
+.saint-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.saint-tag {
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 50px;
+  padding: 0.4rem 1rem;
+  font-size: 0.85rem;
+  color: var(--gold-light);
+  transition: var(--transition);
+}
+
+.saint-tag:hover {
+  background: var(--gold-royal);
+  color: var(--charcoal-deep);
+  transform: scale(1.05);
+  border-color: var(--gold-royal);
+}
+
+/* Synaxarium Controls */
+.synaxarium-controls {
+  display: flex;
+  gap: 1rem;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: rgba(42, 42, 42, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 24px;
+  border: 1px solid var(--glass-border);
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.control-group {
+  flex: 1;
+  min-width: 200px;
+}
+
+.control-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--gold-royal);
+  font-weight: 500;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+.control-group select {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background: var(--charcoal-soft);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  color: var(--cream-soft);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23d4af37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+.control-group select:hover {
+  border-color: var(--gold-royal);
+  box-shadow: var(--shadow-gold);
+  transform: translateY(-1px);
+}
+
+.control-group select:focus {
+  outline: none;
+  border-color: var(--gold-royal);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+}
+
+.control-group button {
+  width: 100%;
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(135deg, var(--gold-royal), var(--gold-deep));
+  border: none;
+  border-radius: 12px;
+  color: var(--charcoal-deep);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.control-group button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg), var(--shadow-gold);
+  filter: brightness(1.1);
+}
+
+.control-group button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Loading State */
+.saints-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  color: var(--gold-royal);
+  font-size: 1.2rem;
+  gap: 1rem;
+  background: rgba(42, 42, 42, 0.5);
+  border-radius: 20px;
+}
+
+.saints-loading i {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Error State */
+.saints-error {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1.5rem;
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  border-radius: 16px;
+  color: #ff6b6b;
+  margin: 1rem 0;
+}
+
+.saints-error i {
+  font-size: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .synaxarium-controls {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .control-group {
+    min-width: 100%;
+  }
+  
+  .saint-name {
+    font-size: 1.4rem;
+  }
+  
+  .saint-description {
+    font-size: 0.95rem;
+  }
+  
+  .section-subtitle {
+    font-size: 1.4rem;
+  }
+  
+  #synaxarium::before {
+    font-size: 5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .saint-item {
+    padding: 1.2rem;
+  }
+  
+  .saint-item.today-saints::after {
+    top: 0.5rem;
+    right: 0.5rem;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.8rem;
+  }
+  
+  .saint-name {
+    font-size: 1.2rem;
+  }
+  
+  .saint-tags {
+    gap: 0.3rem;
+  }
+  
+  .saint-tag {
+    padding: 0.2rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .synaxarium-controls {
+    display: none;
+  }
+  
+  .saint-item {
+    break-inside: avoid;
+    border: 1px solid #000;
+    background: white;
+  }
+  
+  .saint-name {
+    color: black;
+  }
+}

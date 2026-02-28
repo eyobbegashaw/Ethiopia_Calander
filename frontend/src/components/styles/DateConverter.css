@@ -1,0 +1,405 @@
+/* DateConverter.css - Modern Converter Interface */
+
+:root {
+  --gold-primary: #C5A028;
+  --gold-light: #E4C580;
+  --gold-dark: #9E7B1E;
+  --royal-blue: #1A3F6E;
+  --royal-blue-light: #2A5A8C;
+  --royal-blue-dark: #0F2A48;
+  --white-pure: #FFFFFF;
+  --white-soft: #F8F9FC;
+  --white-glass: rgba(255, 255, 255, 0.8);
+  --shadow-sm: 0 8px 20px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 15px 35px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-gold: 0 10px 30px rgba(197, 160, 40, 0.15);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Converter Container */
+#converter.card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+/* Converter Options Grid */
+.converter-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-top: 1.5rem;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Converter Option Card */
+.converter-option {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 24px;
+  padding: 2rem;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.converter-option::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--gold-primary), var(--royal-blue));
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.converter-option:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.converter-option:hover::before {
+  opacity: 1;
+}
+
+.converter-option h3 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin: 0 0 1.5rem 0;
+  color: var(--royal-blue-dark);
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: linear-gradient(135deg, var(--royal-blue), var(--royal-blue-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.converter-option h3 i {
+  background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 2rem;
+}
+
+/* Date Input Group */
+.date-input {
+  display: flex;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.date-input select {
+  flex: 1;
+  min-width: 80px;
+  padding: 1rem 1.2rem;
+  border: 1px solid rgba(197, 160, 40, 0.2);
+  border-radius: 16px;
+  background: linear-gradient(145deg, white, var(--white-soft));
+  color: var(--royal-blue-dark);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%231A3F6E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+.date-input select:hover {
+  border-color: var(--gold-primary);
+  box-shadow: 0 4px 12px rgba(197, 160, 40, 0.1);
+  transform: translateY(-1px);
+}
+
+.date-input select:focus {
+  outline: none;
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 0 4px rgba(197, 160, 40, 0.15);
+}
+
+.date-input select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f5f5f5;
+}
+
+/* Ethiopian numbers styling */
+.date-input select option {
+  font-family: 'Noto Sans Ethiopic', sans-serif;
+}
+
+/* Convert Button */
+.converter-option button {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(145deg, var(--royal-blue), var(--royal-blue-light));
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.converter-option button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.converter-option button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  background: linear-gradient(145deg, var(--royal-blue-light), var(--royal-blue));
+}
+
+.converter-option button:hover:not(:disabled)::before {
+  width: 300px;
+  height: 300px;
+}
+
+.converter-option button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.converter-option button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: linear-gradient(145deg, #ccc, #bbb);
+}
+
+.converter-option button i {
+  font-size: 1.2rem;
+  transition: var(--transition);
+}
+
+.converter-option button:hover i {
+  transform: rotate(10deg);
+}
+
+/* Result Display */
+.result {
+  margin-top: 1.5rem;
+  padding: 1.2rem;
+  background: linear-gradient(135deg, rgba(26, 63, 110, 0.05), rgba(197, 160, 40, 0.05));
+  border-radius: 16px;
+  border: 1px solid rgba(197, 160, 40, 0.15);
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--royal-blue-dark);
+  text-align: center;
+  animation: resultPop 0.5s ease-out;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+@keyframes resultPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(-10px);
+  }
+  50% {
+    transform: scale(1.02) translateY(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.result::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--gold-primary), var(--royal-blue));
+  opacity: 0.3;
+}
+
+/* Loading State */
+.fa-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .converter-options {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .converter-option {
+    padding: 1.5rem;
+  }
+  
+  .converter-option h3 {
+    font-size: 1.4rem;
+  }
+  
+  .date-input {
+    gap: 0.5rem;
+  }
+  
+  .date-input select {
+    padding: 0.8rem 1rem;
+    padding-right: 2rem;
+    min-width: 60px;
+    font-size: 0.95rem;
+  }
+  
+  .result {
+    font-size: 1rem;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .date-input {
+    flex-direction: column;
+  }
+  
+  .date-input select {
+    width: 100%;
+  }
+  
+  .converter-option button {
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+  }
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+  .converter-option {
+    background: rgba(26, 63, 110, 0.3);
+    border-color: rgba(197, 160, 40, 0.2);
+  }
+  
+  .converter-option h3 {
+    color: var(--gold-light);
+  }
+  
+  .date-input select {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-color: rgba(197, 160, 40, 0.3);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23E4C580' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  }
+  
+  .date-input select option {
+    background: var(--royal-blue-dark);
+    color: white;
+  }
+  
+  .result {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--gold-light);
+  }
+}
+
+/* Print styles */
+@media print {
+  .converter-option {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+  
+  .converter-option button {
+    display: none;
+  }
+  
+  .result {
+    border: 1px solid #000;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .converter-option,
+  .result,
+  .date-input select,
+  .converter-option button {
+    transition: none;
+    animation: none;
+  }
+  
+  .converter-option::before,
+  .converter-option button::before {
+    display: none;
+  }
+}
+
+/* Focus states for accessibility */
+.date-input select:focus-visible,
+.converter-option button:focus-visible {
+  outline: 2px solid var(--gold-primary);
+  outline-offset: 2px;
+}
+
+/* Tooltip for additional info */
+.converter-option:hover .converter-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.converter-tooltip {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  font-size: 0.8rem;
+  color: var(--royal-blue-light);
+  opacity: 0;
+  transition: var(--transition);
+  transform: translateY(10px);
+  pointer-events: none;
+}
