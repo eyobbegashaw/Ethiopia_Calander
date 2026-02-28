@@ -95,9 +95,10 @@ const AuthModal = () => {
         }
     };
 
-    const handleGoogleLogin = () => {
-        googleLogin();
-    };
+const handleGoogleLogin = () => {
+    // ቀጥታ ወደ ባክኤንድህ ይላከው (ይህ በጣም አስተማማኝ ነው)
+    window.location.href = "https://ethiopia-calander.onrender.com/api/auth/google";
+};
 
     const closeModal = () => {
         setShowAuthModal(false);
