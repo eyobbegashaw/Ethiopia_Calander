@@ -42,7 +42,7 @@ if (process.env.NODE_ENV === 'development') {
 const corsOptions = {
     origin: process.env.NODE_ENV === 'production' 
         ? process.env.FRONTEND_URL 
-        : ['http://localhost:5173', 'http://localhost:3000'],
+        : ['https://ethiopia-calander.vercel.app', 'https://ethiopia-calander-s56f.vercel.app'],
     credentials: true,
     optionsSuccessStatus: 200
 };
@@ -171,7 +171,7 @@ const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => {
     console.log(`✅ Server running on port ${PORT}`);
     console.log(`📡 Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`🌐 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
+    console.log(`🌐 Frontend URL: ${process.env.FRONTEND_URL}`);
     console.log(`🔄 MongoDB: ${mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'}`);
 });
 
