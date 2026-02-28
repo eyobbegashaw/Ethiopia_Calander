@@ -6,10 +6,9 @@ module.exports = function(passport) {
     passport.use(new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: process.env.GOOGLE_CALLBACK_URL, // እዚህ ጋር ሰረዟን አጥፋት
+        callbackURL: process.env.GOOGLE_CALLBACK_URL, // Make sure this is set correctly in .env
         proxy: true
     },
-    // የተቀረው ኮድህ እዚህ ይቀጥላል...
     async (accessToken, refreshToken, profile, done) => {
         try {
             // Check if user exists with this googleId
@@ -40,13 +39,10 @@ module.exports = function(passport) {
             }
             
             // Create new user
-// config/passport.js
-
             const newUser = new User({
                 googleId: profile.id,
                 authProvider: 'google',
                 email: profile.emails[0].value,
-                // ኢሜይሉ eyob@gmail.com ቢሆን 'eyob' የሚለውን ወስዶ username ያደርገዋል
                 username: profile.emails[0].value.split('@')[0] + '_' + Math.floor(Math.random() * 1000), 
                 firstName: profile.name.givenName,
                 lastName: profile.name.familyName,
