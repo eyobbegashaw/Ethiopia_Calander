@@ -582,7 +582,9 @@ const googleCallback = async (req, res) => {
         
         if (!user) {
             console.error('No user found in Google callback');
-            return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/login?error=no_user`);
+            // Fallback URL if FRONTEND_URL is not set
+            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+            return res.redirect(`${frontendUrl}/login?error=no_user`);
         }
 
         // Update last login in database
@@ -597,13 +599,13 @@ const googleCallback = async (req, res) => {
         const userData = user.getPublicProfile();
 
         // Ensure FRONTEND_URL doesn't have trailing slash
-        const frontendUrl = process.env.FRONTEND_URL?.replace(/\/$/, '') || 'http://localhost:3000';
+        const frontendUrl = (process.env.FRONTEND_URL || 'http://localhost:3000').replace(/\/$/, '');
         
         // Redirect to frontend with token
         res.redirect(`${frontendUrl}/oauth-redirect?token=${token}&user=${encodeURIComponent(JSON.stringify(userData))}`);
     } catch (error) {
         console.error('Google callback error:', error);
-        const frontendUrl = process.env.FRONTEND_URL?.replace(/\/$/, '') || 'http://localhost:3000';
+        const frontendUrl = (process.env.FRONTEND_URL || 'http://localhost:3000').replace(/\/$/, '');
         res.redirect(`${frontendUrl}/login?error=oauth_failed`);
     }
 };
