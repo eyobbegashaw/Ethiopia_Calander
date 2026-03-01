@@ -1,135 +1,39 @@
-<svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
-  <!-- Simple sky gradient -->
-  <defs>
-    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#b3d9ff" />
-      <stop offset="100%" stop-color="#f0f8ff" />
-    </linearGradient>
-    
-    <!-- Flag Colors - solid for performance -->
-    <linearGradient id="flagGreen" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#078930" />
-      <stop offset="100%" stop-color="#0a9c3a" />
-    </linearGradient>
-    <linearGradient id="flagYellow" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#fcdd09" />
-      <stop offset="100%" stop-color="#fde84b" />
-    </linearGradient>
-    <linearGradient id="flagRed" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#da121a" />
-      <stop offset="100%" stop-color="#e63946" />
-    </linearGradient>
-    
-    <!-- Simple stone color -->
-    <pattern id="stonePattern" patternUnits="userSpaceOnUse" width="20" height="20">
-      <rect width="20" height="20" fill="#d2b48c" />
-      <circle cx="5" cy="5" r="2" fill="#8b5a2b" opacity="0.2" />
-      <circle cx="15" cy="15" r="2" fill="#8b5a2b" opacity="0.2" />
-    </pattern>
-  </defs>
-
-  <!-- Sky -->
-  <rect width="300" height="400" fill="url(#skyGrad)" />
-
-  <!-- Sun with simple flag rings -->
-  <circle cx="250" cy="70" r="30" fill="#ffeb99" />
-  <circle cx="250" cy="70" r="35" fill="none" stroke="#078930" stroke-width="2" opacity="0.3" />
-  <circle cx="250" cy="70" r="40" fill="none" stroke="#fcdd09" stroke-width="2" opacity="0.3" />
-  <circle cx="250" cy="70" r="45" fill="none" stroke="#da121a" stroke-width="2" opacity="0.3" />
-
-  <!-- Grass with flag color dots -->
-  <rect x="0" y="300" width="300" height="100" fill="#4caf50" />
-  <circle cx="50" cy="310" r="10" fill="#078930" />
-  <circle cx="120" cy="330" r="12" fill="#da121a" />
-  <circle cx="200" cy="320" r="10" fill="#fcdd09" />
-  <circle cx="270" cy="340" r="14" fill="#078930" />
-
-  <!-- Main church structure - simplified -->
-  <rect x="80" y="180" width="140" height="120" fill="url(#stonePattern)" stroke="#5d3a1a" stroke-width="2" />
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with flag colors -->
+  <rect width="120" height="120" fill="#078930" />
   
-  <!-- Flag stripes on base -->
-  <rect x="80" y="180" width="140" height="6" fill="#078930" />
-  <rect x="80" y="186" width="140" height="6" fill="#fcdd09" />
-  <rect x="80" y="192" width="140" height="6" fill="#da121a" />
+  <!-- Central circle with yellow -->
+  <circle cx="60" cy="60" r="50" fill="#fcdd09" />
+  
+  <!-- Inner circle with red -->
+  <circle cx="60" cy="60" r="40" fill="#da121a" />
+  
+  <!-- Church silhouette (white) -->
+  <!-- Base -->
+  <rect x="40" y="65" width="40" height="30" fill="white" />
+  
+  <!-- Dome base -->
+  <ellipse cx="60" cy="60" rx="25" ry="12" fill="white" />
   
   <!-- Dome -->
-  <ellipse cx="150" cy="160" rx="50" ry="25" fill="#cd853f" stroke="#5d3a1a" stroke-width="2" />
-  <ellipse cx="150" cy="140" rx="40" ry="30" fill="#b87333" stroke="#5d3a1a" stroke-width="2" />
-  <path d="M125 120 Q150 95 175 120" fill="#b87333" stroke="#5d3a1a" stroke-width="2" />
+  <ellipse cx="60" cy="48" rx="20" ry="16" fill="white" />
+  <path d="M45 40 Q60 25 75 40" fill="white" />
   
-  <!-- Main Ethiopian cross with flag colors -->
-  <g transform="translate(150,115)">
-    <rect x="-5" y="-25" width="10" height="50" fill="#078930" />
-    <rect x="-20" y="-10" width="40" height="10" fill="#fcdd09" />
-    <rect x="-12" y="-22" width="24" height="6" fill="#da121a" />
-    <rect x="-12" y="6" width="24" height="6" fill="#078930" />
-    <circle cx="-25" cy="-5" r="4" fill="#da121a" />
-    <circle cx="25" cy="-5" r="4" fill="#078930" />
-    <circle cx="0" cy="-30" r="5" fill="#fcdd09" />
-    <circle cx="0" cy="20" r="5" fill="#da121a" />
+  <!-- Ethiopian Cross -->
+  <g transform="translate(60,42)">
+    <rect x="-6" y="-15" width="12" height="30" fill="#da121a" />
+    <rect x="-15" y="-6" width="30" height="12" fill="#da121a" />
+    <rect x="-4" y="-10" width="8" height="20" fill="#fcdd09" />
+    <rect x="-10" y="-4" width="20" height="8" fill="#fcdd09" />
+    <circle cx="0" cy="-18" r="4" fill="#078930" />
+    <circle cx="0" cy="18" r="4" fill="#078930" />
+    <circle cx="-18" cy="0" r="4" fill="#078930" />
+    <circle cx="18" cy="0" r="4" fill="#078930" />
   </g>
-
-  <!-- Left tower -->
-  <rect x="50" y="190" width="30" height="70" fill="#cd853f" stroke="#5d3a1a" stroke-width="1" />
-  <rect x="50" y="190" width="30" height="6" fill="#078930" />
-  <rect x="50" y="196" width="30" height="6" fill="#fcdd09" />
-  <rect x="50" y="202" width="30" height="6" fill="#da121a" />
-  <ellipse cx="65" cy="180" rx="15" ry="10" fill="#cd853f" stroke="#5d3a1a" stroke-width="1" />
-  <ellipse cx="65" cy="170" rx="12" ry="12" fill="#b87333" stroke="#5d3a1a" stroke-width="1" />
-  <g transform="translate(65,162)">
-    <rect x="-3" y="-15" width="6" height="30" fill="#078930" />
-    <rect x="-10" y="-5" width="20" height="6" fill="#fcdd09" />
-    <circle cx="0" y="-20" r="4" fill="#da121a" />
-  </g>
-
-  <!-- Right tower -->
-  <rect x="220" y="190" width="30" height="70" fill="#cd853f" stroke="#5d3a1a" stroke-width="1" />
-  <rect x="220" y="190" width="30" height="6" fill="#078930" />
-  <rect x="220" y="196" width="30" height="6" fill="#fcdd09" />
-  <rect x="220" y="202" width="30" height="6" fill="#da121a" />
-  <ellipse cx="235" cy="180" rx="15" ry="10" fill="#cd853f" stroke="#5d3a1a" stroke-width="1" />
-  <ellipse cx="235" cy="170" rx="12" ry="12" fill="#b87333" stroke="#5d3a1a" stroke-width="1" />
-  <g transform="translate(235,162)">
-    <rect x="-3" y="-15" width="6" height="30" fill="#078930" />
-    <rect x="-10" y="-5" width="20" height="6" fill="#fcdd09" />
-    <circle cx="0" y="-20" r="4" fill="#da121a" />
-  </g>
-
-  <!-- Door with flag stripes -->
-  <rect x="125" y="240" width="50" height="60" fill="#8b4513" stroke="#5d3a1a" stroke-width="2" />
-  <rect x="125" y="240" width="50" height="6" fill="#078930" />
-  <rect x="125" y="246" width="50" height="6" fill="#fcdd09" />
-  <rect x="125" y="252" width="50" height="6" fill="#da121a" />
-  <circle cx="160" cy="270" r="5" fill="#ffd700" />
-  <path d="M125 240 Q150 220 175 240" fill="#b87333" stroke="#5d3a1a" stroke-width="2" />
-
-  <!-- Windows -->
-  <g transform="translate(110,200)">
-    <rect x="-10" y="-10" width="20" height="20" fill="#add8e6" stroke="#5d3a1a" stroke-width="1" />
-    <line x1="-5" y1="0" x2="5" y2="0" stroke="#078930" stroke-width="2" />
-    <line x1="0" y1="-5" x2="0" y2="5" stroke="#da121a" stroke-width="2" />
-  </g>
-  <g transform="translate(190,200)">
-    <rect x="-10" y="-10" width="20" height="20" fill="#add8e6" stroke="#5d3a1a" stroke-width="1" />
-    <line x1="-5" y1="0" x2="5" y2="0" stroke="#fcdd09" stroke-width="2" />
-    <line x1="0" y1="-5" x2="0" y2="5" stroke="#078930" stroke-width="2" />
-  </g>
-
-  <!-- Decorative crosses -->
-  <g transform="translate(140,190)">
-    <rect x="-8" y="-8" width="16" height="16" fill="#078930" transform="rotate(45)" />
-  </g>
-  <g transform="translate(160,190)">
-    <rect x="-8" y="-8" width="16" height="16" fill="#da121a" transform="rotate(45)" />
-  </g>
-
-  <!-- Text -->
-  <text x="150" y="380" font-family="Georgia, serif" font-size="14" fill="#078930" text-anchor="middle" font-weight="bold">የኢትዮጵያ ዘመን አቆጣጠር</text>
-  <text x="150" y="395" font-family="Georgia, serif" font-size="12" fill="#da121a" text-anchor="middle">Ethiopian Calendar</text>
-
-  <!-- Path and birds -->
-  <path d="M110 300 Q150 280 190 300" stroke="#078930" stroke-width="4" fill="none" opacity="0.5" />
-  <path d="M60 70 Q70 60 80 70" stroke="#078930" stroke-width="2" fill="none" />
-  <path d="M90 50 Q100 40 110 50" stroke="#fcdd09" stroke-width="2" fill="none" />
-  <path d="M200 40 Q210 30 220 40" stroke="#da121a" stroke-width="2" fill="none" />
+  
+  <!-- Decorative elements -->
+  <circle cx="30" cy="30" r="6" fill="#fcdd09" />
+  <circle cx="90" cy="90" r="6" fill="#fcdd09" />
+  <circle cx="90" cy="30" r="4" fill="white" />
+  <circle cx="30" cy="90" r="4" fill="white" />
 </svg>
