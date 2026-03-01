@@ -19,6 +19,27 @@
     <!-- Main horizontal beam -->
     <rect x="-45" y="-18" width="90" height="36" fill="url(#flagVertical)" />
     
+    <svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Pure white background -->
+  <rect width="120" height="120" fill="white" />
+  
+  <!-- Define vertical gradient for flag colors (top-down: green, yellow, red) -->
+  <defs>
+    <linearGradient id="flagVertical" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#078930" /> <!-- Green -->
+      <stop offset="50%" stop-color="#fcdd09" /> <!-- Yellow -->
+      <stop offset="100%" stop-color="#da121a" /> <!-- Red -->
+    </linearGradient>
+  </defs>
+  
+  <!-- Valid Ethiopian Orthodox Tewahedo Church Cross - With vertical flag colors -->
+  <g transform="translate(60,60)">
+    <!-- Main vertical beam -->
+    <rect x="-18" y="-50" width="36" height="100" fill="url(#flagVertical)" />
+    
+    <!-- Main horizontal beam -->
+    <rect x="-45" y="-18" width="90" height="36" fill="url(#flagVertical)" />
+    
     <!-- Upper decorative crossbar -->
     <rect x="-12" y="-65" width="24" height="12" fill="url(#flagVertical)" />
     
@@ -30,6 +51,41 @@
     
     <!-- Right decorative end -->
     <rect x="53" y="-12" width="12" height="24" fill="url(#flagVertical)" />
+    
+    <!-- Top ball -->
+    <circle cx="0" cy="-73" r="7" fill="url(#flagVertical)" />
+    
+    <!-- Bottom ball -->
+    <circle cx="0" cy="73" r="7" fill="url(#flagVertical)" />
+    
+    <!-- Left ball -->
+    <circle cx="-73" cy="0" r="7" fill="url(#flagVertical)" />
+    
+    <!-- Right ball -->
+    <circle cx="73" cy="0" r="7" fill="url(#flagVertical)" />
+    
+    <!-- Center diamond detail (white with small black center) -->
+    <rect x="-6" y="-6" width="12" height="12" fill="white" transform="rotate(45)" />
+    <circle cx="0" cy="0" r="5" fill="black" />
+  </g>
+  
+  <!-- Fine detail lines (kept white for contrast) -->
+  <g transform="translate(60,60)" stroke="white" stroke-width="1.5" fill="none">
+    <!-- Upper arm details -->
+    <line x1="0" y1="-65" x2="0" y2="-50" stroke="white" />
+    <line x1="-12" y1="-59" x2="12" y2="-59" stroke="white" />
+    
+    <!-- Lower arm details -->
+    <line x1="0" y1="50" x2="0" y2="65" stroke="white" />
+    <line x1="-12" y1="56" x2="12" y2="56" stroke="white" />
+    
+    <!-- Side arm details -->
+    <line x1="-65" y1="0" x2="-50" y2="0" stroke="white" />
+    <line x1="50" y1="0" x2="65" y2="0" stroke="white" />
+    <line x1="-59" y1="-12" x2="-59" y2="12" stroke="white" />
+    <line x1="59" y1="-12" x2="59" y2="12" stroke="white" />
+  </g>
+</svg>
     
     <!-- Top ball -->
     <circle cx="0" cy="-73" r="7" fill="url(#flagVertical)" />
