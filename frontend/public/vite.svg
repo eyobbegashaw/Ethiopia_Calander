@@ -1,1 +1,58 @@
-
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Pure white background -->
+  <rect width="120" height="120" fill="white" />
+  
+  <!-- Valid Ethiopian Orthodox Tewahedo Church Cross -->
+  <g transform="translate(60,60)">
+    <!-- Main vertical beam -->
+    <rect x="-18" y="-55" width="36" height="110" fill="black" />
+    
+    <!-- Main horizontal beam -->
+    <rect x="-50" y="-18" width="100" height="36" fill="black" />
+    
+    <!-- Upper decorative crossbar (smaller, centered above main beam) -->
+    <rect x="-12" y="-70" width="24" height="12" fill="black" />
+    
+    <!-- Lower decorative crossbar (smaller, centered below main beam) -->
+    <rect x="-12" y="58" width="24" height="12" fill="black" />
+    
+    <!-- Left decorative end -->
+    <rect x="-70" y="-12" width="12" height="24" fill="black" />
+    
+    <!-- Right decorative end -->
+    <rect x="58" y="-12" width="12" height="24" fill="black" />
+    
+    <!-- Top ball (decorative element typical of Ethiopian crosses) -->
+    <circle cx="0" cy="-78" r="8" fill="black" />
+    
+    <!-- Bottom ball -->
+    <circle cx="0" cy="78" r="8" fill="black" />
+    
+    <!-- Left ball -->
+    <circle cx="-78" cy="0" r="8" fill="black" />
+    
+    <!-- Right ball -->
+    <circle cx="78" cy="0" r="8" fill="black" />
+    
+    <!-- Center diamond/detail (often found in Ethiopian crosses) -->
+    <rect x="-6" y="-6" width="12" height="12" fill="white" transform="rotate(45)" />
+    <circle cx="0" cy="0" r="5" fill="black" />
+  </g>
+  
+  <!-- Fine detail lines (optional authenticity) -->
+  <g transform="translate(60,60)" stroke="white" stroke-width="1.5" fill="none">
+    <!-- Upper arm details -->
+    <line x1="0" y1="-70" x2="0" y2="-55" stroke="white" />
+    <line x1="-12" y1="-64" x2="12" y2="-64" stroke="white" />
+    
+    <!-- Lower arm details -->
+    <line x1="0" y1="55" x2="0" y2="70" stroke="white" />
+    <line x1="-12" y1="61" x2="12" y2="61" stroke="white" />
+    
+    <!-- Side arm details -->
+    <line x1="-70" y1="0" x2="-55" y2="0" stroke="white" />
+    <line x1="55" y1="0" x2="70" y2="0" stroke="white" />
+    <line x1="-64" y1="-12" x2="-64" y2="12" stroke="white" />
+    <line x1="64" y1="-12" x2="64" y2="12" stroke="white" />
+  </g>
+</svg>
