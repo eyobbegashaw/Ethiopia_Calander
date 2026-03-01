@@ -5,122 +5,206 @@
       <stop offset="0%" stop-color="#b3d9ff" />
       <stop offset="100%" stop-color="#f0f8ff" />
     </linearGradient>
-    <!-- Church cross pattern -->
+    
+    <!-- Flag Colors -->
+    <linearGradient id="flagGreenGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#078930" /> <!-- Ethiopia Green -->
+      <stop offset="100%" stop-color="#0a9c3a" />
+    </linearGradient>
+    <linearGradient id="flagYellowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fcdd09" /> <!-- Ethiopia Yellow -->
+      <stop offset="100%" stop-color="#fde84b" />
+    </linearGradient>
+    <linearGradient id="flagRedGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#da121a" /> <!-- Ethiopia Red -->
+      <stop offset="100%" stop-color="#e63946" />
+    </linearGradient>
+    
+    <!-- Church cross pattern with flag colors -->
     <pattern id="crossPattern" patternUnits="userSpaceOnUse" width="30" height="30" patternTransform="rotate(45)">
       <rect width="30" height="30" fill="#b8860b" />
-      <line x1="15" y1="0" x2="15" y2="30" stroke="#ffd700" stroke-width="2" />
-      <line x1="0" y1="15" x2="30" y2="15" stroke="#ffd700" stroke-width="2" />
+      <line x1="15" y1="0" x2="15" y2="30" stroke="#fcdd09" stroke-width="2" />
+      <line x1="0" y1="15" x2="30" y2="15" stroke="#fcdd09" stroke-width="2" />
     </pattern>
+    
     <!-- Gold gradient for crosses and details -->
     <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#ffd700" />
       <stop offset="50%" stop-color="#f0e68c" />
       <stop offset="100%" stop-color="#b8860b" />
     </linearGradient>
-    <!-- Stone texture for church walls -->
+    
+    <!-- Stone texture for church walls with flag color hints -->
     <pattern id="stonePattern" patternUnits="userSpaceOnUse" width="40" height="40">
       <rect width="40" height="40" fill="#d2b48c" />
-      <circle cx="10" cy="10" r="3" fill="#8b5a2b" opacity="0.3" />
-      <circle cx="30" cy="25" r="4" fill="#8b5a2b" opacity="0.3" />
-      <circle cx="20" cy="35" r="3" fill="#8b5a2b" opacity="0.3" />
+      <circle cx="10" cy="10" r="3" fill="#078930" opacity="0.2" />
+      <circle cx="30" cy="25" r="4" fill="#fcdd09" opacity="0.2" />
+      <circle cx="20" cy="35" r="3" fill="#da121a" opacity="0.2" />
     </pattern>
   </defs>
 
   <!-- Sky background -->
   <rect width="300" height="400" fill="url(#skyGrad)" />
 
-  <!-- Sun -->
+  <!-- Sun with flag color halo -->
   <circle cx="250" cy="70" r="30" fill="#ffeb99" opacity="0.7" />
+  <circle cx="250" cy="70" r="35" fill="none" stroke="#078930" stroke-width="2" opacity="0.3" />
+  <circle cx="250" cy="70" r="40" fill="none" stroke="#fcdd09" stroke-width="2" opacity="0.3" />
+  <circle cx="250" cy="70" r="45" fill="none" stroke="#da121a" stroke-width="2" opacity="0.3" />
 
-  <!-- Grass foreground -->
+  <!-- Grass foreground with flag colors in flowers -->
   <rect x="0" y="300" width="300" height="100" fill="#4caf50" />
-  <circle cx="50" cy="310" r="15" fill="#2e7d32" />
-  <circle cx="120" cy="330" r="20" fill="#2e7d32" />
-  <circle cx="200" cy="320" r="18" fill="#2e7d32" />
-  <circle cx="270" cy="340" r="22" fill="#2e7d32" />
+  <!-- Flag color flowers -->
+  <circle cx="50" cy="310" r="15" fill="#078930" />
+  <circle cx="50" cy="310" r="10" fill="#fcdd09" />
+  <circle cx="50" cy="310" r="5" fill="#da121a" />
+  
+  <circle cx="120" cy="330" r="20" fill="#da121a" />
+  <circle cx="120" cy="330" r="15" fill="#fcdd09" />
+  <circle cx="120" cy="330" r="10" fill="#078930" />
+  
+  <circle cx="200" cy="320" r="18" fill="#fcdd09" />
+  <circle cx="200" cy="320" r="12" fill="#da121a" />
+  <circle cx="200" cy="320" r="6" fill="#078930" />
+  
+  <circle cx="270" cy="340" r="22" fill="#078930" />
+  <circle cx="270" cy="340" r="16" fill="#fcdd09" />
+  <circle cx="270" cy="340" r="10" fill="#da121a" />
 
-  <!-- Church base (main building) -->
+  <!-- Church base (main building) with flag colored trim -->
   <rect x="80" y="180" width="140" height="120" fill="url(#stonePattern)" stroke="#5d3a1a" stroke-width="2" />
   
-  <!-- Central dome base (circular) -->
+  <!-- Flag color stripes on base -->
+  <rect x="80" y="180" width="140" height="8" fill="#078930" />
+  <rect x="80" y="188" width="140" height="8" fill="#fcdd09" />
+  <rect x="80" y="196" width="140" height="8" fill="#da121a" />
+  
+  <!-- Central dome base (circular) with flag colors -->
   <ellipse cx="150" cy="160" rx="50" ry="25" fill="#cd853f" stroke="#5d3a1a" stroke-width="2" />
-  <!-- Dome -->
+  <!-- Flag color rings on dome base -->
+  <ellipse cx="150" cy="160" rx="45" ry="20" fill="none" stroke="#078930" stroke-width="3" />
+  <ellipse cx="150" cy="160" rx="40" ry="17" fill="none" stroke="#fcdd09" stroke-width="3" />
+  <ellipse cx="150" cy="160" rx="35" ry="14" fill="none" stroke="#da121a" stroke-width="3" />
+  
+  <!-- Dome with flag color stripes -->
   <ellipse cx="150" cy="140" rx="40" ry="30" fill="#b87333" stroke="#5d3a1a" stroke-width="2" />
   <path d="M125 120 Q150 95 175 120" fill="#b87333" stroke="#5d3a1a" stroke-width="2" />
   
-  <!-- Main cross on dome (Ethiopian style) -->
+  <!-- Flag color stripes on dome -->
+  <ellipse cx="150" cy="140" rx="35" ry="25" fill="none" stroke="#078930" stroke-width="2" />
+  <ellipse cx="150" cy="140" rx="30" ry="20" fill="none" stroke="#fcdd09" stroke-width="2" />
+  <ellipse cx="150" cy="140" rx="25" ry="15" fill="none" stroke="#da121a" stroke-width="2" />
+  
+  <!-- Main cross on dome (Ethiopian style) with flag colors -->
   <g transform="translate(150,115)">
-    <!-- Long vertical -->
-    <rect x="-5" y="-25" width="10" height="50" fill="url(#goldGrad)" />
-    <!-- Horizontal bar -->
-    <rect x="-20" y="-10" width="40" height="10" fill="url(#goldGrad)" />
-    <!-- Top decorative crossbar (smaller) -->
-    <rect x="-12" y="-22" width="24" height="6" fill="url(#goldGrad)" />
-    <!-- Bottom decorative crossbar (smaller) -->
-    <rect x="-12" y="6" width="24" height="6" fill="url(#goldGrad)" />
-    <!-- Small balls on ends (typical Ethiopian) -->
-    <circle cx="-25" cy="-5" r="4" fill="url(#goldGrad)" />
-    <circle cx="25" cy="-5" r="4" fill="url(#goldGrad)" />
-    <circle cx="0" cy="-30" r="5" fill="url(#goldGrad)" />
-    <circle cx="0" cy="20" r="5" fill="url(#goldGrad)" />
+    <!-- Long vertical with flag colors -->
+    <rect x="-5" y="-25" width="10" height="50" fill="url(#flagGreenGrad)" />
+    <!-- Horizontal bar with flag colors -->
+    <rect x="-20" y="-10" width="40" height="10" fill="url(#flagYellowGrad)" />
+    <!-- Top decorative crossbar with flag colors -->
+    <rect x="-12" y="-22" width="24" height="6" fill="url(#flagRedGrad)" />
+    <!-- Bottom decorative crossbar with flag colors -->
+    <rect x="-12" y="6" width="24" height="6" fill="url(#flagGreenGrad)" />
+    <!-- Small balls on ends (typical Ethiopian) with flag colors -->
+    <circle cx="-25" cy="-5" r="4" fill="#da121a" />
+    <circle cx="25" cy="-5" r="4" fill="#078930" />
+    <circle cx="0" cy="-30" r="5" fill="#fcdd09" />
+    <circle cx="0" cy="20" r="5" fill="#da121a" />
   </g>
 
-  <!-- Side towers (two smaller domes) -->
+  <!-- Side towers (two smaller domes) with flag colors -->
   <!-- Left tower -->
   <rect x="50" y="190" width="30" height="70" fill="#cd853f" stroke="#5d3a1a" stroke-width="1" />
+  <!-- Flag color stripes on left tower -->
+  <rect x="50" y="190" width="30" height="6" fill="#078930" />
+  <rect x="50" y="196" width="30" height="6" fill="#fcdd09" />
+  <rect x="50" y="202" width="30" height="6" fill="#da121a" />
+  
   <ellipse cx="65" cy="180" rx="15" ry="10" fill="#cd853f" stroke="#5d3a1a" stroke-width="1" />
+  <!-- Flag color rings on left tower base -->
+  <ellipse cx="65" cy="180" rx="12" ry="8" fill="none" stroke="#078930" stroke-width="2" />
+  <ellipse cx="65" cy="180" rx="9" ry="6" fill="none" stroke="#fcdd09" stroke-width="2" />
+  
   <ellipse cx="65" cy="170" rx="12" ry="12" fill="#b87333" stroke="#5d3a1a" stroke-width="1" />
+  <!-- Flag color rings on left dome -->
+  <ellipse cx="65" cy="170" rx="9" ry="9" fill="none" stroke="#da121a" stroke-width="2" />
+  
   <g transform="translate(65,162)">
-    <rect x="-3" y="-15" width="6" height="30" fill="url(#goldGrad)" />
-    <rect x="-10" y="-5" width="20" height="6" fill="url(#goldGrad)" />
-    <circle cx="0" y="-20" r="4" fill="url(#goldGrad)" />
+    <rect x="-3" y="-15" width="6" height="30" fill="#078930" />
+    <rect x="-10" y="-5" width="20" height="6" fill="#fcdd09" />
+    <circle cx="0" y="-20" r="4" fill="#da121a" />
   </g>
 
   <!-- Right tower -->
   <rect x="220" y="190" width="30" height="70" fill="#cd853f" stroke="#5d3a1a" stroke-width="1" />
+  <!-- Flag color stripes on right tower -->
+  <rect x="220" y="190" width="30" height="6" fill="#078930" />
+  <rect x="220" y="196" width="30" height="6" fill="#fcdd09" />
+  <rect x="220" y="202" width="30" height="6" fill="#da121a" />
+  
   <ellipse cx="235" cy="180" rx="15" ry="10" fill="#cd853f" stroke="#5d3a1a" stroke-width="1" />
+  <!-- Flag color rings on right tower base -->
+  <ellipse cx="235" cy="180" rx="12" ry="8" fill="none" stroke="#078930" stroke-width="2" />
+  <ellipse cx="235" cy="180" rx="9" ry="6" fill="none" stroke="#fcdd09" stroke-width="2" />
+  
   <ellipse cx="235" cy="170" rx="12" ry="12" fill="#b87333" stroke="#5d3a1a" stroke-width="1" />
+  <!-- Flag color rings on right dome -->
+  <ellipse cx="235" cy="170" rx="9" ry="9" fill="none" stroke="#da121a" stroke-width="2" />
+  
   <g transform="translate(235,162)">
-    <rect x="-3" y="-15" width="6" height="30" fill="url(#goldGrad)" />
-    <rect x="-10" y="-5" width="20" height="6" fill="url(#goldGrad)" />
-    <circle cx="0" y="-20" r="4" fill="url(#goldGrad)" />
+    <rect x="-3" y="-15" width="6" height="30" fill="#078930" />
+    <rect x="-10" y="-5" width="20" height="6" fill="#fcdd09" />
+    <circle cx="0" y="-20" r="4" fill="#da121a" />
   </g>
 
-  <!-- Church entrance (door) -->
+  <!-- Church entrance (door) with flag colors -->
   <rect x="125" y="240" width="50" height="60" fill="#8b4513" stroke="#5d3a1a" stroke-width="2" />
+  <!-- Flag color stripes on door -->
+  <rect x="125" y="240" width="50" height="8" fill="#078930" />
+  <rect x="125" y="248" width="50" height="8" fill="#fcdd09" />
+  <rect x="125" y="256" width="50" height="8" fill="#da121a" />
+  
   <circle cx="160" cy="270" r="5" fill="#ffd700" /> <!-- Door handle/knocker -->
-  <!-- Arch above door -->
+  <!-- Arch above door with flag colors -->
   <path d="M125 240 Q150 220 175 240" fill="#b87333" stroke="#5d3a1a" stroke-width="2" />
+  <path d="M130 240 Q150 225 170 240" fill="none" stroke="#078930" stroke-width="2" />
+  <path d="M135 240 Q150 230 165 240" fill="none" stroke="#fcdd09" stroke-width="2" />
+  <path d="M140 240 Q150 235 160 240" fill="none" stroke="#da121a" stroke-width="2" />
 
-  <!-- Windows (Ethiopian cross-shaped windows) -->
+  <!-- Windows with flag colors (Ethiopian cross-shaped windows) -->
   <g transform="translate(110,200)">
     <rect x="-10" y="-10" width="20" height="20" fill="#add8e6" stroke="#5d3a1a" stroke-width="1" />
-    <line x1="-5" y1="0" x2="5" y2="0" stroke="#5d3a1a" stroke-width="1" />
-    <line x1="0" y1="-5" x2="0" y2="5" stroke="#5d3a1a" stroke-width="1" />
+    <line x1="-5" y1="0" x2="5" y2="0" stroke="#078930" stroke-width="2" />
+    <line x1="0" y1="-5" x2="0" y2="5" stroke="#da121a" stroke-width="2" />
   </g>
   <g transform="translate(190,200)">
     <rect x="-10" y="-10" width="20" height="20" fill="#add8e6" stroke="#5d3a1a" stroke-width="1" />
-    <line x1="-5" y1="0" x2="5" y2="0" stroke="#5d3a1a" stroke-width="1" />
-    <line x1="0" y1="-5" x2="0" y2="5" stroke="#5d3a1a" stroke-width="1" />
+    <line x1="-5" y1="0" x2="5" y2="0" stroke="#fcdd09" stroke-width="2" />
+    <line x1="0" y1="-5" x2="0" y2="5" stroke="#078930" stroke-width="2" />
   </g>
 
-  <!-- Small decorative crosses on facade -->
+  <!-- Small decorative crosses on facade with flag colors -->
   <g transform="translate(140,190)">
-    <rect x="-8" y="-8" width="16" height="16" fill="url(#goldGrad)" transform="rotate(45)" />
+    <rect x="-8" y="-8" width="16" height="16" fill="#078930" transform="rotate(45)" />
   </g>
   <g transform="translate(160,190)">
-    <rect x="-8" y="-8" width="16" height="16" fill="url(#goldGrad)" transform="rotate(45)" />
+    <rect x="-8" y="-8" width="16" height="16" fill="#da121a" transform="rotate(45)" />
+  </g>
+  <g transform="translate(150,210)">
+    <rect x="-5" y="-5" width="10" height="10" fill="#fcdd09" transform="rotate(45)" />
   </g>
 
-  <!-- Ethiopian calendar text element (subtle) -->
-  <text x="150" y="380" font-family="Georgia, serif" font-size="14" fill="#2c3e50" text-anchor="middle" font-weight="bold">የኢትዮጵያ ዘመን አቆጣጠር</text>
-  <text x="150" y="395" font-family="Georgia, serif" font-size="12" fill="#34495e" text-anchor="middle">Ethiopian Calendar</text>
+  <!-- Ethiopian calendar text element with flag colors -->
+  <text x="150" y="380" font-family="Georgia, serif" font-size="14" fill="#078930" text-anchor="middle" font-weight="bold">የኢትዮጵያ ዘመን አቆጣጠር</text>
+  <text x="150" y="395" font-family="Georgia, serif" font-size="12" fill="#da121a" text-anchor="middle">Ethiopian Calendar</text>
 
-  <!-- Small path leading to church -->
-  <path d="M110 300 Q150 280 190 300" stroke="#8b5a2b" stroke-width="8" fill="none" opacity="0.6" />
+  <!-- Small path leading to church with flag colors -->
+  <path d="M110 300 Q150 280 190 300" stroke="#078930" stroke-width="8" fill="none" opacity="0.4" />
+  <path d="M110 300 Q150 280 190 300" stroke="#fcdd09" stroke-width="5" fill="none" opacity="0.4" />
+  <path d="M110 300 Q150 280 190 300" stroke="#da121a" stroke-width="2" fill="none" opacity="0.4" />
 
-  <!-- Birds in sky (optional) -->
-  <path d="M60 70 Q70 60 80 70" stroke="#2c3e50" stroke-width="2" fill="none" />
-  <path d="M90 50 Q100 40 110 50" stroke="#2c3e50" stroke-width="2" fill="none" />
-  <path d="M200 40 Q210 30 220 40" stroke="#2c3e50" stroke-width="2" fill="none" />
+  <!-- Birds in sky with flag colors -->
+  <path d="M60 70 Q70 60 80 70" stroke="#078930" stroke-width="2" fill="none" />
+  <path d="M90 50 Q100 40 110 50" stroke="#fcdd09" stroke-width="2" fill="none" />
+  <path d="M200 40 Q210 30 220 40" stroke="#da121a" stroke-width="2" fill="none" />
 </svg>
