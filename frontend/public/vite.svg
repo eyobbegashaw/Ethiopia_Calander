@@ -1,39 +1,40 @@
 <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background with flag colors -->
-  <rect width="120" height="120" fill="#078930" />
+  <!-- Background - white base -->
+  <rect width="120" height="120" fill="white" />
   
-  <!-- Central circle with yellow -->
-  <circle cx="60" cy="60" r="50" fill="#fcdd09" />
+  <!-- Top horizontal flag stripe - Green -->
+  <rect x="0" y="0" width="120" height="35" fill="#078930" />
   
-  <!-- Inner circle with red -->
-  <circle cx="60" cy="60" r="40" fill="#da121a" />
+  <!-- Bottom horizontal flag stripe - Red -->
+  <rect x="0" y="85" width="120" height="35" fill="#da121a" />
   
-  <!-- Church silhouette (white) -->
-  <!-- Base -->
-  <rect x="40" y="65" width="40" height="30" fill="white" />
+  <!-- Central circle with yellow (middle cross background) -->
+  <circle cx="60" cy="60" r="35" fill="#fcdd09" />
   
-  <!-- Dome base -->
-  <ellipse cx="60" cy="60" rx="25" ry="12" fill="white" />
-  
-  <!-- Dome -->
-  <ellipse cx="60" cy="48" rx="20" ry="16" fill="white" />
-  <path d="M45 40 Q60 25 75 40" fill="white" />
-  
-  <!-- Ethiopian Cross -->
-  <g transform="translate(60,42)">
-    <rect x="-6" y="-15" width="12" height="30" fill="#da121a" />
-    <rect x="-15" y="-6" width="30" height="12" fill="#da121a" />
-    <rect x="-4" y="-10" width="8" height="20" fill="#fcdd09" />
-    <rect x="-10" y="-4" width="20" height="8" fill="#fcdd09" />
-    <circle cx="0" cy="-18" r="4" fill="#078930" />
-    <circle cx="0" cy="18" r="4" fill="#078930" />
-    <circle cx="-18" cy="0" r="4" fill="#078930" />
-    <circle cx="18" cy="0" r="4" fill="#078930" />
+  <!-- Ethiopian Orthodox Cross (central) -->
+  <g transform="translate(60,60)">
+    <!-- Main cross structure -->
+    <rect x="-15" y="-40" width="30" height="80" fill="#da121a" />
+    <rect x="-40" y="-15" width="80" height="30" fill="#da121a" />
+    
+    <!-- Inner cross (detail) -->
+    <rect x="-10" y="-30" width="20" height="60" fill="white" />
+    <rect x="-30" y="-10" width="60" height="20" fill="white" />
+    
+    <!-- Cross ends - decorative balls -->
+    <circle cx="0" cy="-48" r="8" fill="#078930" />
+    <circle cx="0" cy="48" r="8" fill="#078930" />
+    <circle cx="-48" cy="0" r="8" fill="#da121a" />
+    <circle cx="48" cy="0" r="8" fill="#da121a" />
+    
+    <!-- Center dot -->
+    <circle cx="0" cy="0" r="6" fill="#fcdd09" />
   </g>
   
-  <!-- Decorative elements -->
-  <circle cx="30" cy="30" r="6" fill="#fcdd09" />
-  <circle cx="90" cy="90" r="6" fill="#fcdd09" />
-  <circle cx="90" cy="30" r="4" fill="white" />
-  <circle cx="30" cy="90" r="4" fill="white" />
+  <!-- Church silhouette subtle behind cross (optional) -->
+  <g opacity="0.15">
+    <rect x="45" y="70" width="30" height="25" fill="#2c3e50" />
+    <ellipse cx="60" cy="65" rx="20" ry="10" fill="#2c3e50" />
+    <ellipse cx="60" cy="55" rx="15" ry="12" fill="#2c3e50" />
+  </g>
 </svg>
