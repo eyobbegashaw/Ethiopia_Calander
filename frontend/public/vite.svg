@@ -1,12 +1,126 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 256 256">
+<svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient for sky -->
   <defs>
-    <linearGradient id="orthodoxGradient" x1="0%" y1="100%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#00AD59" /> <stop offset="50%" stop-color="#FED100" /> <stop offset="100%" stop-color="#EF3340" /> </linearGradient>
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#b3d9ff" />
+      <stop offset="100%" stop-color="#f0f8ff" />
+    </linearGradient>
+    <!-- Church cross pattern -->
+    <pattern id="crossPattern" patternUnits="userSpaceOnUse" width="30" height="30" patternTransform="rotate(45)">
+      <rect width="30" height="30" fill="#b8860b" />
+      <line x1="15" y1="0" x2="15" y2="30" stroke="#ffd700" stroke-width="2" />
+      <line x1="0" y1="15" x2="30" y2="15" stroke="#ffd700" stroke-width="2" />
+    </pattern>
+    <!-- Gold gradient for crosses and details -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffd700" />
+      <stop offset="50%" stop-color="#f0e68c" />
+      <stop offset="100%" stop-color="#b8860b" />
+    </linearGradient>
+    <!-- Stone texture for church walls -->
+    <pattern id="stonePattern" patternUnits="userSpaceOnUse" width="40" height="40">
+      <rect width="40" height="40" fill="#d2b48c" />
+      <circle cx="10" cy="10" r="3" fill="#8b5a2b" opacity="0.3" />
+      <circle cx="30" cy="25" r="4" fill="#8b5a2b" opacity="0.3" />
+      <circle cx="20" cy="35" r="3" fill="#8b5a2b" opacity="0.3" />
+    </pattern>
   </defs>
+
+  <!-- Sky background -->
+  <rect width="300" height="400" fill="url(#skyGrad)" />
+
+  <!-- Sun -->
+  <circle cx="250" cy="70" r="30" fill="#ffeb99" opacity="0.7" />
+
+  <!-- Grass foreground -->
+  <rect x="0" y="300" width="300" height="100" fill="#4caf50" />
+  <circle cx="50" cy="310" r="15" fill="#2e7d32" />
+  <circle cx="120" cy="330" r="20" fill="#2e7d32" />
+  <circle cx="200" cy="320" r="18" fill="#2e7d32" />
+  <circle cx="270" cy="340" r="22" fill="#2e7d32" />
+
+  <!-- Church base (main building) -->
+  <rect x="80" y="180" width="140" height="120" fill="url(#stonePattern)" stroke="#5d3a1a" stroke-width="2" />
   
-  <path fill="url(#orthodoxGradient)" d="M128 0c-8.8 0-16 7.2-16 16v80c0 8.8 7.2 16 16 16s16-7.2 16-16V16c0-8.8-7.2-16-16-16zm-32 128c0-8.8-7.2-16-16-16H16c-8.8 0-16 7.2-16 16s7.2 16 16 16h64c8.8 0 16-7.2 16-16zm128-16c-8.8 0-16 7.2-16 16s7.2 16 16 16h64c8.8 0 16-7.2 16-16s-7.2-16-16-16h-64zM128 160c-8.8 0-16 7.2-16 16v80c0 8.8 7.2 16 16 16s16-7.2 16-16v-80c0-8.8-7.2-16-16-16z"/>
+  <!-- Central dome base (circular) -->
+  <ellipse cx="150" cy="160" rx="50" ry="25" fill="#cd853f" stroke="#5d3a1a" stroke-width="2" />
+  <!-- Dome -->
+  <ellipse cx="150" cy="140" rx="40" ry="30" fill="#b87333" stroke="#5d3a1a" stroke-width="2" />
+  <path d="M125 120 Q150 95 175 120" fill="#b87333" stroke="#5d3a1a" stroke-width="2" />
   
-  <path fill="#FFD700" d="M112 160c-8.8 0-16 7.2-16 16s7.2 16 16 16 16-7.2 16-16-7.2-16-16-16zM64 112c-8.8 0-16 7.2-16 16s7.2 16 16 16 16-7.2 16-16-7.2-16-16-16zm128 0c-8.8 0-16 7.2-16 16s7.2 16 16 16 16-7.2 16-16-7.2-16-16-16z"/>
-  
-  <path fill="url(#orthodoxGradient)" d="M160 224c0 17.7-14.3 32-32 32s-32-14.3-32-32 14.3-32 32-32 32 14.3 32 32z"/>
+  <!-- Main cross on dome (Ethiopian style) -->
+  <g transform="translate(150,115)">
+    <!-- Long vertical -->
+    <rect x="-5" y="-25" width="10" height="50" fill="url(#goldGrad)" />
+    <!-- Horizontal bar -->
+    <rect x="-20" y="-10" width="40" height="10" fill="url(#goldGrad)" />
+    <!-- Top decorative crossbar (smaller) -->
+    <rect x="-12" y="-22" width="24" height="6" fill="url(#goldGrad)" />
+    <!-- Bottom decorative crossbar (smaller) -->
+    <rect x="-12" y="6" width="24" height="6" fill="url(#goldGrad)" />
+    <!-- Small balls on ends (typical Ethiopian) -->
+    <circle cx="-25" cy="-5" r="4" fill="url(#goldGrad)" />
+    <circle cx="25" cy="-5" r="4" fill="url(#goldGrad)" />
+    <circle cx="0" cy="-30" r="5" fill="url(#goldGrad)" />
+    <circle cx="0" cy="20" r="5" fill="url(#goldGrad)" />
+  </g>
+
+  <!-- Side towers (two smaller domes) -->
+  <!-- Left tower -->
+  <rect x="50" y="190" width="30" height="70" fill="#cd853f" stroke="#5d3a1a" stroke-width="1" />
+  <ellipse cx="65" cy="180" rx="15" ry="10" fill="#cd853f" stroke="#5d3a1a" stroke-width="1" />
+  <ellipse cx="65" cy="170" rx="12" ry="12" fill="#b87333" stroke="#5d3a1a" stroke-width="1" />
+  <g transform="translate(65,162)">
+    <rect x="-3" y="-15" width="6" height="30" fill="url(#goldGrad)" />
+    <rect x="-10" y="-5" width="20" height="6" fill="url(#goldGrad)" />
+    <circle cx="0" y="-20" r="4" fill="url(#goldGrad)" />
+  </g>
+
+  <!-- Right tower -->
+  <rect x="220" y="190" width="30" height="70" fill="#cd853f" stroke="#5d3a1a" stroke-width="1" />
+  <ellipse cx="235" cy="180" rx="15" ry="10" fill="#cd853f" stroke="#5d3a1a" stroke-width="1" />
+  <ellipse cx="235" cy="170" rx="12" ry="12" fill="#b87333" stroke="#5d3a1a" stroke-width="1" />
+  <g transform="translate(235,162)">
+    <rect x="-3" y="-15" width="6" height="30" fill="url(#goldGrad)" />
+    <rect x="-10" y="-5" width="20" height="6" fill="url(#goldGrad)" />
+    <circle cx="0" y="-20" r="4" fill="url(#goldGrad)" />
+  </g>
+
+  <!-- Church entrance (door) -->
+  <rect x="125" y="240" width="50" height="60" fill="#8b4513" stroke="#5d3a1a" stroke-width="2" />
+  <circle cx="160" cy="270" r="5" fill="#ffd700" /> <!-- Door handle/knocker -->
+  <!-- Arch above door -->
+  <path d="M125 240 Q150 220 175 240" fill="#b87333" stroke="#5d3a1a" stroke-width="2" />
+
+  <!-- Windows (Ethiopian cross-shaped windows) -->
+  <g transform="translate(110,200)">
+    <rect x="-10" y="-10" width="20" height="20" fill="#add8e6" stroke="#5d3a1a" stroke-width="1" />
+    <line x1="-5" y1="0" x2="5" y2="0" stroke="#5d3a1a" stroke-width="1" />
+    <line x1="0" y1="-5" x2="0" y2="5" stroke="#5d3a1a" stroke-width="1" />
+  </g>
+  <g transform="translate(190,200)">
+    <rect x="-10" y="-10" width="20" height="20" fill="#add8e6" stroke="#5d3a1a" stroke-width="1" />
+    <line x1="-5" y1="0" x2="5" y2="0" stroke="#5d3a1a" stroke-width="1" />
+    <line x1="0" y1="-5" x2="0" y2="5" stroke="#5d3a1a" stroke-width="1" />
+  </g>
+
+  <!-- Small decorative crosses on facade -->
+  <g transform="translate(140,190)">
+    <rect x="-8" y="-8" width="16" height="16" fill="url(#goldGrad)" transform="rotate(45)" />
+  </g>
+  <g transform="translate(160,190)">
+    <rect x="-8" y="-8" width="16" height="16" fill="url(#goldGrad)" transform="rotate(45)" />
+  </g>
+
+  <!-- Ethiopian calendar text element (subtle) -->
+  <text x="150" y="380" font-family="Georgia, serif" font-size="14" fill="#2c3e50" text-anchor="middle" font-weight="bold">የኢትዮጵያ ዘመን አቆጣጠር</text>
+  <text x="150" y="395" font-family="Georgia, serif" font-size="12" fill="#34495e" text-anchor="middle">Ethiopian Calendar</text>
+
+  <!-- Small path leading to church -->
+  <path d="M110 300 Q150 280 190 300" stroke="#8b5a2b" stroke-width="8" fill="none" opacity="0.6" />
+
+  <!-- Birds in sky (optional) -->
+  <path d="M60 70 Q70 60 80 70" stroke="#2c3e50" stroke-width="2" fill="none" />
+  <path d="M90 50 Q100 40 110 50" stroke="#2c3e50" stroke-width="2" fill="none" />
+  <path d="M200 40 Q210 30 220 40" stroke="#2c3e50" stroke-width="2" fill="none" />
 </svg>
