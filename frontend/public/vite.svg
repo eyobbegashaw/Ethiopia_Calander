@@ -38,23 +38,7 @@
     <rect x="-6" y="-6" width="12" height="12" fill="white" transform="rotate(45)" />
     <circle cx="0" cy="0" r="5" fill="black" />
   </g>
-  
-  <!-- Fine detail lines (optional authenticity) -->
-  <g transform="translate(60,60)" stroke="white" stroke-width="1.5" fill="none">
-    <!-- Upper arm details -->
-    <line x1="0" y1="-65" x2="0" y2="-50" stroke="white" />
-    <line x1="-12" y1="-59" x2="12" y2="-59" stroke="white" />
-    
-    <!-- Lower arm details -->
-    <line x1="0" y1="50" x2="0" y2="65" stroke="white" />
-    <line x1="-12" y1="56" x2="12" y2="56" stroke="white" />
-    
-    <!-- Side arm details -->
-    <line x1="-65" y1="0" x2="-50" y2="0" stroke="white" />
-    <line x1="50" y1="0" x2="65" y2="0" stroke="white" />
-    <line x1="-59" y1="-12" x2="-59" y2="12" stroke="white" />
-    <line x1="59" y1="-12" x2="59" y2="12" stroke="white" />
-  </g>
+
   
   <!-- Ensure nothing extends beyond viewBox (safe boundary line - invisible) -->
   <rect width="120" height="120" fill="none" stroke="none" />
