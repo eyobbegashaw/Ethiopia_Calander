@@ -14,7 +14,7 @@ const Hero = () => {
             const { year: eYear, month: eMonth, day: eDay } = gcToEth(now);
 
             setCurrentDate({
-                ethiopian: `${ethiopianMonths[eMonth - 1]} ${toEthNum(eDay)}, ${toEthNum(eYear)} እ.ኤ.አ.`,
+                ethiopian: `${ethiopianMonths[eMonth - 1]} ${toEthNum(eDay)}, ${toEthNum(eYear)} እ.ኢ.አ.`,
                 gregorian: `${gregorianMonths[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()} G.C.`,
                 dayName: `${dayNames[now.getDay()]} (${englishDays[now.getDay()]})`
             });
