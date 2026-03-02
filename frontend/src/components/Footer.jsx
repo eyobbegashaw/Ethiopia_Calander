@@ -25,8 +25,8 @@ const Footer = () => {
                     </div>
                     <div className="footer-section">
                         <h3>Contact</h3>
-                        <p>Email:eyobbegashaw.vercel.com</p>
-                        <p>Developer:Dn Eyob Begashaw</p>
+                         <p>Email:<a href=""></a></p>
+                        <pDeveloper Website:<a href="htpps://eyobbegashaw.vercel.app">ዲ/ን ኢዮብ በጋሻው</a></p>
                         <p>ይህ ድህረ ገጽ የመጀመሪያ ስሪት ነው<strong>v1.0.0</strong>።በሚቀጥለው ስሪት ይበትጥ ይሻሻላል።</p>
                     </div>
                 </div>
