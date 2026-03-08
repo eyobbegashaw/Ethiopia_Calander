@@ -127,10 +127,10 @@ const HolidayCalculator = () => {
                                         <div className="holiday-name">
                                             {holiday.nameAmharic || holiday.name}
                                             {holiday.type === 'movable' && (
-                                                <span className="holiday-badge movable">ተንቀሳቃሽ</span>
+                                                <span className="holiday-badge movable"></span>
                                             )}
                                             {holiday.type === 'fixed' && (
-                                                <span className="holiday-badge fixed">ቋሚ</span>
+                                                <span className="holiday-badge fixed"></span>
                                             )}
                                         </div>
                                         <div className="holiday-date">{formatHolidayDate(holiday)}</div>
@@ -150,7 +150,7 @@ const HolidayCalculator = () => {
                 ) : null}
             </div>
             
-            {bahreHasab && (
+            /* {bahreHasab && (
                 <div className="bahre-hasab-details">
                     <h3>
                         <i className="fas fa-calculator"></i> 
@@ -166,7 +166,7 @@ const HolidayCalculator = () => {
                                 );
                             }
                             return null;
-                        })}
+                        })} */
                     </div>
                 </div>
             )}
