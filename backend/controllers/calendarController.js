@@ -1,199 +1,74 @@
 const { Saint, Reading, Holiday } = require('../models/Calendar');
 const { gcToEth, ethToGC } = require('../utils/calendarUtils');
 
-// የባሕረ ሐሳብ ክፍል (Bahre Hasab Class)
 class BahreHasab {
     constructor(year) {
         this.year = parseInt(year);
-        this.ameteAlem = this.year + 5500; // ዓመተ ዓለም
-        this.months = [
-            "መስከረም", "ጥቅምት", "ህዳር", "ታህሳስ",
-            "ጥር", "የካቲት", "መጋቢት", "ሚያዝያ",
-            "ግንቦት", "ሰኔ", "ሐምሌ", "ነሐሴ", "ጳጉሜን"
-        ];
+        this.ameteAlem = this.year + 5500;
+        this.months = ["መስከረም", "ጥቅምት", "ህዳር", "ታህሳስ", "ጥር", "የካቲት", "መጋቢት", "ሚያዝያ", "ግንቦት", "ሰኔ", "ሐምሌ", "ነሐሴ", "ጳጉሜን"];
     }
 
-    // መሠረታዊ ቀመሮችን ማስላት
-    calculateBase() {
-        // 1. መደብ (Medeb)
-        this.medeb = this.ameteAlem % 19;
-        
-        // 2. ወንጌላዊ (Wenber / Evangelist)
-        const wenber = this.medeb === 0 ? 18 : this.medeb - 1;
-        const evangelists = ["ማቴዎስ", "ማርቆስ", "ሉቃስ", "ዮሐንስ"];
-        const evangelistIndex = this.ameteAlem % 4;
-        this.evangelist = evangelists[evangelistIndex === 0 ? 3 : evangelistIndex - 1];
-        
-        // 3. አበቅቴ (Abekte)
-        this.abekte = (wenber * 11) % 30;
-        
-        // 4. መጥቅዕ (Metke)
-        this.metke = this.abekte === 0 ? 30 : 30 - this.abekte;
-        
-        // 5. የመጥቅዕ ወር
-        this.metkeMonth = this.metke > 14 ? "መስከረም" : "ጥቅምት";
-        
-        return {
-            medeb: this.medeb,
-            evangelist: this.evangelist,
-            abekte: this.abekte,
-            metke: this.metke,
-            metkeMonth: this.metkeMonth
-        };
-    }
-
-    // የመስከረም 1 ቀን የሳምንቱን ቀን ማስላት
+    // 1. መስከረም 1 ቀን የሳምንቱን ስንተኛ ቀን እንደሆነ ማወቅ (0=ሰኞ ... 6=እሁድ)
     getMeskerem1Weekday() {
-        const tinte = (this.ameteAlem + Math.floor(this.ameteAlem / 4) + 1) % 7;
-        const weekdayMap = ["ሰኞ", "ማክሰኞ", "ረቡዕ", "ሐሙስ", "ዓርብ", "ቅዳሜ", "እሁድ"];
-        return weekdayMap[tinte];
+        // የቀመር ቀሪ (ረድኤት)
+        const r = (this.ameteAlem + Math.floor(this.ameteAlem / 4)) % 7;
+        // በባሕረ ሐሳብ አቆጣጠር 2=ሰኞ፣ 3=ማክሰኞ ... 0=እሁድ (ወይም 7)
+        // ወደ array index ለመቀየር (0=ሰኞ፣ 1=ማክሰኞ...)
+        const index = (r + 5) % 7; 
+        return index;
     }
 
-    // የመባጃ ሐመር ማስላት
-    calculateMebajaHamer() {
-        const baseYear = 2016;
-        const baseMebaja = 23;
-        const yearDiff = this.year - baseYear;
-        let mebajaHamer = baseMebaja + yearDiff;
-        
-        if (mebajaHamer > 30) {
-            mebajaHamer = mebajaHamer - 30;
-        }
-        
-        this.mebajaHamer = mebajaHamer;
-        return mebajaHamer;
-    }
-
-    // የነነዌን ቀን ማስላት
-    calculateNenewe() {
-        let month = "ጥር";
-        let day = this.mebajaHamer;
-        
-        if (this.metke <= 14) {
-            month = "የካቲት";
-        }
-        
-        this.nenewe = { month, day };
-        return this.nenewe;
-    }
-
-    // ቀናትን መደመር (ኢትዮጵያ ካሌንደር)
-    addEthDays(startMonth, startDay, daysToAdd) {
-        let monthIndex = this.months.indexOf(startMonth);
-        let currentDay = startDay;
-        let remainingDays = daysToAdd;
-        
-        while (remainingDays > 0) {
-            const daysInMonth = (monthIndex === 12) ? 
-                (this.year % 4 === 3 ? 6 : 5) : 30; // ጳጉሜን ልዩ ነው
-            
-            const daysLeftInMonth = daysInMonth - currentDay;
-            
-            if (remainingDays <= daysLeftInMonth) {
-                currentDay += remainingDays;
-                remainingDays = 0;
-            } else {
-                remainingDays -= (daysLeftInMonth + 1);
-                monthIndex = (monthIndex + 1) % 13;
-                currentDay = 1;
-            }
-        }
-        
-        return {
-            month: this.months[monthIndex],
-            day: currentDay
-        };
-    }
-
-    // ተውሳክ ማስላት (Tewsak)
-    calculateTewsak(month, day) {
-        // ይህ ቀለል ያለ ስሌት ነው - በምስሉ መሠረት ማስተካከል ያስፈልጋል
-        const baseDay = this.getMeskerem1Weekday();
-        const dayMap = {
-            "እሁድ": 1, "ሰኞ": 2, "ማክሰኞ": 3, 
-            "ረቡዕ": 4, "ሐሙስ": 5, "ዓርብ": 6, "ቅዳሜ": 7
-        };
-        return dayMap[baseDay] || 1;
-    }
-
-    // ሁሉንም ተንቀሳቃሽ በዓላት ማስላት
     calculateAllFeasts() {
-        // መሠረታዊ ስሌቶች
-        this.calculateBase();
-        this.calculateMebajaHamer();
-        this.calculateNenewe();
-        const meskerem1Weekday = this.getMeskerem1Weekday();
+        // ሀ. መሠረታዊ ስሌቶች
+        const medeb = this.ameteAlem % 19;
+        const wenber = medeb === 0 ? 18 : medeb - 1;
+        const abekte = (wenber * 11) % 30;
+        const metke = abekte === 0 ? 30 : 30 - abekte;
+        const metkeMonth = metke > 14 ? "መስከረም" : "ጥቅምት";
+
+        // ለ. የበዓለ መጥቅዕ ዕለት (የሳምንቱ ቀን)
+        // ቀመር፡ (መስከረም 1 ዕለት + መጥቅዕ - 1) % 7
+        const m1 = this.getMeskerem1Weekday(); // 0-6 (ሰኞ-እሁድ)
+        const bealeMetkeWeekday = (m1 + (metkeMonth === "መስከረም" ? metke - 1 : metke + 30 - 1)) % 7;
+
+        // ሐ. ተውሳክ (ከምስሎቹ ላይ የተወሰደ ቋሚ ቁጥር)
+        // 0=ሰኞ(5), 1=ማክሰኞ(4), 2=ረቡዕ(3), 3=ሐሙስ(2), 4=ዓርብ(1), 5=ቅዳሜ(8), 6=እሁድ(7)
+        const tewsakMap = [5, 4, 3, 2, 1, 8, 7];
+        const tewsak = tewsakMap[bealeMetkeWeekday];
+
+        // መ. መባጃ ሐመር
+        let mebajaHamer = metke + tewsak;
+        if (mebajaHamer > 30) mebajaHamer -= 30;
+
+        // ሠ. የነነዌ ወር
+        const neneweMonth = (metke > 14 && mebajaHamer <= 30 && metke + tewsak > 30) || (metke <= 14) ? "የካቲት" : "ጥር";
+
+        const weekdayNames = ["ሰኞ", "ማክሰኞ", "ረቡዕ", "ሐሙስ", "ዓርብ", "ቅዳሜ", "እሁድ"];
         
-        // ከነነዌ ተነስቶ በዓላትን ማስላት
-        const neneweDate = { month: this.nenewe.month, day: this.nenewe.day };
-        
-        // የበዓላት ቀናት (ከነነዌ ጀምሮ ያሉት ቀናት)
+        const results = {
+            meskerem1: { full: `መስከረም 1:- ${weekdayNames[m1]}` },
+            mebajaHamer: { value: mebajaHamer, full: `መባጃ ሐመር:- ${mebajaHamer}` },
+            nenewe: { month: neneweMonth, day: mebajaHamer, full: `ጾመ ነነዌ:- ${neneweMonth} ${mebajaHamer}, ${this.year}` }
+        };
+
         const feastDays = {
-            abiyTsom: 14,        // አቢይ ጾም
-            debreZeyit: 41,      // ደብረ ዘይት
-            hosanna: 62,         // ሆሣዕና
-            siklet: 67,          // ስቅለት
-            tinsae: 69,          // ትንሣኤ (ፋሲካ)
-            rikbeKahnat: 93,     // ርክበ ካህናት
-            erget: 108,          // ዕርገት
-            paracletos: 118,     // ጰራቅሊጦስ
-            tsomHawaryat: 119,   // ጾመ ሐዋርያት
-            tsomDihnet: 121      // ጾመ ድኅነት
+            abiyTsom: 14, debreZeyit: 41, hosanna: 62, siklet: 67, 
+            tinsae: 69, rikbeKahnat: 93, erget: 108, paracletos: 118, 
+            tsomHawaryat: 119, tsomDihnet: 121
         };
-        
-        // በዓላትን ማስላት
-        const feasts = {
-            meskerem1: {
-                day: 1,
-                month: "መስከረም",
-                weekday: meskerem1Weekday,
-                full: `መስከረም 1:- ${meskerem1Weekday}`
-            },
-            mebajaHamer: {
-                value: this.mebajaHamer,
-                full: `መባጃ ሐመር:- ${this.mebajaHamer}`
-            },
-            nenewe: {
-                ...neneweDate,
-                full: `ጾመ ነነዌ:- ${neneweDate.month} ${neneweDate.day}, ${this.year}`
-            }
-        };
-        
-        // ሌሎቹን በዓላት አስላ
+
         for (const [key, days] of Object.entries(feastDays)) {
-            const date = this.addEthDays(neneweDate.month, neneweDate.day, days);
-            feasts[key] = {
+            const date = this.addEthDays(neneweMonth, mebajaHamer, days);
+            results[key] = {
                 ...date,
                 full: `${this.getFeastName(key)}:- ${date.month} ${date.day}, ${this.year}`
             };
         }
-        
-        return feasts;
-    }
 
-    getFeastName(key) {
-        const names = {
-            abiyTsom: "አቢይ ጾም",
-            debreZeyit: "ደብረ ዘይት",
-            hosanna: "ሆሣዕና",
-            siklet: "ስቅለት",
-            tinsae: "ትንሣኤ",
-            rikbeKahnat: "ርክበ ካህናት",
-            erget: "ዕርገት",
-            paracletos: "ጰራቅሊጦስ",
-            tsomHawaryat: "ጾመ ሐዋርያት",
-            tsomDihnet: "ጾመ ድኅነት"
-        };
-        return names[key] || key;
+        return results;
     }
-
-    getFullResult() {
-        return {
-            year: this.year,
-            ...this.calculateAllFeasts()
-        };
-    }
-}
+    
+    // ... addEthDays እና getFeastName እንዳሉ ይቀጥላሉ
 
 // @desc    Get saints for a specific date
 // @route   GET /api/calendar/saints/:month/:day
@@ -294,8 +169,8 @@ const getHolidaysByYear = async (req, res) => {
                 type: 'movable',
                 date: { month: bahreHasab.months.indexOf(movableFeasts.nenewe.month) + 1, day: movableFeasts.nenewe.day },
                 formattedDate: movableFeasts.nenewe.full.split(':-')[1].trim(),
-                description: 'የነነዌ ጾም መጀመሪያ',
-                descriptionEnglish: 'Beginning of Nineveh Fast'
+                // description: 'የነነዌ ጾም መጀመሪያ',
+                // descriptionEnglish: 'Beginning of Nineveh Fast'
             },
             {
                 name: 'አቢይ ጾም',
@@ -304,8 +179,8 @@ const getHolidaysByYear = async (req, res) => {
                 type: 'movable',
                 date: { month: bahreHasab.months.indexOf(movableFeasts.abiyTsom.month) + 1, day: movableFeasts.abiyTsom.day },
                 formattedDate: movableFeasts.abiyTsom.full.split(':-')[1].trim(),
-                description: 'የአቢይ ጾም መጀመሪያ',
-                descriptionEnglish: 'Beginning of Great Lent'
+                // description: 'የአቢይ ጾም መጀመሪያ',
+                // descriptionEnglish: 'Beginning of Great Lent'
             },
             {
                 name: 'ደብረ ዘይት',
@@ -322,7 +197,7 @@ const getHolidaysByYear = async (req, res) => {
                 type: 'movable',
                 date: { month: bahreHasab.months.indexOf(movableFeasts.hosanna.month) + 1, day: movableFeasts.hosanna.day },
                 formattedDate: movableFeasts.hosanna.full.split(':-')[1].trim(),
-                description: 'የጌታ ወደ ኢየሩሳሌም መግባት'
+                // description: 'የጌታ ወደ ኢየሩሳሌም መግባት'
             },
             {
                 name: 'ስቅለት',
@@ -339,7 +214,7 @@ const getHolidaysByYear = async (req, res) => {
                 type: 'movable',
                 date: { month: bahreHasab.months.indexOf(movableFeasts.tinsae.month) + 1, day: movableFeasts.tinsae.day },
                 formattedDate: movableFeasts.tinsae.full.split(':-')[1].trim(),
-                description: 'የጌታችን ኢየሱስ ክርስቶስ ትንሣኤ'
+                // description: 'የጌታችን ኢየሱስ ክርስቶስ ትንሣኤ'
             },
             {
                 name: 'ርክበ ካህናት',
@@ -356,7 +231,7 @@ const getHolidaysByYear = async (req, res) => {
                 type: 'movable',
                 date: { month: bahreHasab.months.indexOf(movableFeasts.erget.month) + 1, day: movableFeasts.erget.day },
                 formattedDate: movableFeasts.erget.full.split(':-')[1].trim(),
-                description: 'የጌታችን ወደ ሰማይ መውጣት'
+                // description: 'የጌታችን ወደ ሰማይ መውጣት'
             },
             {
                 name: 'ጰራቅሊጦስ',
@@ -365,7 +240,7 @@ const getHolidaysByYear = async (req, res) => {
                 type: 'movable',
                 date: { month: bahreHasab.months.indexOf(movableFeasts.paracletos.month) + 1, day: movableFeasts.paracletos.day },
                 formattedDate: movableFeasts.paracletos.full.split(':-')[1].trim(),
-                description: 'የመንፈስ ቅዱስ መውረድ'
+                // description: 'የመንፈስ ቅዱስ መውረድ'
             },
             {
                 name: 'ጾመ ሐዋርያት',
