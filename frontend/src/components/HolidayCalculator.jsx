@@ -93,24 +93,7 @@ const HolidayCalculator = () => {
                 </div>
             )}
             
-            {additionalInfo && (
-                <div className="bahre-hasab-info">
-                    <h3>
-                        <i className="fas fa-info-circle"></i> 
-                        የባሕረ ሐሳብ መረጃ ለ{year} ዓ.ም
-                    </h3>
-                    <div className="info-grid">
-                        <div className="info-item">
-                            <span className="info-label">መስከረም 1:</span>
-                            <span className="info-value">{additionalInfo.meskerem1.formatted}</span>
-                        </div>
-                        <div className="info-item">
-                            <span className="info-label">መባጃ ሐመር:</span>
-                            <span className="info-value">{additionalInfo.mebajaHamer.formatted}</span>
-                        </div>
-                    </div>
-                </div>
-            )}
+ 
             
             <div className="holidays-list">
                 {loading ? (
@@ -150,23 +133,7 @@ const HolidayCalculator = () => {
                 ) : null}
             </div>
             
-            /* {bahreHasab && (
-                <div className="bahre-hasab-details">
-                    <h3>
-                        <i className="fas fa-calculator"></i> 
-                        ዝርዝር የባሕረ ሐሳብ ስሌት
-                    </h3>
-                    <div className="details-grid">
-                        {Object.entries(bahreHasab).map(([key, value]) => {
-                            if (typeof value === 'object' && value.full) {
-                                return (
-                                    <div key={key} className="detail-item">
-                                        {value.full}
-                                    </div>
-                                );
-                            }
-                            return null;
-                        })} */
+ 
                     </div>
                 </div>
             )}
