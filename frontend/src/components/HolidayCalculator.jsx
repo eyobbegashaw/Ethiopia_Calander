@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { toEthNum, ethiopianMonths } from '../utils/calendarUtils';
 import { calendarAPI } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
@@ -6,7 +6,7 @@ import './styles/HolidayCalculator.css';
 
 const HolidayCalculator = () => {
     const { currentUser, saveToHistory } = useAuth();
-    const [year, setYear] = useState(2018); // ነባሪ 2018 ዓ.ም
+    const [year, setYear] = useState(2018); // Default 2018 ዓ.ም
     const [holidays, setHolidays] = useState([]);
     const [bahreHasab, setBahreHasab] = useState(null);
     const [additionalInfo, setAdditionalInfo] = useState(null);
@@ -14,22 +14,29 @@ const HolidayCalculator = () => {
     const [error, setError] = useState(null);
 
     const calculateHolidays = async () => {
+        // Validate year input
+        const yearValue = parseInt(year);
+        if (isNaN(yearValue) || yearValue < 1900 || yearValue > 2100) {
+            setError('Please enter a valid year between 1900 and 2100');
+            return;
+        }
+
         setLoading(true);
         setError(null);
         try {
-            const response = await calendarAPI.getHolidaysByYear(year);
+            const response = await calendarAPI.getHolidaysByYear(yearValue);
             setHolidays(response.data.holidays || []);
             setAdditionalInfo(response.data.additionalInfo || null);
             setBahreHasab(response.data.bahreHasab || null);
 
             if (currentUser) {
-                await saveToHistory('holiday_calculation', `Calculated holidays for Ethiopian year ${year}`, {
-                    year
+                await saveToHistory('holiday_calculation', `Calculated holidays for Ethiopian year ${yearValue}`, {
+                    year: yearValue
                 });
             }
         } catch (err) {
             console.error('Error calculating holidays:', err);
-            setError('Failed to calculate holidays');
+            setError(err.response?.data?.message || 'Failed to calculate holidays');
             setHolidays([]);
             setAdditionalInfo(null);
             setBahreHasab(null);
@@ -38,17 +45,28 @@ const HolidayCalculator = () => {
         }
     };
 
+    const handleYearChange = (e) => {
+        const value = e.target.value;
+        // Allow empty string or valid numbers
+        if (value === '' || /^\d+$/.test(value)) {
+            setYear(value);
+        }
+    };
+
     const formatHolidayDate = (holiday) => {
         if (holiday.formattedDate) {
             return holiday.formattedDate;
         } else if (holiday.date) {
-            return `${ethiopianMonths[holiday.date.month - 1]} ${toEthNum(holiday.date.day)}, ${toEthNum(year)}`;
+            const yearNum = parseInt(year);
+            if (!isNaN(yearNum)) {
+                return `${ethiopianMonths[holiday.date.month - 1]} ${toEthNum(holiday.date.day)}, ${toEthNum(yearNum)}`;
+            }
         }
         return '';
     };
 
-    // በዓላትን በወር መሠረት መድብ
-    const groupHolidaysByMonth = () => {
+    // Group holidays by month with useMemo to prevent unnecessary recalculations
+    const groupedHolidays = useMemo(() => {
         const groups = {};
         holidays.forEach(holiday => {
             const monthIndex = holiday.date?.month || 1;
@@ -59,9 +77,11 @@ const HolidayCalculator = () => {
             groups[monthName].push(holiday);
         });
         return groups;
-    };
+    }, [holidays]);
 
-    const groupedHolidays = groupHolidaysByMonth();
+    const handleCalculateClick = useCallback(() => {
+        calculateHolidays();
+    }, [year]);
 
     return (
         <section className="card" id="holidays">
@@ -75,13 +95,13 @@ const HolidayCalculator = () => {
                 <input 
                     type="number" 
                     value={year}
-                    onChange={(e) => setYear(parseInt(e.target.value))}
+                    onChange={handleYearChange}
                     placeholder="Enter Ethiopian Year (e.g., 2018)" 
                     min="1900" 
                     max="2100" 
                     disabled={loading}
                 />
-                <button onClick={calculateHolidays} disabled={loading}>
+                <button onClick={handleCalculateClick} disabled={loading}>
                     <i className={`fas ${loading ? 'fa-spinner fa-spin' : 'fa-search'}`}></i> 
                     {loading ? 'በማስላት ላይ...' : 'አስላ'}
                 </button>
@@ -93,7 +113,26 @@ const HolidayCalculator = () => {
                 </div>
             )}
             
- 
+            {/* Additional Info Section */}
+            {additionalInfo && (
+                <div className="additional-info">
+                    <h3>ተጨማሪ መረጃ - Additional Information</h3>
+                    <div className="info-grid">
+                        <div className="info-item">
+                            <span className="info-label">መስከረም 1:</span>
+                            <span className="info-value">{additionalInfo.meskerem1.formatted}</span>
+                        </div>
+                        <div className="info-item">
+                            <span className="info-label">መጥቅዕ:</span>
+                            <span className="info-value">{additionalInfo.metke?.formatted || ''}</span>
+                        </div>
+                        <div className="info-item">
+                            <span className="info-label">መባጃ ሐመር:</span>
+                            <span className="info-value">{additionalInfo.mebajaHamer.formatted}</span>
+                        </div>
+                    </div>
+                </div>
+            )}
             
             <div className="holidays-list">
                 {loading ? (
@@ -106,14 +145,14 @@ const HolidayCalculator = () => {
                             <h3 className="month-title">{monthName}</h3>
                             <div className="month-holidays">
                                 {monthHolidays.map((holiday, index) => (
-                                    <div key={holiday._id || index} className="holiday-item">
+                                    <div key={holiday._id || `${monthName}-${index}`} className="holiday-item">
                                         <div className="holiday-name">
                                             {holiday.nameAmharic || holiday.name}
                                             {holiday.type === 'movable' && (
-                                                <span className="holiday-badge movable"></span>
+                                                <span className="holiday-badge movable">ተንቀሳቃሽ</span>
                                             )}
                                             {holiday.type === 'fixed' && (
-                                                <span className="holiday-badge fixed"></span>
+                                                <span className="holiday-badge fixed">ቋሚ</span>
                                             )}
                                         </div>
                                         <div className="holiday-date">{formatHolidayDate(holiday)}</div>
@@ -132,11 +171,6 @@ const HolidayCalculator = () => {
                     </div>
                 ) : null}
             </div>
-            
- 
-                    </div>
-                </div>
-            )}
         </section>
     );
 };
