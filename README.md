@@ -165,13 +165,6 @@ Daily saints and commemorations including:
 - **Nginx** - Reverse proxy (production)
 
 ---
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
 ## 🙏 Acknowledgments
 
 - **Ethiopian Orthodox Tewahedo Church** - For the rich spiritual heritage
@@ -185,21 +178,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
 
-[![Email](https://img.shields.io/badge/Email-info%40ethiopiancalendar.com-blue?style=for-the-badge&logo=gmail)](mailto:info@ethiopiancalendar.com)
-[![Website](https://img.shields.io/badge/Website-ethiopiancalendar.com-green?style=for-the-badge&logo=google-chrome)](https://ethiopiancalendar.com)
-[![GitHub](https://img.shields.io/badge/GitHub-ethiopian--calendar-black?style=for-the-badge&logo=github)](https://github.com/yourusername/ethiopia-calendar)
+ 
+[![Website](https://img.shields.io/badge/eyobbegashaw.vercel.app-green?style=for-the-badge&logo=google-chrome)](https://eyobbegashaw.vercel.app)
+[![GitHub](https://img.shields.io/badge/GitHub-ethiopian--calendar-black?style=for-the-badge&logo=github)](https://github.com/eyobbegashaw/Ethiopia-Calendar)
 
 </div>
-
-### 🆘 Need Help?
-
-- 📚 Check the [Documentation](#documentation)
-- 🐛 Report bugs via [GitHub Issues](https://github.com/yourusername/ethiopia-calendar/issues)
-- 💬 Join our [Community Chat](http://localhost:5173)
-- 📧 Email: info@ethiopiancalendar.com
-
 ---
-
 ## 🎉 Show Your Support
 
 If you find this project useful, please consider:
@@ -223,30 +207,12 @@ If you find this project useful, please consider:
 
 ## 📊 Project Status
 
-![Build Status](https://img.shields.io/github/actions/workflow/status/yourusername/ethiopia-calendar/ci.yml?branch=main)
-![Coverage](https://img.shields.io/codecov/c/github/yourusername/ethiopia-calendar)
-![Downloads](https://img.shields.io/npm/dt/ethiopian-calendar)
-![Stars](https://img.shields.io/github/stars/yourusername/ethiopia-calendar?style=social)
+![Build Status](https://img.shields.io/github/actions/workflow/status/eyobbegashaw/Ethiopia-Calendar/ci.yml?branch=main)
+![Coverage](https://img.shields.io/codecov/c/github/eyobbegashaw/Ethiopia-Calendar)
+![Downloads](https://img.shields.io/npm/dt/Ethiopian-Calendar)
+![Stars](https://img.shields.io/github/stars/eyobbegashaw/Ethiopia-Calendar?style=social)
 
 ---
-
-## 🚦 Roadmap
-
-- [x] Ethiopian Calendar conversion
-- [x] Synaxarium (Saints) database
-- [x] Daily readings (ግጻዊ)
-- [x] Quiz system with Gemini AI
-- [x] Community chat with groups
-- [x] Google OAuth integration
-- [ ] Mobile app (React Native)
-- [ ] Push notifications
-- [ ] Video streaming for liturgy
-- [ ] Multiple language support (Tigrinya, Oromo)
-- [ ] Offline mode
-- [ ] Prayer times calculator
-
----
-
 <div align="center">
 
 **Thank you for using ኢትዮጵያ ቀን መቁጠሪያ!** 🙏
