@@ -76,7 +76,7 @@
 }
 
 body {
-  font-family: 'Inter', 'Noto Sans Ethiopic', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Noto Sans Ethiopic', sans-serif;
   background: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.6;
