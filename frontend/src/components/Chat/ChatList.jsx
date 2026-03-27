@@ -67,20 +67,25 @@ const ChatList = ({ onSelectGroup, onSelectPrivateChat, activeChat, activePrivat
         }
     };
 
-    const handleJoinGroupPreview = (group) => {
-        // Don't show preview if already a member
+    // Handle group click - if member, go directly to chat, else show preview
+    const handleGroupClick = (group) => {
         if (group.isMember) {
+            // Already a member - go directly to chat
             onSelectGroup(group);
-            return;
-        }
-        setShowJoinPreview(group);
-        if (window.innerWidth <= 768) {
-            onCloseSidebar();
+            if (window.innerWidth <= 768) {
+                onCloseSidebar();
+            }
+        } else {
+            // Not a member - show join preview
+            setShowJoinPreview(group);
+            if (window.innerWidth <= 768) {
+                onCloseSidebar();
+            }
         }
     };
 
     const handleJoinGroup = async (groupId) => {
-        if (joiningGroupId) return; // Prevent multiple join attempts
+        if (joiningGroupId) return;
         
         setJoiningGroupId(groupId);
         try {
@@ -104,12 +109,12 @@ const ChatList = ({ onSelectGroup, onSelectPrivateChat, activeChat, activePrivat
             const errorMessage = err.response?.data?.message || 'Failed to join group';
             
             if (errorMessage === 'Already a member') {
-                // If already a member, just open the group
+                // If already a member, reload groups and open the group
+                await loadGroups();
                 const group = groups.find(g => g._id === groupId);
                 if (group) {
                     setShowJoinPreview(null);
                     onSelectGroup(group);
-                    alert('You are already a member of this group.');
                 }
             } else {
                 alert(errorMessage);
@@ -138,6 +143,10 @@ const ChatList = ({ onSelectGroup, onSelectPrivateChat, activeChat, activePrivat
         }
         return true;
     });
+
+    // Separate groups into "My Groups" and "Other Groups"
+    const myGroups = filteredGroups.filter(group => group.isMember);
+    const otherGroups = filteredGroups.filter(group => !group.isMember && !group.pendingRequest);
 
     return (
         <>
@@ -226,26 +235,18 @@ const ChatList = ({ onSelectGroup, onSelectPrivateChat, activeChat, activePrivat
                     </div>
                 )}
 
-                {/* Groups Section */}
-                <div className="groups-section">
-                    <h3 className="section-header">
-                        <i className="fas fa-users"></i> Groups
-                    </h3>
-                    
-                    {loading ? (
-                        <div className="chat-loading">
-                            <i className="fas fa-spinner fa-spin"></i> Loading groups...
-                        </div>
-                    ) : error ? (
-                        <div className="chat-error">
-                            <i className="fas fa-exclamation-circle"></i> {error}
-                        </div>
-                    ) : (
+                {/* My Groups Section - Direct access for members */}
+                {myGroups.length > 0 && (filter === 'all' || filter === 'my') && (
+                    <div className="groups-section">
+                        <h3 className="section-header">
+                            <i className="fas fa-star"></i> Your Communities
+                        </h3>
                         <div className="groups-list">
-                            {filteredGroups.map(group => (
+                            {myGroups.map(group => (
                                 <div 
                                     key={group._id} 
-                                    className={`group-item ${activeChat?._id === group._id ? 'active' : ''}`}
+                                    className={`group-item member-group ${activeChat?._id === group._id ? 'active' : ''}`}
+                                    onClick={() => handleGroupClick(group)}
                                 >
                                     <div className="group-avatar">
                                         {group.avatar ? (
@@ -262,8 +263,61 @@ const ChatList = ({ onSelectGroup, onSelectPrivateChat, activeChat, activePrivat
                                             {group.settings?.isPrivate && (
                                                 <i className="fas fa-lock private-icon" title="Private Group"></i>
                                             )}
-                                            {group.isMember && (
-                                                <span className="member-badge">Member</span>
+                                            <span className="member-badge">
+                                                <i className="fas fa-check-circle"></i> Member
+                                            </span>
+                                        </div>
+                                        <p className="group-description">{group.description}</p>
+                                        <div className="group-meta">
+                                            <span><i className="fas fa-users"></i> {group.memberCount}</span>
+                                            <span><i className="fas fa-comment"></i> {group.messageCount || 0}</span>
+                                            {group.unreadCount > 0 && (
+                                                <span className="unread-indicator">
+                                                    <i className="fas fa-circle"></i> {group.unreadCount} unread
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="group-actions">
+                                        <button 
+                                            className="chat-btn"
+                                            onClick={() => handleGroupClick(group)}
+                                        >
+                                            <i className="fas fa-comments"></i> Open Chat
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Other Groups Section - Need to join */}
+                {otherGroups.length > 0 && (filter === 'all' || filter === 'public') && (
+                    <div className="groups-section">
+                        <h3 className="section-header">
+                            <i className="fas fa-globe"></i> Discover Communities
+                        </h3>
+                        <div className="groups-list">
+                            {otherGroups.map(group => (
+                                <div 
+                                    key={group._id} 
+                                    className={`group-item discover-group`}
+                                >
+                                    <div className="group-avatar">
+                                        {group.avatar ? (
+                                            <img src={group.avatar} alt={group.name} />
+                                        ) : (
+                                            <div className="avatar-placeholder">
+                                                {group.name.charAt(0).toUpperCase()}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="group-info">
+                                        <div className="group-name-row">
+                                            <h4>{group.name}</h4>
+                                            {group.settings?.isPrivate && (
+                                                <i className="fas fa-lock private-icon" title="Private Group"></i>
                                             )}
                                         </div>
                                         <p className="group-description">{group.description}</p>
@@ -273,51 +327,56 @@ const ChatList = ({ onSelectGroup, onSelectPrivateChat, activeChat, activePrivat
                                         </div>
                                     </div>
                                     <div className="group-actions">
-                                        {group.isMember ? (
-                                            <button 
-                                                className="chat-btn"
-                                                onClick={() => onSelectGroup(group)}
-                                            >
-                                                <i className="fas fa-comments"></i> Chat
-                                            </button>
-                                        ) : group.pendingRequest ? (
-                                            <button className="pending-btn" disabled>
-                                                <i className="fas fa-clock"></i> Pending
-                                            </button>
-                                        ) : (
-                                            <button 
-                                                className="join-btn"
-                                                onClick={() => handleJoinGroupPreview(group)}
-                                                disabled={joiningGroupId === group._id}
-                                            >
-                                                {joiningGroupId === group._id ? (
-                                                    <><i className="fas fa-spinner fa-spin"></i> Joining...</>
-                                                ) : (
-                                                    <><i className="fas fa-sign-in-alt"></i> Join</>
-                                                )}
-                                            </button>
-                                        )}
+                                        <button 
+                                            className="join-btn"
+                                            onClick={() => handleGroupClick(group)}
+                                            disabled={joiningGroupId === group._id}
+                                        >
+                                            {joiningGroupId === group._id ? (
+                                                <><i className="fas fa-spinner fa-spin"></i> Joining...</>
+                                            ) : (
+                                                <><i className="fas fa-sign-in-alt"></i> Join</>
+                                            )}
+                                        </button>
                                     </div>
                                 </div>
                             ))}
-
-                            {filteredGroups.length === 0 && (
-                                <div className="no-groups">
-                                    <i className="fas fa-comments"></i>
-                                    <p>No groups found</p>
-                                    {canCreateGroup && (
-                                        <button 
-                                            className="create-first-btn"
-                                            onClick={() => setShowCreateGroup(true)}
-                                        >
-                                            Create your first group
-                                        </button>
-                                    )}
-                                </div>
-                            )}
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
+
+                {/* Loading State */}
+                {loading && (
+                    <div className="chat-loading">
+                        <i className="fas fa-spinner fa-spin"></i> Loading groups...
+                    </div>
+                )}
+
+                {/* No Groups State */}
+                {!loading && filteredGroups.length === 0 && (
+                    <div className="no-groups">
+                        <i className="fas fa-comments"></i>
+                        <p>No groups found</p>
+                        {canCreateGroup && (
+                            <button 
+                                className="create-first-btn"
+                                onClick={() => setShowCreateGroup(true)}
+                            >
+                                Create your first group
+                            </button>
+                        )}
+                    </div>
+                )}
+
+                {/* Error State */}
+                {error && !loading && (
+                    <div className="chat-error">
+                        <i className="fas fa-exclamation-circle"></i> {error}
+                        <button onClick={loadGroups} className="retry-btn">
+                            Retry
+                        </button>
+                    </div>
+                )}
             </div>
 
             {showCreateGroup && (
