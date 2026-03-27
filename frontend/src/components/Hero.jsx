@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { gcToEth, ethiopianMonths, toEthNum, gregorianMonths, dayNames, englishDays } from '../utils/calendarUtils';
+import './styles/Hero.css';
 
-const Hero = () => {
+const Hero = ({ onQuizStart }) => {
     const [currentDate, setCurrentDate] = useState({
         ethiopian: '',
         gregorian: '',
@@ -51,19 +52,19 @@ const Hero = () => {
                 <div className="hero-description-wrapper">
                     <p className="hero-description">
                         <span className="description-amharic">
-                            የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን ቀን መቁጠሪያ፣ ስንክሳር፣ ግጻዌ ፣ በዓላትን እና መንፈሳዊ እውቀትን በዘመናዊ መንገድ ያቀርብልዎታል። ትክክለኛ የቀን መቀየሪያ፣ የቅዱሳን ታሪኮች፣ የዕለቱ ንባቦች እና መንፈሳዊ ፈተናዎችን ያገኛሉ።
+                            የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን ቀን መቁጠሪያ፣ ስንክሳር፣ ግጻዌ በዓላትን እና መንፈሳዊ እውቀትን በዘመናዊ መንገድ ያቀርብልዎታል። ትክክለኛ የቀን መቀየሪያ፣ የቅዱሳን ታሪኮች፣ የዕለቱ ንባቦች እና መንፈሳዊ ፈተናዎችን ያገኛሉ።
                         </span>
                         <br />
                         <span className="description-english">
-                            Your complete spiritual companion for Ethiopian Orthodox Tewahedo Church traditions. Access accurate calendar conversion, daily Synaxarium readings, liturgical schedules, holiday calculations, and deepen your faith through spiritual quizzes. Join our community to share and grow together in faith.
+                            Your complete spiritual companion for Ethiopian Orthodox Tewahedo Church traditions. Access accurate Ethiopian calendar conversion, daily Synaxarium readings (ስንክሳር), liturgical readings (ግጻዌ), holiday calculations (ባሕረ ሐሳብ), and deepen your faith through spiritual quizzes. Join our community to share and grow together in faith.
                         </span>
                     </p>
                     
-                    {/* CTA Button */}
+                    {/* CTA Buttons */}
                     <div className="hero-cta">
                         <Link to="/calendar" className="cta-button primary">
                             <i className="fas fa-calendar-alt"></i>
-                            <span>Explore Tools</span>
+                            <span>Get Started</span>
                         </Link>
                         <Link to="/quiz" className="cta-button secondary">
                             <i className="fas fa-question-circle"></i>
