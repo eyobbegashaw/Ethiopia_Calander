@@ -46,11 +46,12 @@ function App() {
                             <Routes>
                                 <Route path="/oauth-redirect" element={<OAuthRedirect />} />
                                 <Route path="/login" element={<Navigate to="/" />} />
+                                
+                                {/* Home Route - Only Hero and Quiz Cards */}
                                 <Route path="/" element={
                                     <>
-                                        <Hero />    
+                                        <Hero />
                                         <div className="main-container">
-                                            {/* Quiz Cards Section */}
                                             <section id="quiz" className="quiz-cards-section">
                                                 <h2 className="section-title">
                                                     <i className="fas fa-question-circle"></i> 
@@ -117,18 +118,53 @@ function App() {
                                                     </div>
                                                 </div>
                                             </section>
-
-                                            {/* Main Components */}
-                                            <DateConverter />
-                                            <Calendar />
-                                            <Synaxarium />
-                                            <Gizae />
-                                            <HolidayCalculator />
-                                            <Gallery />
-                                            <Chat />
                                         </div>
                                     </>
                                 } />
+                                
+                                {/* Individual Page Routes */}
+                                <Route path="/converter" element={
+                                    <div className="main-container">
+                                        <DateConverter />
+                                    </div>
+                                } />
+                                
+                                <Route path="/calendar" element={
+                                    <div className="main-container">
+                                        <Calendar />
+                                    </div>
+                                } />
+                                
+                                <Route path="/synaxarium" element={
+                                    <div className="main-container">
+                                        <Synaxarium />
+                                    </div>
+                                } />
+                                
+                                <Route path="/gizae" element={
+                                    <div className="main-container">
+                                        <Gizae />
+                                    </div>
+                                } />
+                                
+                                <Route path="/holidays" element={
+                                    <div className="main-container">
+                                        <HolidayCalculator />
+                                    </div>
+                                } />
+                                
+                                <Route path="/gallery" element={
+                                    <div className="main-container">
+                                        <Gallery />
+                                    </div>
+                                } />
+                                
+                                <Route path="/chat" element={
+                                    <div className="main-container">
+                                        <Chat />
+                                    </div>
+                                } />
+                                
                                 <Route path="*" element={<Navigate to="/" replace />} />
                             </Routes>
                             <Footer />
