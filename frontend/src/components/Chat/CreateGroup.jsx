@@ -20,37 +20,52 @@ const CreateGroup = ({ onClose, onGroupCreated, remainingSlots }) => {
     const [loading, setLoading] = useState(false);
     const [avatar, setAvatar] = useState(null);
     const [avatarPreview, setAvatarPreview] = useState(null);
+    const [error, setError] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         
         if (remainingSlots <= 0) {
-            alert(`You can only create up to 3 groups. You have ${remainingSlots} slots remaining.`);
+            setError(`You can only create up to 3 groups. You have ${remainingSlots} slots remaining.`);
+            return;
+        }
+
+        if (!formData.name.trim()) {
+            setError('Group name is required');
             return;
         }
 
         setLoading(true);
+        setError('');
 
         try {
             const data = new FormData();
-            data.append('name', formData.name);
-            data.append('description', formData.description);
+            data.append('name', formData.name.trim());
+            data.append('description', formData.description.trim());
             data.append('category', formData.category);
-            data.append('tags', JSON.stringify(formData.tags.split(',').map(t => t.trim()).filter(t => t)));
+            
+            const tagsArray = formData.tags.split(',').map(t => t.trim()).filter(t => t);
+            data.append('tags', JSON.stringify(tagsArray));
             data.append('settings', JSON.stringify(formData.settings));
+            
             if (avatar) {
                 data.append('avatar', avatar);
             }
             
             const response = await chatAPI.createGroup(data);
             
-            // Auto-join happens on server side
-            alert('Group created successfully! You are now a member.');
-            onGroupCreated(response.data.group);
-            onClose();
+            // The server should automatically add the creator as a member
+            if (response.data.group) {
+                alert('Group created successfully! You are now a member.');
+                onGroupCreated(response.data.group);
+                onClose();
+            } else {
+                throw new Error('No group data received');
+            }
         } catch (err) {
             console.error('Error creating group:', err);
-            alert(err.response?.data?.message || 'Failed to create group');
+            const errorMessage = err.response?.data?.message || err.message || 'Failed to create group';
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -59,6 +74,10 @@ const CreateGroup = ({ onClose, onGroupCreated, remainingSlots }) => {
     const handleAvatarChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            if (file.size > 5 * 1024 * 1024) {
+                setError('Avatar image must be less than 5MB');
+                return;
+            }
             setAvatar(file);
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -78,6 +97,13 @@ const CreateGroup = ({ onClose, onGroupCreated, remainingSlots }) => {
                     </button>
                 </div>
                 
+                {error && (
+                    <div className="error-message">
+                        <i className="fas fa-exclamation-circle"></i>
+                        <span>{error}</span>
+                    </div>
+                )}
+                
                 <div className="group-limit-warning">
                     <i className="fas fa-info-circle"></i>
                     <span>You can create up to 3 groups. {remainingSlots} slot{remainingSlots !== 1 ? 's' : ''} remaining.</span>
@@ -86,7 +112,7 @@ const CreateGroup = ({ onClose, onGroupCreated, remainingSlots }) => {
                 <form onSubmit={handleSubmit}>
                     {/* Avatar Upload */}
                     <div className="form-group avatar-upload">
-                        <label>Group Avatar</label>
+                        <label>Group Avatar (Optional)</label>
                         <div className="avatar-preview" onClick={() => document.getElementById('avatar-input').click()}>
                             {avatarPreview ? (
                                 <img src={avatarPreview} alt="Group avatar" />
