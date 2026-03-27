@@ -1,9 +1,13 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './styles/Footer.css';
 
 const Footer = () => {
+    const currentYear = new Date().getFullYear();
+    const ethiopianYear = currentYear - 8; // Approximate Ethiopian year offset
+
     return (
-        <footer id="about">
+        <footer>
             <div className="container">
                 <div className="footer-content">
                     <div className="footer-section">
@@ -14,24 +18,27 @@ const Footer = () => {
                     <div className="footer-section">
                         <h3>Quick Links</h3>
                         <ul>
-                            <li><a href="#home">Home</a></li>
-                            <li><a href="#today">Today's Date</a></li>
-                            <li><a href="#calendar">Calendar</a></li>
-                            <li><a href="#synaxarium">ስንክሳር</a></li>
-                            <li><a href="#gizae">ግጻዊ</a></li>
-                            <li><a href="#converter">Date Converter</a></li>
-                            <li><a href="#holidays">Holiday Calculator</a></li>
+                            <li><Link to="/">Home</Link></li>
+                            <li><Link to="/calendar">Calendar</Link></li>
+                            <li><Link to="/converter">Date Converter</Link></li>
+                            <li><Link to="/synaxarium">Synaxarium (ስንክሳር)</Link></li>
+                            <li><Link to="/gizae">Gizae (ግጻዊ)</Link></li>
+                            <li><Link to="/holidays">Holiday Calculator</Link></li>
+                            <li><Link to="/quiz">Spiritual Quiz</Link></li>
+                            <li><Link to="/chat">Community Chat</Link></li>
+                            <li><Link to="/gallery">Gallery</Link></li>
                         </ul>
                     </div>
                     <div className="footer-section">
-                        <h3>Contact</h3>
-                         
-                        <p> Developer:<a href="https://eyobbegashaw.vercel.app" target="_blank">ዲ/ን ኢዮብ በጋሻው</a></p>
-                        <p>ይህ ድህረ ገጽ የመጀመሪያ ስሪት ነው <strong>v1.0.0</strong> ።በሚቀጥለው ስሪት ይበትጥ ይሻሻላል።</p>
+                        <h3>Contact & Info</h3>
+                        <p>Developer: <a href="https://eyobbegashaw.vercel.app" target="_blank" rel="noopener noreferrer">ዲ/ን ኢዮብ በጋሻው</a></p>
+                        <p>ይህ ድህረ ገጽ የመጀመሪያ ስሪት ነው <strong>v1.0.0</strong> ። በሚቀጥለው ስሪት ይበትጥ ይሻሻላል።</p>
+                        <p>Follow us on social media for updates and spiritual content.</p>
                     </div>
                 </div>
                 <div className="footer-bottom">
-                    <p>&copy; 2018 እ.ኢ.አ. - ኢትዮጵያ ቀን መቁጠሪያ - All Rights Reserved</p>
+                    <p>&copy; {ethiopianYear} እ.ኢ.አ. - {currentYear} G.C. ኢትዮጵያ ቀን መቁጠሪያ - All Rights Reserved</p>
+                    <p className="footer-credit">Preserving Ethiopian Orthodox Heritage | የኢትዮጵያ ኦርቶዶክስ ቅርስ ጠባቂ</p>
                 </div>
             </div>
         </footer>
