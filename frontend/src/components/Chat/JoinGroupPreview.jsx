@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { chatAPI } from '../../services/api';
 import '../styles/Chat.css';
 
-const JoinGroupPreview = ({ group, onClose, onJoin }) => {
+const JoinGroupPreview = ({ group, onClose, onJoin, joining }) => {
     const [recentMessages, setRecentMessages] = useState([]);
     const [loading, setLoading] = useState(true);
     const messagesEndRef = React.useRef(null);
@@ -71,6 +71,11 @@ const JoinGroupPreview = ({ group, onClose, onJoin }) => {
                         <div className="loading-messages">
                             <i className="fas fa-spinner fa-spin"></i> Loading messages...
                         </div>
+                    ) : recentMessages.length === 0 ? (
+                        <div className="no-messages-preview">
+                            <i className="fas fa-comment-slash"></i>
+                            <p>No messages yet. Be the first to chat!</p>
+                        </div>
                     ) : (
                         <div className="messages-list">
                             {recentMessages.map(msg => (
@@ -100,8 +105,20 @@ const JoinGroupPreview = ({ group, onClose, onJoin }) => {
 
                 {/* Fixed Join Button */}
                 <div className="preview-footer">
-                    <button className="join-group-btn" onClick={onJoin}>
-                        <i className="fas fa-sign-in-alt"></i> Join Group
+                    <button 
+                        className={`join-group-btn ${joining ? 'joining' : ''}`} 
+                        onClick={onJoin}
+                        disabled={joining}
+                    >
+                        {joining ? (
+                            <>
+                                <i className="fas fa-spinner fa-spin"></i> Joining...
+                            </>
+                        ) : (
+                            <>
+                                <i className="fas fa-sign-in-alt"></i> Join Group
+                            </>
+                        )}
                     </button>
                 </div>
             </div>
