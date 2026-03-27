@@ -120,7 +120,7 @@ const Header = () => {
                             </div>
                         </li>
 
-                        {/* Tools Dropdown - Updated with Quiz link to /quiz page */}
+                        {/* Tools Dropdown */}
                         <li className={`nav-item dropdown ${activeDropdown === 'tools' ? 'active' : ''}`}>
                             <button 
                                 className="nav-link dropdown-toggle"
@@ -152,7 +152,6 @@ const Header = () => {
                                         <span className="dropdown-subtitle">የባሕረ ሀሳብ በዓላት</span>
                                     </div>
                                 </Link>
-                                {/* Quiz Link - Now points to /quiz page */}
                                 <Link to="/quiz" className="dropdown-item" onClick={closeMobileMenu}>
                                     <span className="dropdown-icon">❓</span>
                                     <div className="dropdown-content">
