@@ -51,7 +51,7 @@ const Hero = () => {
                 <div className="hero-description-wrapper">
                     <p className="hero-description">
                         <span className="description-amharic">
-                            የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን ቀን መቁጠሪያ፣ ስንክሳር፣ ግጻዌ በዓላትን እና መንፈሳዊ እውቀትን በዘመናዊ መንገድ ያቀርብልዎታል። ትክክለኛ የቀን መቀየሪያ፣ የቅዱሳን ታሪኮች፣ የዕለቱ ንባቦች እና መንፈሳዊ ፈተናዎችን ያገኛሉ።
+                            የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን ቀን መቁጠሪያ፣ ስንክሳር፣ ግጻዌ ፣ በዓላትን እና መንፈሳዊ እውቀትን በዘመናዊ መንገድ ያቀርብልዎታል። ትክክለኛ የቀን መቀየሪያ፣ የቅዱሳን ታሪኮች፣ የዕለቱ ንባቦች እና መንፈሳዊ ፈተናዎችን ያገኛሉ።
                         </span>
                         <br />
                         <span className="description-english">
