@@ -17,11 +17,14 @@ const ChatList = ({ onSelectGroup, onSelectPrivateChat, activeChat, activePrivat
     const [searchTerm, setSearchTerm] = useState('');
     const [canCreateGroup, setCanCreateGroup] = useState(true);
     const [groupCount, setGroupCount] = useState(0);
+    const [joiningGroupId, setJoiningGroupId] = useState(null);
 
     useEffect(() => {
         loadGroups();
         loadPrivateChats();
-        checkGroupCreationLimit();
+        if (currentUser) {
+            checkGroupCreationLimit();
+        }
     }, [currentUser]);
 
     const loadGroups = async () => {
@@ -29,7 +32,13 @@ const ChatList = ({ onSelectGroup, onSelectPrivateChat, activeChat, activePrivat
         setError(null);
         try {
             const response = await chatAPI.getGroups();
-            setGroups(response.data.groups);
+            // Process groups to add isMember flag
+            const processedGroups = response.data.groups.map(group => ({
+                ...group,
+                isMember: group.isMember || false,
+                pendingRequest: group.pendingRequest || false
+            }));
+            setGroups(processedGroups);
         } catch (err) {
             console.error('Error loading groups:', err);
             setError('Failed to load groups');
@@ -39,6 +48,7 @@ const ChatList = ({ onSelectGroup, onSelectPrivateChat, activeChat, activePrivat
     };
 
     const loadPrivateChats = async () => {
+        if (!currentUser) return;
         try {
             const response = await chatAPI.getPrivateChats();
             setPrivateChats(response.data.chats || []);
@@ -58,6 +68,11 @@ const ChatList = ({ onSelectGroup, onSelectPrivateChat, activeChat, activePrivat
     };
 
     const handleJoinGroupPreview = (group) => {
+        // Don't show preview if already a member
+        if (group.isMember) {
+            onSelectGroup(group);
+            return;
+        }
         setShowJoinPreview(group);
         if (window.innerWidth <= 768) {
             onCloseSidebar();
@@ -65,29 +80,53 @@ const ChatList = ({ onSelectGroup, onSelectPrivateChat, activeChat, activePrivat
     };
 
     const handleJoinGroup = async (groupId) => {
+        if (joiningGroupId) return; // Prevent multiple join attempts
+        
+        setJoiningGroupId(groupId);
         try {
             const response = await chatAPI.joinGroup(groupId);
+            
             if (response.data.pending) {
-                alert('Join request sent to admin!');
+                alert('Join request sent to admin! You will be notified when approved.');
                 setShowJoinPreview(null);
-                await loadGroups();
-            } else {
+                await loadGroups(); // Reload to update pending status
+            } else if (response.data.group) {
+                // Successfully joined
                 const joinedGroup = response.data.group;
-                await loadGroups();
+                await loadGroups(); // Reload groups to update membership status
                 setShowJoinPreview(null);
+                // Select the newly joined group
                 onSelectGroup(joinedGroup);
                 alert('Successfully joined the group!');
             }
         } catch (err) {
             console.error('Error joining group:', err);
-            alert(err.response?.data?.message || 'Failed to join group');
+            const errorMessage = err.response?.data?.message || 'Failed to join group';
+            
+            if (errorMessage === 'Already a member') {
+                // If already a member, just open the group
+                const group = groups.find(g => g._id === groupId);
+                if (group) {
+                    setShowJoinPreview(null);
+                    onSelectGroup(group);
+                    alert('You are already a member of this group.');
+                }
+            } else {
+                alert(errorMessage);
+            }
+        } finally {
+            setJoiningGroupId(null);
         }
     };
 
-    const handleCreateGroupSuccess = () => {
+    const handleCreateGroupSuccess = (newGroup) => {
         loadGroups();
         checkGroupCreationLimit();
         setShowCreateGroup(false);
+        // Auto-select the newly created group
+        if (newGroup) {
+            onSelectGroup(newGroup);
+        }
     };
 
     const filteredGroups = groups.filter(group => {
@@ -223,6 +262,9 @@ const ChatList = ({ onSelectGroup, onSelectPrivateChat, activeChat, activePrivat
                                             {group.settings?.isPrivate && (
                                                 <i className="fas fa-lock private-icon" title="Private Group"></i>
                                             )}
+                                            {group.isMember && (
+                                                <span className="member-badge">Member</span>
+                                            )}
                                         </div>
                                         <p className="group-description">{group.description}</p>
                                         <div className="group-meta">
@@ -236,18 +278,23 @@ const ChatList = ({ onSelectGroup, onSelectPrivateChat, activeChat, activePrivat
                                                 className="chat-btn"
                                                 onClick={() => onSelectGroup(group)}
                                             >
-                                                <i className="fas fa-comments"></i>
+                                                <i className="fas fa-comments"></i> Chat
                                             </button>
                                         ) : group.pendingRequest ? (
                                             <button className="pending-btn" disabled>
-                                                Pending
+                                                <i className="fas fa-clock"></i> Pending
                                             </button>
                                         ) : (
                                             <button 
                                                 className="join-btn"
                                                 onClick={() => handleJoinGroupPreview(group)}
+                                                disabled={joiningGroupId === group._id}
                                             >
-                                                <i className="fas fa-sign-in-alt"></i>
+                                                {joiningGroupId === group._id ? (
+                                                    <><i className="fas fa-spinner fa-spin"></i> Joining...</>
+                                                ) : (
+                                                    <><i className="fas fa-sign-in-alt"></i> Join</>
+                                                )}
                                             </button>
                                         )}
                                     </div>
@@ -258,13 +305,14 @@ const ChatList = ({ onSelectGroup, onSelectPrivateChat, activeChat, activePrivat
                                 <div className="no-groups">
                                     <i className="fas fa-comments"></i>
                                     <p>No groups found</p>
-                                    <button 
-                                        className="create-first-btn"
-                                        onClick={() => setShowCreateGroup(true)}
-                                        disabled={!canCreateGroup}
-                                    >
-                                        Create your first group
-                                    </button>
+                                    {canCreateGroup && (
+                                        <button 
+                                            className="create-first-btn"
+                                            onClick={() => setShowCreateGroup(true)}
+                                        >
+                                            Create your first group
+                                        </button>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -285,6 +333,7 @@ const ChatList = ({ onSelectGroup, onSelectPrivateChat, activeChat, activePrivat
                     group={showJoinPreview}
                     onClose={() => setShowJoinPreview(null)}
                     onJoin={() => handleJoinGroup(showJoinPreview._id)}
+                    joining={joiningGroupId === showJoinPreview._id}
                 />
             )}
         </>
