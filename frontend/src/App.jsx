@@ -165,6 +165,80 @@ function App() {
                                     </div>
                                 } />
                                 
+                                {/* Quiz Page Route */}
+                                <Route path="/quiz" element={
+                                    <div className="main-container">
+                                        <div className="quiz-page-wrapper">
+                                            <section className="quiz-cards-section">
+                                                <h2 className="section-title">
+                                                    <i className="fas fa-question-circle"></i> 
+                                                    Test Your Knowledge
+                                                </h2>
+                                                <p className="section-subtitle">Choose a quiz to test your understanding of Ethiopian Orthodox traditions</p>
+                                                
+                                                <div className="quiz-cards-grid">
+                                                    {/* Synaxarium Quiz Card */}
+                                                    <div className="quiz-card" onClick={() => handleQuizStart('synaxarium')}>
+                                                        <div className="quiz-card-icon">
+                                                            <i className="fas fa-church"></i>
+                                                        </div>
+                                                        <h3>Synaxarium Quiz</h3>
+                                                        <p>Test your knowledge of saints and their commemorations</p>
+                                                        <div className="quiz-card-meta">
+                                                            <span><i className="fas fa-question-circle"></i> 15 Questions</span>
+                                                            <span><i className="fas fa-clock"></i> 5 mins</span>
+                                                        </div>
+                                                        <div className="quiz-card-difficulty">
+                                                            <span className="difficulty-badge medium">Medium</span>
+                                                        </div>
+                                                        <button className="quiz-card-btn">
+                                                            Start Quiz <i className="fas fa-arrow-right"></i>
+                                                        </button>
+                                                    </div>
+
+                                                    {/* Gizae Quiz Card */}
+                                                    <div className="quiz-card" onClick={() => handleQuizStart('gizae')}>
+                                                        <div className="quiz-card-icon">
+                                                            <i className="fas fa-bible"></i>
+                                                        </div>
+                                                        <h3>Gizae Quiz</h3>
+                                                        <p>Test your knowledge of daily readings and scriptures</p>
+                                                        <div className="quiz-card-meta">
+                                                            <span><i className="fas fa-question-circle"></i> 15 Questions</span>
+                                                            <span><i className="fas fa-clock"></i> 5 mins</span>
+                                                        </div>
+                                                        <div className="quiz-card-difficulty">
+                                                            <span className="difficulty-badge easy">Easy</span>
+                                                        </div>
+                                                        <button className="quiz-card-btn">
+                                                            Start Quiz <i className="fas fa-arrow-right"></i>
+                                                        </button>
+                                                    </div>
+
+                                                    {/* Holidays Quiz Card */}
+                                                    <div className="quiz-card" onClick={() => handleQuizStart('holidays')}>
+                                                        <div className="quiz-card-icon">
+                                                            <i className="fas fa-calendar-alt"></i>
+                                                        </div>
+                                                        <h3>Holidays Quiz</h3>
+                                                        <p>Test your knowledge of Ethiopian Orthodox holidays</p>
+                                                        <div className="quiz-card-meta">
+                                                            <span><i className="fas fa-question-circle"></i> 15 Questions</span>
+                                                            <span><i className="fas fa-clock"></i> 5 mins</span>
+                                                        </div>
+                                                        <div className="quiz-card-difficulty">
+                                                            <span className="difficulty-badge hard">Hard</span>
+                                                        </div>
+                                                        <button className="quiz-card-btn">
+                                                            Start Quiz <i className="fas fa-arrow-right"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </div>
+                                } />
+                                
                                 <Route path="*" element={<Navigate to="/" replace />} />
                             </Routes>
                             <Footer />
