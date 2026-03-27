@@ -47,10 +47,10 @@ function App() {
                                 <Route path="/oauth-redirect" element={<OAuthRedirect />} />
                                 <Route path="/login" element={<Navigate to="/" />} />
                                 
-                                {/* Home Route - Only Hero and Quiz Cards */}
+                                {/* Home Route */}
                                 <Route path="/" element={
                                     <>
-                                        <Hero />
+                                        <Hero onQuizStart={handleQuizStart} />
                                         <div className="main-container">
                                             <section id="quiz" className="quiz-cards-section">
                                                 <h2 className="section-title">
@@ -165,7 +165,6 @@ function App() {
                                     </div>
                                 } />
                                 
-                                {/* Quiz Page Route */}
                                 <Route path="/quiz" element={
                                     <div className="main-container">
                                         <div className="quiz-page-wrapper">
@@ -247,7 +246,10 @@ function App() {
                             {activeQuiz && selectedQuizCategory && (
                                 <Quiz 
                                     category={selectedQuizCategory}
-                                    onClose={handleQuizClose}
+                                    onClose={() => {
+                                        setActiveQuiz(false);
+                                        setSelectedQuizCategory(null);
+                                    }}
                                 />
                             )}
                         </div>
