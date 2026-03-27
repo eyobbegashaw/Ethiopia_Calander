@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { chatAPI } from '../../services/api';
+import { useAuth } from '../../contexts/AuthContext';
 import '../styles/Chat.css';
 
-const CreateGroup = ({ onClose, onGroupCreated }) => {
+const CreateGroup = ({ onClose, onGroupCreated, remainingSlots }) => {
+    const { currentUser } = useAuth();
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -16,33 +18,94 @@ const CreateGroup = ({ onClose, onGroupCreated }) => {
         }
     });
     const [loading, setLoading] = useState(false);
+    const [avatar, setAvatar] = useState(null);
+    const [avatarPreview, setAvatarPreview] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        if (remainingSlots <= 0) {
+            alert(`You can only create up to 3 groups. You have ${remainingSlots} slots remaining.`);
+            return;
+        }
+
         setLoading(true);
 
         try {
-            const data = {
-                ...formData,
-                tags: formData.tags.split(',').map(t => t.trim()).filter(t => t)
-            };
+            const data = new FormData();
+            data.append('name', formData.name);
+            data.append('description', formData.description);
+            data.append('category', formData.category);
+            data.append('tags', JSON.stringify(formData.tags.split(',').map(t => t.trim()).filter(t => t)));
+            data.append('settings', JSON.stringify(formData.settings));
+            if (avatar) {
+                data.append('avatar', avatar);
+            }
             
-            await chatAPI.createGroup(data);
-            onGroupCreated();
+            const response = await chatAPI.createGroup(data);
+            
+            // Auto-join happens on server side
+            alert('Group created successfully! You are now a member.');
+            onGroupCreated(response.data.group);
             onClose();
         } catch (err) {
             console.error('Error creating group:', err);
-            alert('Failed to create group');
+            alert(err.response?.data?.message || 'Failed to create group');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleAvatarChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setAvatar(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setAvatarPreview(reader.result);
+            };
+            reader.readAsDataURL(file);
         }
     };
 
     return (
         <div className="create-group-modal" onClick={onClose}>
             <div className="modal-content" onClick={e => e.stopPropagation()}>
-                <h2>Create New Group</h2>
+                <div className="modal-header">
+                    <h2>Create New Group</h2>
+                    <button className="close-modal" onClick={onClose}>
+                        <i className="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div className="group-limit-warning">
+                    <i className="fas fa-info-circle"></i>
+                    <span>You can create up to 3 groups. {remainingSlots} slot{remainingSlots !== 1 ? 's' : ''} remaining.</span>
+                </div>
+
                 <form onSubmit={handleSubmit}>
+                    {/* Avatar Upload */}
+                    <div className="form-group avatar-upload">
+                        <label>Group Avatar</label>
+                        <div className="avatar-preview" onClick={() => document.getElementById('avatar-input').click()}>
+                            {avatarPreview ? (
+                                <img src={avatarPreview} alt="Group avatar" />
+                            ) : (
+                                <div className="avatar-placeholder">
+                                    <i className="fas fa-camera"></i>
+                                    <span>Upload</span>
+                                </div>
+                            )}
+                        </div>
+                        <input
+                            id="avatar-input"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleAvatarChange}
+                            style={{ display: 'none' }}
+                        />
+                    </div>
+
                     <div className="form-group">
                         <label>Group Name *</label>
                         <input
@@ -51,6 +114,7 @@ const CreateGroup = ({ onClose, onGroupCreated }) => {
                             onChange={e => setFormData({...formData, name: e.target.value})}
                             required
                             placeholder="Enter group name"
+                            maxLength="50"
                         />
                     </div>
 
@@ -61,6 +125,7 @@ const CreateGroup = ({ onClose, onGroupCreated }) => {
                             onChange={e => setFormData({...formData, description: e.target.value})}
                             placeholder="Describe the purpose of your group"
                             rows="3"
+                            maxLength="200"
                         />
                     </div>
 
@@ -89,7 +154,7 @@ const CreateGroup = ({ onClose, onGroupCreated }) => {
                     </div>
 
                     <div className="form-group">
-                        <label>
+                        <label className="checkbox-label">
                             <input
                                 type="checkbox"
                                 checked={formData.settings.isPrivate}
@@ -101,29 +166,31 @@ const CreateGroup = ({ onClose, onGroupCreated }) => {
                                     }
                                 })}
                             />
-                            Private Group (requires approval to join)
+                            Private Group (members need approval to join)
                         </label>
                     </div>
 
-                    <div className="form-group">
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={formData.settings.requireApproval}
-                                onChange={e => setFormData({
-                                    ...formData,
-                                    settings: {
-                                        ...formData.settings,
-                                        requireApproval: e.target.checked
-                                    }
-                                })}
-                            />
-                            Require admin approval for new members
-                        </label>
-                    </div>
+                    {formData.settings.isPrivate && (
+                        <div className="form-group">
+                            <label className="checkbox-label">
+                                <input
+                                    type="checkbox"
+                                    checked={formData.settings.requireApproval}
+                                    onChange={e => setFormData({
+                                        ...formData,
+                                        settings: {
+                                            ...formData.settings,
+                                            requireApproval: e.target.checked
+                                        }
+                                    })}
+                                />
+                                Require admin approval for new members
+                            </label>
+                        </div>
+                    )}
 
                     <div className="form-group">
-                        <label>
+                        <label className="checkbox-label">
                             <input
                                 type="checkbox"
                                 checked={formData.settings.allowMemberPolls}
@@ -140,7 +207,7 @@ const CreateGroup = ({ onClose, onGroupCreated }) => {
                     </div>
 
                     <div className="form-group">
-                        <label>
+                        <label className="checkbox-label">
                             <input
                                 type="checkbox"
                                 checked={formData.settings.allowMemberQuizzes}
@@ -157,8 +224,12 @@ const CreateGroup = ({ onClose, onGroupCreated }) => {
                     </div>
 
                     <div className="modal-actions">
-                        <button type="submit" disabled={loading}>
-                            {loading ? 'Creating...' : 'Create Group'}
+                        <button type="submit" disabled={loading || remainingSlots <= 0}>
+                            {loading ? (
+                                <><i className="fas fa-spinner fa-spin"></i> Creating...</>
+                            ) : (
+                                <><i className="fas fa-plus-circle"></i> Create Group</>
+                            )}
                         </button>
                         <button type="button" onClick={onClose}>
                             Cancel
