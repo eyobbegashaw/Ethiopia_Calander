@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+
+
 const QuizAttemptSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
