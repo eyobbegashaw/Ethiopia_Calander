@@ -21,7 +21,7 @@ const createGroup = async (req, res) => {
             tags,
             lastActivity: new Date()
         });
-        
+
         await group.save();
         
         // Create chat for group
