@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
     try {
+
+        
         // አዲሱ የ Mongoose ቨርዥን URI ብቻ ነው የሚፈልገው
         const conn = await mongoose.connect(process.env.MONGODB_URI);
         
