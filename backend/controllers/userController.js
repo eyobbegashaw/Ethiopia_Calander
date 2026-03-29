@@ -18,7 +18,7 @@ const getUsers = async (req, res) => {
                 { email: { $regex: search, $options: 'i' } }
             ];
         }
-        
+
         if (role) {
             query.role = role;
         }
