@@ -11,7 +11,7 @@ const getHistory = async (req, res) => {
         
         if (type) {
             query.type = type;
-        }
+        }    
         
         if (startDate || endDate) {
             query.timestamp = {};
