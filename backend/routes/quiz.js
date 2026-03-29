@@ -16,4 +16,6 @@ router.post('/generate', protect, generateQuiz);
 router.post('/submit', protect, submitQuizAttempt);
 router.get('/history', protect, getQuizHistory);
 
+
+
 module.exports = router;
