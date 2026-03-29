@@ -9,6 +9,8 @@ class BahreHasab {
         this.weekdayNames = ["ሰኞ", "ማክሰኞ", "ረቡዕ", "ሐሙስ", "ዓርብ", "ቅዳሜ", "እሁድ"];
     }
 
+
+    
     // 1. መስከረም 1 ቀን የሳምንቱን ስንተኛ ቀን እንደሆነ ማወቅ (0=ሰኞ ... 6=እሁድ)
     getMeskerem1Weekday() {
         // Correct formula: (AmeteAlem + floor(AmeteAlem / 4)) % 7
