@@ -16,6 +16,7 @@ const {
 } = require('../controllers/authController');
 const { protect, rateLimit } = require('../middleware/auth');
 
+
 // Rate limiting for auth routes
 const authLimiter = rateLimit(5, 15 * 60 * 1000); // 5 attempts per 15 minutes
 
