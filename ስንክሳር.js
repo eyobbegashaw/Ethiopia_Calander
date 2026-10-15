@@ -1,5 +1,3 @@
-// ስንክሳር.js - Orthodox Synaxarium functionality
-
 // Sample Saints Data for Synaxarium
 const saintsData = {
     "1-1": [

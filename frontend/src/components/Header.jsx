@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
-import { useAuth } from '../contexts/AuthContext';
 import './styles/Header.css';
 
 const Header = () => {
     const { isDarkMode, toggleTheme } = useTheme();
-    const { currentUser, setShowAuthModal } = useAuth();
     const [scrolled, setScrolled] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState(null);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [moreMenuOpen, setMoreMenuOpen] = useState(false);
+    const [installPrompt, setInstallPrompt] = useState(null);
+    const [isIOS] = useState(() => /iphone|ipad|ipod/i.test(window.navigator.userAgent) && !window.MSStream);
+    const [isInstalled, setIsInstalled] = useState(() => (
+        window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone
+    ));
+    const [showIOSInstallHelp, setShowIOSInstallHelp] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -40,6 +45,24 @@ const Header = () => {
         }
     }, [isDarkMode]);
 
+    useEffect(() => {
+        const handleInstallPrompt = (event) => {
+            event.preventDefault();
+            setInstallPrompt(event);
+        };
+        const handleInstalled = () => {
+            setIsInstalled(true);
+            setInstallPrompt(null);
+        };
+
+        window.addEventListener('beforeinstallprompt', handleInstallPrompt);
+        window.addEventListener('appinstalled', handleInstalled);
+        return () => {
+            window.removeEventListener('beforeinstallprompt', handleInstallPrompt);
+            window.removeEventListener('appinstalled', handleInstalled);
+        };
+    }, []);
+
     const toggleDropdown = (dropdown) => {
         setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
     };
@@ -49,8 +72,20 @@ const Header = () => {
         setActiveDropdown(null);
     };
 
+    const installApp = async () => {
+        setMoreMenuOpen(false);
+        if (!installPrompt) {
+            setShowIOSInstallHelp(true);
+            return;
+        }
+
+        await installPrompt.prompt();
+        const { outcome } = await installPrompt.userChoice;
+        if (outcome === 'accepted') setInstallPrompt(null);
+    };
+
     return (
-        <header className={`header ${scrolled ? 'scrolled' : ''}`}>
+        <header className={`header ${scrolled ? 'scrolled' : ''} ${isDarkMode ? '' : 'light-mode'}`}>
             <div className="header-container">
                 {/* Logo */}
                 <div className="logo-wrapper">
@@ -110,13 +145,6 @@ const Header = () => {
                                         <span className="dropdown-subtitle">ግጻዊ</span>
                                     </div>
                                 </Link>
-                                <Link to="/gallery" className="dropdown-item" onClick={closeMobileMenu}>
-                                    <span className="dropdown-icon">🖼️</span>
-                                    <div className="dropdown-content">
-                                        <span className="dropdown-title">Gallery</span>
-                                        <span className="dropdown-subtitle">ምስሎች</span>
-                                    </div>
-                                </Link>
                             </div>
                         </li>
 
@@ -152,23 +180,9 @@ const Header = () => {
                                         <span className="dropdown-subtitle">የባሕረ ሀሳብ በዓላት</span>
                                     </div>
                                 </Link>
-                                <Link to="/quiz" className="dropdown-item" onClick={closeMobileMenu}>
-                                    <span className="dropdown-icon">❓</span>
-                                    <div className="dropdown-content">
-                                        <span className="dropdown-title">Quiz</span>
-                                        <span className="dropdown-subtitle">ፈተና</span>
-                                    </div>
-                                </Link>
                             </div>
                         </li>
 
-                        {/* Community Link */}
-                        <li className="nav-item">
-                            <Link to="/chat" className="nav-link" onClick={closeMobileMenu}>
-                                <i className="fas fa-users"></i>
-                                <span>Community</span>
-                            </Link>
-                        </li>
                     </ul>
 
                     {/* Mobile User Controls */}
@@ -176,16 +190,6 @@ const Header = () => {
                         <button className="theme-toggle-mobile" onClick={toggleTheme}>
                             <i className={`fas fa-${isDarkMode ? 'sun' : 'moon'}`}></i>
                             <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
-                        </button>
-                        <button 
-                            className="auth-toggle-mobile"
-                            onClick={() => {
-                                currentUser ? document.getElementById('user-panel')?.classList.toggle('active') : setShowAuthModal(true);
-                                closeMobileMenu();
-                            }}
-                        >
-                            <i className="fas fa-user-circle"></i>
-                            <span>{currentUser ? 'Profile' : 'Sign In'}</span>
                         </button>
                     </div>
                 </nav>
@@ -195,19 +199,43 @@ const Header = () => {
                     <button className="theme-toggle" onClick={toggleTheme} title={isDarkMode ? 'Light Mode' : 'Dark Mode'}>
                         <i className={`fas fa-${isDarkMode ? 'sun' : 'moon'}`}></i>
                     </button>
-                    <div 
-                        className="user-avatar" 
-                        onClick={() => currentUser ? document.getElementById('user-panel')?.classList.toggle('active') : setShowAuthModal(true)}
-                        title={currentUser ? 'User Profile' : 'Sign In'}
-                    >
-                        {currentUser?.avatar ? (
-                            <img src={currentUser.avatar} alt={currentUser.username} />
-                        ) : (
-                            <i className="fas fa-user"></i>
-                        )}
-                    </div>
                 </div>
             </div>
+            <nav className="mobile-bottom-nav" aria-label="Mobile navigation">
+                <NavLink to="/" end className={({ isActive }) => `mobile-nav-link${isActive ? ' active' : ''}`} onClick={() => setMoreMenuOpen(false)}>
+                    <i className="fas fa-home" aria-hidden="true" /><span>Home</span>
+                </NavLink>
+                <NavLink to="/calendar" className={({ isActive }) => `mobile-nav-link${isActive ? ' active' : ''}`} onClick={() => setMoreMenuOpen(false)}>
+                    <i className="fas fa-calendar-alt" aria-hidden="true" /><span>Calendar</span>
+                </NavLink>
+                <NavLink to="/converter" className={({ isActive }) => `mobile-nav-link${isActive ? ' active' : ''}`} onClick={() => setMoreMenuOpen(false)}>
+                    <i className="fas fa-exchange-alt" aria-hidden="true" /><span>Convert</span>
+                </NavLink>
+                <NavLink to="/synaxarium" className={({ isActive }) => `mobile-nav-link${isActive ? ' active' : ''}`} onClick={() => setMoreMenuOpen(false)}>
+                    <i className="fas fa-book-open" aria-hidden="true" /><span>Read</span>
+                </NavLink>
+                <button className={`mobile-nav-link${moreMenuOpen ? ' active' : ''}`} type="button" aria-expanded={moreMenuOpen} aria-controls="mobile-more-menu" onClick={() => setMoreMenuOpen((open) => !open)}>
+                    <i className="fas fa-ellipsis-h" aria-hidden="true" /><span>More</span>
+                </button>
+                {moreMenuOpen && <div className="mobile-more-menu" id="mobile-more-menu">
+                    <NavLink to="/gizae" onClick={() => setMoreMenuOpen(false)}><i className="fas fa-scroll" aria-hidden="true" /> Gizae readings</NavLink>
+                    <NavLink to="/holidays" onClick={() => setMoreMenuOpen(false)}><i className="fas fa-star" aria-hidden="true" /> Feast days</NavLink>
+                    <button type="button" onClick={() => { toggleTheme(); setMoreMenuOpen(false); }}>
+                        <i className={`fas fa-${isDarkMode ? 'sun' : 'moon'}`} aria-hidden="true" /> {isDarkMode ? 'Light mode' : 'Dark mode'}
+                    </button>
+                    {!isInstalled && (installPrompt || isIOS) && <button type="button" onClick={installApp}>
+                        <i className="fas fa-download" aria-hidden="true" /> Install app
+                    </button>}
+                </div>}
+            </nav>
+            {showIOSInstallHelp && <div className="ios-install-backdrop" role="presentation" onClick={() => setShowIOSInstallHelp(false)}>
+                <section className="ios-install-dialog" role="dialog" aria-modal="true" aria-labelledby="ios-install-title">
+                    <button className="ios-install-close" type="button" aria-label="Close install instructions" onClick={() => setShowIOSInstallHelp(false)}>×</button>
+                    <h2 id="ios-install-title">Add to Home Screen</h2>
+                    <p>In Safari, tap the Share button, then choose <strong>Add to Home Screen</strong>.</p>
+                    <button className="ios-install-done" type="button" onClick={() => setShowIOSInstallHelp(false)}>Done</button>
+                </section>
+            </div>}
         </header>
     );
 };

@@ -24,9 +24,6 @@ const Footer = () => {
                             <li><Link to="/synaxarium">Synaxarium (ስንክሳር)</Link></li>
                             <li><Link to="/gizae">Gizae (ግጻዊ)</Link></li>
                             <li><Link to="/holidays">Holiday Calculator</Link></li>
-                            <li><Link to="/quiz">Spiritual Quiz</Link></li>
-                            <li><Link to="/chat">Community Chat</Link></li>
-                            <li><Link to="/gallery">Gallery</Link></li>
                         </ul>
                     </div>
                     <div className="footer-section">

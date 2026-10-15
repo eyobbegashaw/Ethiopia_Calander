@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { toEthNum, ethiopianMonths, gcToEth } from '../utils/calendarUtils';
-import { calendarAPI } from '../services/api';
-import { useAuth } from '../contexts/AuthContext';
+import { saintsData } from '../data/saintsData';
 import './styles/Synaxarium.css';
 
 const Synaxarium = () => {
-    const { currentUser, saveToHistory } = useAuth();
     const [selectedMonth, setSelectedMonth] = useState(1);
     const [selectedDay, setSelectedDay] = useState(1);
     const [daysInMonth, setDaysInMonth] = useState(30);
@@ -50,8 +48,7 @@ const Synaxarium = () => {
             const now = new Date();
             const { month: eMonth, day: eDay } = gcToEth(now);
             
-            const response = await calendarAPI.getSaintsByDate(eMonth, eDay);
-            setTodaySaints(response.data.saints || []);
+            setTodaySaints(saintsData[`${eMonth}-${eDay}`] || []);
         } catch (err) {
             console.error('Error loading today\'s saints:', err);
             setError('Failed to load today\'s saints');
@@ -65,15 +62,7 @@ const Synaxarium = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await calendarAPI.getSaintsByDate(month, day);
-            setSearchResults(response.data.saints || []);
-
-            if (currentUser) {
-                await saveToHistory('saint_search', `Searched saints for ${ethiopianMonths[month-1]} ${day}`, {
-                    month,
-                    day
-                });
-            }
+            setSearchResults(saintsData[`${month}-${day}`] || []);
         } catch (err) {
             console.error('Error searching saints:', err);
             setError('Failed to search saints');

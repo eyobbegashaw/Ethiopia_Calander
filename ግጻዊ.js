@@ -1,5 +1,3 @@
-// ግጻዊ.js - Daily Readings functionality
-
 // Sample ግጻዊ (Daily Readings) Data
 const gizaeData = {
     "1-1": [

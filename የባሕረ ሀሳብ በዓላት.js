@@ -1,8 +1,4 @@
-// የባሕረ ሀሳብ በዓላት.js - Ethiopian
-
-
- Orthodox Holidays Calculator
-
+ 
 // Sample Ethiopian holidays data
 const ethHolidays = {
   "1-1": "አዲስ አመት (New Year)",

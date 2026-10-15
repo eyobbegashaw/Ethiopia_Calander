@@ -1,11 +1,9 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { toEthNum, ethiopianMonths } from '../utils/calendarUtils';
-import { calendarAPI } from '../services/api';
-import { useAuth } from '../contexts/AuthContext';
+import { sampleHolidays } from '../data/holidaysData';
 import './styles/HolidayCalculator.css';
 
 const HolidayCalculator = () => {
-    const { currentUser, saveToHistory } = useAuth();
     const [year, setYear] = useState(2018); // Default 2018 ዓ.ም
     const [holidays, setHolidays] = useState([]);
     const [bahreHasab, setBahreHasab] = useState(null);
@@ -24,16 +22,14 @@ const HolidayCalculator = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await calendarAPI.getHolidaysByYear(yearValue);
-            setHolidays(response.data.holidays || []);
-            setAdditionalInfo(response.data.additionalInfo || null);
-            setBahreHasab(response.data.bahreHasab || null);
+            setHolidays(sampleHolidays.map((holiday, index) => ({
+                _id: `${yearValue}-${holiday.month}-${holiday.day}-${index}`,
+                name: holiday.name,
+                date: { month: holiday.month, day: holiday.day },
+            })));
+            setAdditionalInfo(null);
+            setBahreHasab(null);
 
-            if (currentUser) {
-                await saveToHistory('holiday_calculation', `Calculated holidays for Ethiopian year ${yearValue}`, {
-                    year: yearValue
-                });
-            }
         } catch (err) {
             console.error('Error calculating holidays:', err);
             setError(err.response?.data?.message || 'Failed to calculate holidays');

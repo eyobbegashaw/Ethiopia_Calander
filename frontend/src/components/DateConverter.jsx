@@ -3,13 +3,9 @@ import {
     toEthNum, ethToGC, gcToEth, 
     ethiopianMonths, gregorianMonths 
 } from '../utils/calendarUtils';
-import { calendarAPI } from '../services/api';
-import { useAuth } from '../contexts/AuthContext';
 import './styles/DateConverter.css';
 
 const DateConverter = () => {
-    const { currentUser, saveToHistory } = useAuth();
-
     // Gregorian date state
     const [gDay, setGDay] = useState(1);
     const [gMonth, setGMonth] = useState(new Date().getMonth() + 1);
@@ -39,25 +35,6 @@ const DateConverter = () => {
             const result = `${ethiopianMonths[ethMonth - 1]} ${toEthNum(ethDay)}, ${toEthNum(ethYear)} እ.ኤ.አ.`;
             setGToEResult(result);
 
-            if (currentUser) {
-                await saveToHistory('conversion', `Gregorian ${gMonth}/${gDay}/${gYear} → Ethiopian ${ethiopianMonths[ethMonth - 1]} ${ethDay}, ${ethYear}`, {
-                    from: 'gregorian',
-                    to: 'ethiopian',
-                    input: { year: gYear, month: gMonth, day: gDay },
-                    output: { year: ethYear, month: ethMonth, day: ethDay }
-                });
-            }
-
-            // Also try to get from API if needed for more accurate conversions
-            try {
-                await calendarAPI.convertDate({
-                    from: 'gregorian',
-                    to: 'ethiopian',
-                    date: gDate.toISOString()
-                });
-            } catch (apiErr) {
-                console.log('API conversion not available, using local calculation');
-            }
         } catch (error) {
             console.error('Conversion error:', error);
             setGToEResult('Error converting date');
@@ -73,25 +50,6 @@ const DateConverter = () => {
             const result = `${gregorianMonths[gDate.getMonth()]} ${gDate.getDate()}, ${gDate.getFullYear()} G.C.`;
             setEToGResult(result);
 
-            if (currentUser) {
-                await saveToHistory('conversion', `Ethiopian ${ethiopianMonths[eMonth - 1]} ${eDay}, ${eYear} → Gregorian ${gregorianMonths[gDate.getMonth()]} ${gDate.getDate()}, ${gDate.getFullYear()}`, {
-                    from: 'ethiopian',
-                    to: 'gregorian',
-                    input: { year: eYear, month: eMonth, day: eDay },
-                    output: { year: gDate.getFullYear(), month: gDate.getMonth() + 1, day: gDate.getDate() }
-                });
-            }
-
-            // Also try to get from API if needed
-            try {
-                await calendarAPI.convertDate({
-                    from: 'ethiopian',
-                    to: 'gregorian',
-                    date: { year: eYear, month: eMonth, day: eDay }
-                });
-            } catch (apiErr) {
-                console.log('API conversion not available, using local calculation');
-            }
         } catch (error) {
             console.error('Conversion error:', error);
             setEToGResult('Error converting date');

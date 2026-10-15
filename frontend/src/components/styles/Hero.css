@@ -1,0 +1,431 @@
+.hero {
+  min-height: min(720px, 88vh);
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 8rem 2rem 5rem;
+  color: #f7f5ed;
+  background: #183b36;
+  isolation: isolate;
+}
+
+.hero-backdrop {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  background-image: linear-gradient(90deg, rgba(12, 34, 31, 0.88) 0%, rgba(17, 51, 44, 0.78) 48%, rgba(17, 45, 40, 0.58) 100%), var(--app-landscape-image);
+  background-position: center, center 46%;
+  background-size: cover;
+  background-attachment: fixed, fixed;
+  animation: hero-arrive 900ms ease-out both;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  opacity: 0.24;
+  background-image: linear-gradient(120deg, transparent 55%, rgba(224, 187, 105, 0.24));
+  pointer-events: none;
+}
+
+.hero-content {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+  align-items: center;
+  gap: clamp(3rem, 8vw, 8rem);
+}
+
+.hero-copy {
+  max-width: 670px;
+  animation: hero-copy-arrive 700ms 120ms ease-out both;
+}
+
+.hero-kicker,
+.features-eyebrow {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #e6c87c;
+}
+
+.hero-kicker {
+  margin: 0 0 1.4rem;
+}
+
+.hero h1 {
+  margin: 0;
+  max-width: 700px;
+  font-family: 'Noto Sans Ethiopic', sans-serif;
+  font-size: clamp(2.7rem, 5.4vw, 5rem);
+  font-weight: 500;
+  line-height: 1.17;
+}
+
+.hero h1 span {
+  color: #e6c87c;
+}
+
+.hero-intro {
+  max-width: 540px;
+  margin: 1.4rem 0 0;
+  color: rgba(247, 245, 237, 0.82);
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.hero-cta {
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.cta-button {
+  min-height: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 0.8rem 1.2rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: transform 180ms ease, background-color 180ms ease;
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+}
+
+.cta-button.primary {
+  background: #e6c87c;
+  color: #17332e;
+}
+
+.cta-button.primary:hover {
+  background: #f1d995;
+}
+
+.hero-text-link {
+  color: #f7f5ed;
+  text-decoration-color: rgba(247, 245, 237, 0.5);
+  text-underline-offset: 5px;
+  font-weight: 600;
+}
+
+.hero-text-link span {
+  display: inline-block;
+  margin-left: 0.35rem;
+  transition: transform 180ms ease;
+}
+
+.hero-text-link:hover span {
+  transform: translateX(4px);
+}
+
+.install-app-button {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid rgba(247, 245, 237, 0.42);
+  border-radius: 4px;
+  background: rgba(12, 34, 31, 0.25);
+  color: #f7f5ed;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.install-app-button:hover {
+  transform: translateY(-2px);
+  border-color: #e6c87c;
+  background: rgba(230, 200, 124, 0.14);
+}
+
+.install-app-button i {
+  color: #e6c87c;
+}
+
+.hero-install-backdrop {
+  position: fixed;
+  z-index: 1500;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.58);
+}
+
+.hero-install-dialog {
+  position: relative;
+  width: min(380px, 100%);
+  padding: 1.6rem;
+  border: 1px solid var(--border-color);
+  border-top: 3px solid var(--gold-royal);
+  border-radius: 6px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-lg);
+}
+
+.hero-install-dialog h2 {
+  margin: 0 2rem 0.7rem 0;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+}
+
+.hero-install-dialog p {
+  margin-bottom: 1.3rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.hero-install-close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.7rem;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
+.hero-install-done {
+  min-height: 42px;
+  padding: 0.55rem 1rem;
+  border: 0;
+  border-radius: 4px;
+  background: var(--gold-royal);
+  color: #1a1a1a;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.current-date {
+  width: 100%;
+  max-width: 390px;
+  justify-self: end;
+  padding: 1.5rem 1.6rem 1.3rem;
+  border: 1px solid rgba(247, 245, 237, 0.24);
+  border-top: 3px solid #e6c87c;
+  background: linear-gradient(145deg, rgba(10, 30, 27, 0.88), rgba(19, 48, 42, 0.82));
+  box-shadow: 0 28px 72px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(16px);
+  animation: hero-copy-arrive 700ms 260ms ease-out both;
+}
+
+.date-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding-bottom: 1.15rem;
+  border-bottom: 1px solid rgba(247, 245, 237, 0.16);
+}
+
+.date-card-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: #f7f5ed;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.date-card-tag {
+  color: rgba(247, 245, 237, 0.55);
+  font-size: 0.58rem;
+  font-weight: 700;
+  text-align: right;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.date-indicator {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 9px;
+  border-radius: 50%;
+  background: #e6c87c;
+  box-shadow: 0 0 0 4px rgba(230, 200, 124, 0.12), 0 0 14px rgba(230, 200, 124, 0.4);
+}
+
+.date-card-primary {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.25rem 0 0.65rem;
+}
+
+.ethiopian-day-number {
+  color: #f7f5ed;
+  font-size: 5.3rem;
+  font-weight: 500;
+  line-height: 0.95;
+  font-variant-numeric: tabular-nums;
+}
+
+.ethiopian-date-detail {
+  min-height: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.25rem;
+  padding-left: 1.1rem;
+  border-left: 1px solid rgba(230, 200, 124, 0.48);
+}
+
+.ethiopian-month {
+  color: #e6c87c;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.ethiopian-year {
+  color: rgba(247, 245, 237, 0.68);
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.date-weekday-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding-bottom: 1.1rem;
+}
+
+.date-weekday-amharic {
+  color: rgba(247, 245, 237, 0.95);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.date-weekday-english {
+  color: rgba(247, 245, 237, 0.52);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.date-equivalent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.9rem 0;
+  border-top: 1px solid rgba(247, 245, 237, 0.16);
+  border-bottom: 1px solid rgba(247, 245, 237, 0.16);
+}
+
+.date-equivalent-label {
+  color: rgba(247, 245, 237, 0.5);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.date-equivalent-value {
+  color: rgba(247, 245, 237, 0.92);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.date-convert-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1rem;
+  color: #e6c87c;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.date-convert-link i {
+  color: currentColor;
+  transition: transform 180ms ease;
+}
+
+.date-convert-link:hover i {
+  transform: translateX(4px);
+}
+
+.hero-bottomline {
+  position: absolute;
+  bottom: 1.6rem;
+  left: 50%;
+  display: flex;
+  gap: 0.8rem;
+  transform: translateX(-50%);
+  color: rgba(247, 245, 237, 0.62);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+@keyframes hero-arrive {
+  from { transform: scale(1.035); opacity: 0.6; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes hero-copy-arrive {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 760px) {
+  .hero {
+    min-height: auto;
+    padding: 7.5rem 1.25rem 5rem;
+  }
+
+  .hero-content {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.3rem, 10vw, 3.6rem);
+  }
+
+  .current-date {
+    justify-self: start;
+    max-width: 100%;
+  }
+
+  .ethiopian-day-number {
+    font-size: 4.8rem;
+  }
+
+  .hero-bottomline {
+    bottom: 1.25rem;
+    font-size: 0.58rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-backdrop,
+  .hero-copy,
+  .current-date {
+    animation: none;
+  }
+
+  .cta-button,
+  .hero-text-link span {
+    transition: none;
+  }
+}

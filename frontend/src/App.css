@@ -3,6 +3,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Ethiopic:wght@400;500;700&display=swap');
 
 :root {
+  --app-landscape-image: url('./assets/1.png');
+
   /* Light Mode Variables */
   --bg-primary-light: #f5f0e6;
   --bg-secondary-light: #ffffff;
@@ -86,6 +88,11 @@ body {
   overflow-x: hidden;
 }
 
+body.light-mode {
+  background: var(--bg-primary-light);
+  color: var(--text-primary-light);
+}
+
 /* Enhanced Lalibela Church Background */
 body::before {
   content: '';
@@ -96,7 +103,7 @@ body::before {
   height: 100%;
   background-image: 
     linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-    url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+    var(--app-landscape-image);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -104,6 +111,10 @@ body::before {
   opacity: 0.25;
   z-index: -2;
   pointer-events: none;
+}
+
+body.light-mode::before {
+  opacity: 0.16;
 }
 
 /* Improved overlay for better readability */
@@ -119,8 +130,8 @@ body::after {
   pointer-events: none;
 }
 
-.light-mode body::after {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.7) 100%);
+body.light-mode::after {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
 }
 
 /* Icon Styles */
@@ -144,6 +155,156 @@ i, .fas, .far, .fab, .fal {
   padding: 80px 2rem 2rem;
   position: relative;
   z-index: 1;
+}
+
+.home-features-wrapper {
+  padding-top: 3.5rem;
+  padding-bottom: 5rem;
+}
+
+.features-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 1.6rem;
+}
+
+.features-eyebrow {
+  margin-bottom: 0.45rem;
+}
+
+.features-heading h2 {
+  color: var(--text-primary);
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.features-heading > p {
+  max-width: 300px;
+  margin-bottom: 0.2rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.feature-card {
+  grid-column: span 2;
+  min-height: 210px;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 1.35rem;
+  box-shadow: var(--shadow-sm);
+  color: inherit;
+  text-decoration: none;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.feature-card:nth-child(4) {
+  grid-column: 2 / span 2;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--gold-royal);
+  box-shadow: var(--shadow-md);
+}
+
+.feature-icon {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.feature-icon i {
+  color: var(--gold-deep);
+  font-size: 1rem;
+}
+
+.feature-card-content {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.feature-card h3 {
+  margin: 0.15rem 0 0.5rem;
+  color: var(--text-primary);
+  font-size: 1.08rem;
+  font-weight: 700;
+}
+
+.feature-card p {
+  margin-bottom: 1.2rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.feature-card-link {
+  margin-top: auto;
+  color: var(--gold-deep);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.feature-card-link span {
+  display: inline-block;
+  margin-left: 0.25rem;
+  transition: transform 180ms ease;
+}
+
+.feature-card:hover .feature-card-link span {
+  transform: translateX(3px);
+}
+
+@media (max-width: 900px) {
+  .feature-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .feature-card,
+  .feature-card:nth-child(4) {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .main-container.home-features-wrapper {
+    padding: 2.5rem 1.1rem 3rem;
+  }
+
+  .features-heading {
+    display: block;
+  }
+
+  .features-heading > p {
+    margin-top: 0.65rem;
+  }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-card {
+    min-height: 0;
+  }
 }
 
 /* Quiz Cards Section */

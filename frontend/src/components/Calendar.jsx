@@ -5,12 +5,9 @@ import {
 } from '../utils/calendarUtils';
 import { saintsData } from '../data/saintsData';
 import { ethHolidays, gcHolidays } from '../data/holidaysData';
-import { useAuth } from '../contexts/AuthContext';
 import './styles/Calendar.css';
 
 const Calendar = () => {
-    const { currentUser, saveToHistory } = useAuth();
-    
     // Initialize with current Ethiopian date
     const [currentDate, setCurrentDate] = useState(() => {
         const now = new Date();
@@ -126,10 +123,6 @@ const Calendar = () => {
     };
 
     const handleDayClick = (day) => {
-        if (currentUser) {
-            saveToHistory('calendar_view', `Viewed ${ethiopianMonths[currentDate.month-1]} ${day} in calendar`);
-        }
-        
         // Trigger saint display (will be handled by parent or event)
         const event = new CustomEvent('showSaintsForDate', { 
             detail: { 

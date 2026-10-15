@@ -31,7 +31,11 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  background: var(--glass-bg);
+  background-image: linear-gradient(90deg, rgba(12, 34, 31, 0.88), rgba(17, 45, 40, 0.72)), var(--app-landscape-image);
+  background-position: center, center 46%;
+  background-size: cover;
+  background-attachment: fixed, fixed;
+  background-repeat: no-repeat;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--glass-border);
@@ -41,18 +45,18 @@
 
 .header.scrolled {
   padding: 0.4rem 0;
-  background: rgba(26, 26, 26, 0.95);
+  background-image: linear-gradient(90deg, rgba(12, 34, 31, 0.94), rgba(17, 45, 40, 0.86)), var(--app-landscape-image);
   box-shadow: var(--shadow-sm);
 }
 
 /* Light mode header */
 .header.light-mode {
-  background: rgba(255, 255, 255, 0.85);
+  background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.76)), var(--app-landscape-image);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .header.light-mode.scrolled {
-  background: rgba(255, 255, 255, 0.95);
+  background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.86)), var(--app-landscape-image);
 }
 
 .header-container {
@@ -440,14 +444,218 @@
   display: none;
 }
 
+.mobile-bottom-nav,
+.mobile-more-menu,
+.ios-install-backdrop {
+  display: none;
+}
+
 /* Mobile menu styles */
 @media (max-width: 768px) {
+  body {
+    padding-bottom: calc(70px + env(safe-area-inset-bottom));
+  }
+
+  .header {
+    padding: 0.55rem 0;
+  }
+
   .header-container {
     padding: 0 1rem;
   }
-  
-  .mobile-toggle {
+
+  .mobile-toggle,
+  .nav-menu,
+  .mobile-user-controls {
+    display: none !important;
+  }
+
+  .logo {
+    gap: 0.65rem;
+  }
+
+  .logo-text-primary {
+    font-size: 1rem;
+  }
+
+  .mobile-bottom-nav {
+    position: fixed;
+    z-index: 1200;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    min-height: calc(64px + env(safe-area-inset-bottom));
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    align-items: stretch;
+    padding: 0.35rem 0.35rem calc(0.35rem + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--glass-border);
+    background-image: linear-gradient(rgba(26, 26, 26, 0.88), rgba(26, 26, 26, 0.94)), var(--app-landscape-image);
+    background-position: center, center 46%;
+    background-size: cover;
+    background-attachment: fixed, fixed;
+    background-repeat: no-repeat;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.18);
+  }
+
+  .header.light-mode .mobile-bottom-nav {
+    border-top-color: rgba(0, 0, 0, 0.12);
+    background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.96)), var(--app-landscape-image);
+    box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.1);
+  }
+
+  .mobile-nav-link {
+    min-width: 0;
+    min-height: 52px;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    border: 0;
+    border-radius: 5px;
+    background: transparent;
+    color: rgba(245, 240, 230, 0.72);
+    font: inherit;
+    font-size: 0.66rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-nav-link i {
+    color: currentColor;
+    font-size: 1.12rem;
+  }
+
+  .header.light-mode .mobile-nav-link {
+    color: #4a4a4a;
+  }
+
+  .mobile-nav-link.active {
+    color: #e6c87c;
+    background: rgba(212, 175, 55, 0.11);
+  }
+
+  .header.light-mode .mobile-nav-link.active {
+    color: #765b0e;
+    background: rgba(212, 175, 55, 0.14);
+  }
+
+  .mobile-more-menu {
+    position: absolute;
+    right: 0.6rem;
+    bottom: calc(100% + 0.55rem);
+    width: min(270px, calc(100vw - 1.2rem));
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    background: #242424;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.28);
+  }
+
+  .header.light-mode .mobile-more-menu {
+    border-color: rgba(0, 0, 0, 0.12);
+    background: #fff;
+  }
+
+  .mobile-more-menu a,
+  .mobile-more-menu button {
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.7rem 0.8rem;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--cream-soft);
+    font: inherit;
+    font-size: 0.9rem;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .header.light-mode .mobile-more-menu a,
+  .header.light-mode .mobile-more-menu button {
+    color: #1a1a1a;
+  }
+
+  .mobile-more-menu a:hover,
+  .mobile-more-menu button:hover,
+  .mobile-more-menu a.active {
+    background: rgba(212, 175, 55, 0.14);
+  }
+
+  .mobile-more-menu i {
+    width: 1.1rem;
+    color: var(--gold-royal);
+    text-align: center;
+  }
+
+  .ios-install-backdrop {
+    position: fixed;
+    z-index: 1400;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.55);
+  }
+
+  .ios-install-dialog {
+    position: relative;
+    width: min(360px, 100%);
+    padding: 1.5rem;
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    background: #242424;
+    color: var(--cream-soft);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .header.light-mode .ios-install-dialog {
+    background: #fff;
+    color: #1a1a1a;
+  }
+
+  .ios-install-dialog h2 {
+    margin: 0 2rem 0.65rem 0;
+    font-size: 1.2rem;
+  }
+
+  .ios-install-dialog p {
+    margin-bottom: 1.2rem;
+    color: inherit;
+    line-height: 1.6;
+  }
+
+  .ios-install-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.7rem;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-size: 1.6rem;
+    cursor: pointer;
+  }
+
+  .ios-install-done {
+    min-height: 42px;
+    padding: 0.5rem 1rem;
+    border: 0;
+    border-radius: 4px;
+    background: var(--gold-royal);
+    color: #1a1a1a;
+    font-weight: 700;
+    cursor: pointer;
   }
   
   .nav-menu {

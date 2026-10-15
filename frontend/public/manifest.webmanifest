@@ -1,0 +1,19 @@
+{
+  "id": "/",
+  "name": "Ethiopian Calendar and Synaxarium",
+  "short_name": "Ethiopian Calendar",
+  "description": "Ethiopian Orthodox calendar, date conversion, daily commemorations, and liturgical readings.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f5f0e6",
+  "theme_color": "#183b36",
+  "icons": [
+    {
+      "src": "/pwa-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

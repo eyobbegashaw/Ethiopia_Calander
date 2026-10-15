@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { toEthNum, ethiopianMonths, gcToEth } from '../utils/calendarUtils';
-import { calendarAPI } from '../services/api';
-import { useAuth } from '../contexts/AuthContext';
+import { gizaeData } from '../data/gizaeData';
 import './styles/Gizae.css';
 
 const Gizae = () => {
-    const { currentUser, saveToHistory } = useAuth();
     const [selectedMonth, setSelectedMonth] = useState(1);
     const [selectedDay, setSelectedDay] = useState(1);
     const [daysInMonth, setDaysInMonth] = useState(30);
@@ -43,16 +41,8 @@ const Gizae = () => {
     const loadReadings = async (month, day) => {
         setLoading(true);
         setError(null);
-        try {
-            const response = await calendarAPI.getReadingsByDate(month, day);
-            setReadings(response.data.readings || []);
-        } catch (err) {
-            console.error('Error loading readings:', err);
-            setError('Failed to load readings');
-            setReadings([]);
-        } finally {
-            setLoading(false);
-        }
+        setReadings(gizaeData[`${month}-${day}`] || []);
+        setLoading(false);
     };
 
     const loadBookmarks = () => {
@@ -66,13 +56,8 @@ const Gizae = () => {
         }
     };
 
-    const handleSearch = async () => {
-        if (currentUser) {
-            await saveToHistory('gizae_search', `Searched readings for ${ethiopianMonths[selectedMonth-1]} ${selectedDay}`, {
-                month: selectedMonth,
-                day: selectedDay
-            });
-        }
+    const handleSearch = () => {
+        loadReadings(selectedMonth, selectedDay);
     };
 
     const toggleBookmark = (reading) => {
