@@ -1,45 +1,21 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo } from 'react';
 import { toEthNum, ethiopianMonths } from '../utils/calendarUtils';
 import { sampleHolidays } from '../data/holidaysData';
 import './styles/HolidayCalculator.css';
 
 const HolidayCalculator = () => {
     const [year, setYear] = useState(2018); // Default 2018 ዓ.ም
-    const [holidays, setHolidays] = useState([]);
-    const [bahreHasab, setBahreHasab] = useState(null);
-    const [additionalInfo, setAdditionalInfo] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-
-    const calculateHolidays = async () => {
-        // Validate year input
-        const yearValue = parseInt(year);
-        if (isNaN(yearValue) || yearValue < 1900 || yearValue > 2100) {
-            setError('Please enter a valid year between 1900 and 2100');
-            return;
-        }
-
-        setLoading(true);
-        setError(null);
-        try {
-            setHolidays(sampleHolidays.map((holiday, index) => ({
+    const yearValue = year === '' ? NaN : Number(year);
+    const isValidYear = Number.isInteger(yearValue) && yearValue >= 1900 && yearValue <= 2100;
+    const holidays = useMemo(() => (
+        isValidYear
+            ? sampleHolidays.map((holiday, index) => ({
                 _id: `${yearValue}-${holiday.month}-${holiday.day}-${index}`,
                 name: holiday.name,
                 date: { month: holiday.month, day: holiday.day },
-            })));
-            setAdditionalInfo(null);
-            setBahreHasab(null);
-
-        } catch (err) {
-            console.error('Error calculating holidays:', err);
-            setError(err.response?.data?.message || 'Failed to calculate holidays');
-            setHolidays([]);
-            setAdditionalInfo(null);
-            setBahreHasab(null);
-        } finally {
-            setLoading(false);
-        }
-    };
+            }))
+            : []
+    ), [isValidYear, yearValue]);
 
     const handleYearChange = (e) => {
         const value = e.target.value;
@@ -53,7 +29,7 @@ const HolidayCalculator = () => {
         if (holiday.formattedDate) {
             return holiday.formattedDate;
         } else if (holiday.date) {
-            const yearNum = parseInt(year);
+            const yearNum = Number(year);
             if (!isNaN(yearNum)) {
                 return `${ethiopianMonths[holiday.date.month - 1]} ${toEthNum(holiday.date.day)}, ${toEthNum(yearNum)}`;
             }
@@ -75,17 +51,13 @@ const HolidayCalculator = () => {
         return groups;
     }, [holidays]);
 
-    const handleCalculateClick = useCallback(() => {
-        calculateHolidays();
-    }, [year]);
-
     return (
         <section className="card" id="holidays">
             <h2 className="section-title">
                 <i className="fas fa-calendar-alt"></i> 
                 የባሕረ ሐሳብ በዓላት - Bahre Hasab Calculator
             </h2>
-            <p>Enter an Ethiopian year to calculate the dates of major Orthodox holidays:</p>
+            <p>Enter an Ethiopian year to view the dates of major Orthodox holidays:</p>
             
             <div className="calculator-form">
                 <input 
@@ -95,47 +67,17 @@ const HolidayCalculator = () => {
                     placeholder="Enter Ethiopian Year (e.g., 2018)" 
                     min="1900" 
                     max="2100" 
-                    disabled={loading}
                 />
-                <button onClick={handleCalculateClick} disabled={loading}>
-                    <i className={`fas ${loading ? 'fa-spinner fa-spin' : 'fa-search'}`}></i> 
-                    {loading ? 'በማስላት ላይ...' : 'አስላ'}
-                </button>
             </div>
             
-            {error && (
+            {year !== '' && !isValidYear && (
                 <div className="holidays-error">
-                    <i className="fas fa-exclamation-circle"></i> {error}
-                </div>
-            )}
-            
-            {/* Additional Info Section */}
-            {additionalInfo && (
-                <div className="additional-info">
-                    <h3>ተጨማሪ መረጃ - Additional Information</h3>
-                    <div className="info-grid">
-                        <div className="info-item">
-                            <span className="info-label">መስከረም 1:</span>
-                            <span className="info-value">{additionalInfo.meskerem1.formatted}</span>
-                        </div>
-                        <div className="info-item">
-                            <span className="info-label">መጥቅዕ:</span>
-                            <span className="info-value">{additionalInfo.metke?.formatted || ''}</span>
-                        </div>
-                        <div className="info-item">
-                            <span className="info-label">መባጃ ሐመር:</span>
-                            <span className="info-value">{additionalInfo.mebajaHamer.formatted}</span>
-                        </div>
-                    </div>
+                    <i className="fas fa-exclamation-circle"></i> Please enter a valid year between 1900 and 2100.
                 </div>
             )}
             
             <div className="holidays-list">
-                {loading ? (
-                    <div className="holidays-loading">
-                        <i className="fas fa-spinner fa-spin"></i> Loading holidays...
-                    </div>
-                ) : holidays.length > 0 ? (
+                {holidays.length > 0 ? (
                     Object.entries(groupedHolidays).map(([monthName, monthHolidays]) => (
                         <div key={monthName} className="month-group">
                             <h3 className="month-title">{monthName}</h3>
@@ -160,10 +102,10 @@ const HolidayCalculator = () => {
                             </div>
                         </div>
                     ))
-                ) : year && !loading ? (
+                ) : year !== '' && isValidYear ? (
                     <div className="no-holidays">
                         <i className="fas fa-calendar-times"></i>
-                        <p>No holidays found for year {year}. Click Calculate to get results.</p>
+                        <p>No holidays found for year {year}.</p>
                     </div>
                 ) : null}
             </div>

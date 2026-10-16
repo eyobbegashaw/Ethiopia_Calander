@@ -3,13 +3,27 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
     gcToEth,
-    ethiopianMonths,
     toEthNum,
-    gregorianMonths,
-    dayNames,
-    englishDays
+    gregorianMonths
 } from '../utils/calendarUtils';
 import './styles/Hero.css';
+
+const ETHIOPIA_DATE_FORMATTER = new Intl.DateTimeFormat('en-US', {
+    calendar: 'gregory',
+    timeZone: 'Africa/Addis_Ababa',
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric'
+});
+const ETHIOPIAN_LABEL_FORMATTER = new Intl.DateTimeFormat('am-ET-u-ca-ethiopic', {
+    timeZone: 'Africa/Addis_Ababa',
+    weekday: 'long',
+    month: 'long'
+});
+const GREGORIAN_WEEKDAY_FORMATTER = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Africa/Addis_Ababa',
+    weekday: 'long'
+});
 
 const Hero = () => {
     const [installPrompt, setInstallPrompt] = useState(null);
@@ -71,20 +85,32 @@ const Hero = () => {
     useEffect(() => {
         const updateDate = () => {
             const now = new Date();
+            const dateParts = ETHIOPIA_DATE_FORMATTER.formatToParts(now);
+            const ethiopianLabels = Object.fromEntries(
+                ETHIOPIAN_LABEL_FORMATTER.formatToParts(now)
+                    .filter(({ type }) => ['month', 'weekday'].includes(type))
+                    .map(({ type, value }) => [type, value])
+            );
+            const ethiopiaDateParts = Object.fromEntries(
+                dateParts
+                    .filter(({ type }) => ['year', 'month', 'day'].includes(type))
+                    .map(({ type, value }) => [type, Number(value)])
+            );
+            const { year, month, day } = ethiopiaDateParts;
+            const gregorianDate = new Date(year, month - 1, day);
 
             const {
                 year: eYear,
-                month: eMonth,
                 day: eDay
-            } = gcToEth(now);
+            } = gcToEth(gregorianDate);
 
             setCurrentDate({
                 ethiopianDay: toEthNum(eDay),
-                ethiopianMonth: ethiopianMonths[eMonth - 1],
+                ethiopianMonth: ethiopianLabels.month,
                 ethiopianYear: toEthNum(eYear),
-                gregorian: `${gregorianMonths[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`,
-                ethiopianWeekday: dayNames[now.getDay()],
-                gregorianWeekday: englishDays[now.getDay()]
+                gregorian: `${gregorianMonths[month - 1]} ${day}, ${year}`,
+                ethiopianWeekday: ethiopianLabels.weekday,
+                gregorianWeekday: GREGORIAN_WEEKDAY_FORMATTER.format(now)
             });
         };
 

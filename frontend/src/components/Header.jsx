@@ -241,6 +241,13 @@ const Header = () => {
                                         <span className="dropdown-subtitle">የባሕረ ሀሳብ በዓላት</span>
                                     </div>
                                 </Link>
+                                <Link to="/geez-numerals" className="dropdown-item" onClick={closeMobileMenu}>
+                                    <span className="dropdown-icon">፩</span>
+                                    <div className="dropdown-content">
+                                        <span className="dropdown-title">Geez Number Converter</span>
+                                        <span className="dropdown-subtitle">ግእዝ ቁጥር</span>
+                                    </div>
+                                </Link>
                             </div>
                         </li>
 
@@ -267,6 +274,9 @@ const Header = () => {
                 </NavLink>
                 <NavLink to="/holidays" className={({ isActive }) => `mobile-nav-link${isActive ? ' active' : ''}`} onClick={() => setMoreMenuOpen(false)}>
                     <i className="fas fa-star" aria-hidden="true" /><span>ባህረ-ሀሳብ</span>
+                </NavLink>
+                <NavLink to="/geez-numerals" className={({ isActive }) => `mobile-nav-link${isActive ? ' active' : ''}`} onClick={() => setMoreMenuOpen(false)}>
+                    <i className="fas fa-calculator" aria-hidden="true" /><span>ግእዝ</span>
                 </NavLink>
             </nav>
             {showIOSInstallHelp && <div className="ios-install-backdrop" role="presentation" onClick={() => setShowIOSInstallHelp(false)}>

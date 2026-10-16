@@ -22,6 +22,7 @@
 #holidays {
   position: relative;
   overflow: hidden;
+  margin-top: 2rem;
 }
 
 #holidays::before {

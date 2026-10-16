@@ -7,6 +7,7 @@ import Calendar from './components/Calendar';
 import Synaxarium from './components/Synaxarium';
 import Gizae from './components/Gizae';
 import HolidayCalculator from './components/HolidayCalculator';
+import GeezNumeralConverter from './components/GeezNumeralConverter';
 import { FontProvider } from './contexts/FontContext';
 import './App.css';
 
@@ -196,6 +197,12 @@ function App() {
                         <Route path="/holidays" element={
                             <div className="main-container">
                                 <HolidayCalculator />
+                            </div>
+                        } />
+
+                        <Route path="/geez-numerals" element={
+                            <div className="main-container">
+                                <GeezNumeralConverter />
                             </div>
                         } />
                     </Routes>

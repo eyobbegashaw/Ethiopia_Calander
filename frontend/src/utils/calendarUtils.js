@@ -29,82 +29,71 @@ export function isEthLeap(year) {
     return year % 4 === 3;
 }
 
+const MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
+
+function utcDayNumber(year, month, day) {
+    const date = new Date(0);
+    date.setUTCHours(0, 0, 0, 0);
+    date.setUTCFullYear(year, month, day);
+    return date.getTime() / MILLISECONDS_PER_DAY;
+}
+
+function localDateFromParts(year, month, day) {
+    const date = new Date(0);
+    date.setHours(0, 0, 0, 0);
+    date.setFullYear(year, month, day);
+    return date;
+}
+
+function ethiopianNewYearDayNumber(year) {
+    const gregorianYear = year + 7;
+    const startDay = isEthLeap(year - 1) ? 12 : 11;
+    return utcDayNumber(gregorianYear, 8, startDay);
+}
+
 export function ethToGC(ey, em, ed) {
-    const gcNewYear = new Date(ey + 7, 8, isEthLeap(ey + 7) ? 12 : 11);
-    let days = (em - 1) * 30 + (ed - 1);
-    if (em === 13) days = 360 + ed - 1;
-    return new Date(gcNewYear.getTime() + days * 24 * 60 * 60 * 1000);
+    if (!Number.isInteger(ey) || ey < 1 ||
+        !Number.isInteger(em) || em < 1 || em > 13 ||
+        !Number.isInteger(ed) || ed < 1 ||
+        ed > (em === 13 ? (isEthLeap(ey) ? 6 : 5) : 30)) {
+        throw new RangeError('Invalid Ethiopian date.');
+    }
+
+    const daysSinceNewYear = (em - 1) * 30 + ed - 1;
+    const newYear = ethiopianNewYearDayNumber(ey);
+    const convertedDay = newYear + daysSinceNewYear;
+    const convertedDate = new Date(convertedDay * MILLISECONDS_PER_DAY);
+    return localDateFromParts(
+        convertedDate.getUTCFullYear(),
+        convertedDate.getUTCMonth(),
+        convertedDate.getUTCDate()
+    );
 }
 
 export function gcToEth(gDate) {
-    // Fixed conversion: Ethiopian New Year is on September 11 (or 12 in leap years)
-    // Ethiopian year = Gregorian year - 8 (for dates from Jan 1 to Sep 10)
-    // Ethiopian year = Gregorian year - 7 (for dates from Sep 11 to Dec 31)
-    
-    const year = gDate.getFullYear();
-    const month = gDate.getMonth(); // 0-11 (Jan = 0, Sep = 8, Dec = 11)
-    const day = gDate.getDate();
-    
-    let ethYear;
-    let newYearDate;
-    
-    // Determine which Ethiopian year this date falls in
-    if (month < 8) { // January to August (before September)
-        // For dates before September, we're in the Ethiopian year that started in previous Gregorian year
-        ethYear = year - 8;
-        // Check if previous year was leap to determine New Year day
-        const newYearDay = isEthLeap(ethYear) ? 12 : 11;
-        newYearDate = new Date(year - 1, 8, newYearDay); // New Year was in September of previous year
-    } else if (month === 8) { // September
-        // Check if current Ethiopian year is leap
-        ethYear = year - 7;
-        const newYearDay = isEthLeap(ethYear) ? 12 : 11;
-        newYearDate = new Date(year, 8, newYearDay);
-        
-        // If date is before New Year, we're still in previous Ethiopian year
-        if (day < newYearDay) {
-            ethYear = year - 8;
-            const prevNewYearDay = isEthLeap(ethYear) ? 12 : 11;
-            newYearDate = new Date(year - 1, 8, prevNewYearDay);
-        }
-    } else { // October to December (after September)
-        ethYear = year - 7;
-        const newYearDay = isEthLeap(ethYear) ? 12 : 11;
-        newYearDate = new Date(year, 8, newYearDay);
+    if (!(gDate instanceof Date) || Number.isNaN(gDate.getTime())) {
+        throw new TypeError('A valid Gregorian date is required.');
     }
-    
-    // Calculate days since Ethiopian New Year
-    const diffTime = gDate - newYearDate;
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    
-    // Calculate Ethiopian month and day
-    // Ethiopian months are 30 days each, with 13th month having 5 or 6 days
-    let ethMonth = Math.floor(diffDays / 30) + 1;
-    let ethDay = (diffDays % 30) + 1;
-    
-    // Handle Pagume (13th month)
-    const daysInYear = isEthLeap(ethYear) ? 366 : 365;
-    const ethDaysInYear = 13 * 30; // 390 days in Ethiopian year (including Pagume)
-    
-    // If we've gone beyond the 13th month, adjust
-    if (ethMonth > 13) {
-        ethYear += 1;
-        ethMonth = 1;
-    }
-    
-    return { 
+
+    const gregorianYear = gDate.getFullYear();
+    const dateDayNumber = utcDayNumber(
+        gregorianYear,
+        gDate.getMonth(),
+        gDate.getDate()
+    );
+    const possibleEthYear = gregorianYear - 7;
+    const ethYear = dateDayNumber >= ethiopianNewYearDayNumber(possibleEthYear)
+        ? possibleEthYear
+        : possibleEthYear - 1;
+    const daysSinceNewYear = dateDayNumber - ethiopianNewYearDayNumber(ethYear);
+    const ethMonth = Math.floor(daysSinceNewYear / 30) + 1;
+    const ethDay = (daysSinceNewYear % 30) + 1;
+
+    return {
         year: ethYear, 
         month: ethMonth, 
         day: ethDay 
     };
-}
-
-// Test function for February 28, 2026
-export function testDate() {
-    const testDate = new Date(2026, 1, 28); // February 28, 2026
-    const result = gcToEth(testDate);
-    console.log('Test Result:', result);
-    return result;
 }
 
 export const ethiopianMonths = [

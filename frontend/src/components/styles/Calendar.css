@@ -76,6 +76,10 @@
 }
 
 /* Calendar Container */
+#calendar.card {
+  margin-top: 2rem;
+}
+
 .calendar-container {
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(8px);
@@ -104,6 +108,15 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin: 0;
+}
+
+.calendar-today-button .today-btn {
+  color: #fff;
+  font-weight: 700;
+}
+
+.calendar-today-button .today-btn i {
+  color: #fff;
 }
 
 .calendar-nav button {

@@ -1,115 +1,80 @@
-import React, { useState, useEffect } from 'react';
-import { toEthNum, ethiopianMonths, gcToEth } from '../utils/calendarUtils';
+import React, { useState } from 'react';
+import { toEthNum, ethiopianMonths, gcToEth, isEthLeap } from '../utils/calendarUtils';
 import { gizaeData } from '../data/gizaeData';
+import useSpeechPlayback from '../hooks/useSpeechPlayback';
 import './styles/Gizae.css';
 
 const Gizae = () => {
-    const [selectedMonth, setSelectedMonth] = useState(1);
-    const [selectedDay, setSelectedDay] = useState(1);
-    const [daysInMonth, setDaysInMonth] = useState(30);
-    const [readings, setReadings] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [bookmarks, setBookmarks] = useState([]);
-    const [notes, setNotes] = useState({});
-    const [showNoteModal, setShowNoteModal] = useState(false);
-    const [currentNote, setCurrentNote] = useState({ reading: '', text: '' });
+    const todayEth = gcToEth(new Date());
+    const [selectedMonth, setSelectedMonth] = useState(todayEth.month);
+    const [selectedDay, setSelectedDay] = useState(todayEth.day);
+    const [selectedYear, setSelectedYear] = useState(todayEth.year);
+    const { activeSpeechId, toggleSpeech } = useSpeechPlayback();
+    const daysInMonth = selectedMonth === 13
+        ? (isEthLeap(selectedYear) ? 6 : 5)
+        : 30;
 
-    useEffect(() => {
-        const days = selectedMonth === 13 ? 6 : 30;
-        setDaysInMonth(days);
-        
-        if (selectedDay > days) {
-            setSelectedDay(1);
-        }
-        
-        loadTodaysReadings();
-        loadBookmarks();
-    }, []);
+    const readings = gizaeData[`${selectedMonth}-${selectedDay}`] || [];
 
-    useEffect(() => {
-        loadReadings(selectedMonth, selectedDay);
-    }, [selectedMonth, selectedDay]);
-
-    const loadTodaysReadings = async () => {
-        const now = new Date();
-        const { month: eMonth, day: eDay } = gcToEth(now);
-        setSelectedMonth(eMonth);
-        setSelectedDay(eDay);
-    };
-
-    const loadReadings = async (month, day) => {
-        setLoading(true);
-        setError(null);
-        setReadings(gizaeData[`${month}-${day}`] || []);
-        setLoading(false);
-    };
-
-    const loadBookmarks = () => {
-        const saved = localStorage.getItem('gizaeBookmarks');
-        if (saved) {
-            setBookmarks(JSON.parse(saved));
-        }
-        const savedNotes = localStorage.getItem('gizaeNotes');
-        if (savedNotes) {
-            setNotes(JSON.parse(savedNotes));
-        }
-    };
-
-    const handleSearch = () => {
-        loadReadings(selectedMonth, selectedDay);
-    };
-
-    const toggleBookmark = (reading) => {
-        const key = `${selectedMonth}-${selectedDay}-${reading.title}`;
-        const newBookmarks = bookmarks.includes(key)
-            ? bookmarks.filter(b => b !== key)
-            : [...bookmarks, key];
-        
-        setBookmarks(newBookmarks);
-        localStorage.setItem('gizaeBookmarks', JSON.stringify(newBookmarks));
-    };
-
-    const saveNote = () => {
-        const key = `${selectedMonth}-${selectedDay}-${currentNote.reading}`;
-        const newNotes = { ...notes, [key]: currentNote.text };
-        setNotes(newNotes);
-        localStorage.setItem('gizaeNotes', JSON.stringify(newNotes));
-        setShowNoteModal(false);
+    const selectDate = (month, day, year) => {
+        setSelectedMonth(month);
+        setSelectedDay(day);
+        setSelectedYear(year);
     };
 
     const shareReading = async (reading) => {
+        const content = reading.contentAmharic || reading.content;
         if (navigator.share) {
             try {
                 await navigator.share({
-                    title: reading.title,
-                    text: reading.content,
+                    title: reading.titleAmharic || reading.title,
+                    text: content,
                     url: window.location.href
                 });
             } catch (err) {
                 console.error('Error sharing:', err);
             }
         } else {
-            navigator.clipboard.writeText(`${reading.title}\n\n${reading.content}\n\n${reading.reference}`);
+            await navigator.clipboard.writeText(`${reading.titleAmharic || reading.title}\n\n${content}\n\n${reading.reference}`);
             alert('Reading copied to clipboard!');
         }
     };
 
-    const generateDayOptions = () => {
-        return Array.from({ length: daysInMonth }, (_, i) => i + 1).map(day => (
-            <option key={day} value={day}>{toEthNum(day)}</option>
-        ));
+    const changeMonth = (direction) => {
+        const nextMonth = selectedMonth + direction;
+        const wrappedMonth = nextMonth < 1 ? 13 : nextMonth > 13 ? 1 : nextMonth;
+        const nextYear = nextMonth < 1
+            ? selectedYear - 1
+            : nextMonth > 13
+                ? selectedYear + 1
+                : selectedYear;
+        const nextMonthDays = wrappedMonth === 13
+            ? (isEthLeap(nextYear) ? 6 : 5)
+            : 30;
+
+        selectDate(wrappedMonth, Math.min(selectedDay, nextMonthDays), nextYear);
     };
 
-    const getAudioUrl = (reading) => {
-        // In a real app, this would fetch from a text-to-speech service
-        return null;
-    };
+    const changeDay = (direction) => {
+        if (direction < 0 && selectedDay === 1) {
+            const previousMonth = selectedMonth === 1 ? 13 : selectedMonth - 1;
+            const previousYear = selectedMonth === 1 ? selectedYear - 1 : selectedYear;
+            const previousMonthDays = previousMonth === 13
+                ? (isEthLeap(previousYear) ? 6 : 5)
+                : 30;
 
-    const playAudio = (reading) => {
-        const utterance = new SpeechSynthesisUtterance(reading.content);
-        utterance.lang = 'am-ET';
-        window.speechSynthesis.speak(utterance);
+            selectDate(previousMonth, previousMonthDays, previousYear);
+            return;
+        }
+
+        if (direction > 0 && selectedDay === daysInMonth) {
+            const nextMonth = selectedMonth === 13 ? 1 : selectedMonth + 1;
+            const nextYear = selectedMonth === 13 ? selectedYear + 1 : selectedYear;
+            selectDate(nextMonth, 1, nextYear);
+            return;
+        }
+
+        selectDate(selectedMonth, selectedDay + direction, selectedYear);
     };
 
     return (
@@ -118,65 +83,55 @@ const Gizae = () => {
             
             <div className="gizae-controls">
                 <div className="control-group">
-                    <label htmlFor="gizae-month-select">ወር Select Month</label>
-                    <select 
-                        id="gizae-month-select" 
-                        value={selectedMonth}
-                        onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
-                        disabled={loading}
-                    >
-                        {ethiopianMonths.map((month, index) => (
-                            <option key={index + 1} value={index + 1}>
-                                {month}
-                            </option>
-                        ))}
-                    </select>
+                    <div className="date-stepper" role="group" aria-label="Select Ethiopian month">
+                        <button
+                            type="button"
+                            className="stepper-arrow"
+                            onClick={() => changeMonth(-1)}
+                            aria-label="Previous Ethiopian month"
+                        >
+                            <i className="fas fa-chevron-left" aria-hidden="true" />
+                        </button>
+                        <span className="stepper-value" aria-live="polite">
+                            {ethiopianMonths[selectedMonth - 1]}
+                        </span>
+                        <button
+                            type="button"
+                            className="stepper-arrow"
+                            onClick={() => changeMonth(1)}
+                            aria-label="Next Ethiopian month"
+                        >
+                            <i className="fas fa-chevron-right" aria-hidden="true" />
+                        </button>
+                    </div>
                 </div>
                 <div className="control-group">
-                    <label htmlFor="gizae-day-select">ቀን Select Day</label>
-                    <select 
-                        id="gizae-day-select" 
-                        value={selectedDay}
-                        onChange={(e) => setSelectedDay(parseInt(e.target.value))}
-                        disabled={loading}
-                    >
-                        {generateDayOptions()}
-                    </select>
-                </div>
-                <div className="control-group">
-                    <label>&nbsp;</label>
-                    <button onClick={handleSearch} disabled={loading}>
-                        <i className={`fas ${loading ? 'fa-spinner fa-spin' : 'fa-search'}`}></i> 
-                        {loading ? 'Loading...' : 'Search Readings'}
-                    </button>
+                    <div className="date-stepper" role="group" aria-label="Select Ethiopian day">
+                        <button
+                            type="button"
+                            className="stepper-arrow"
+                            onClick={() => changeDay(-1)}
+                            aria-label="Previous day"
+                        >
+                            <i className="fas fa-chevron-left" aria-hidden="true" />
+                        </button>
+                        <span className="stepper-value" aria-live="polite">
+                            {toEthNum(selectedDay)}
+                        </span>
+                        <button
+                            type="button"
+                            className="stepper-arrow"
+                            onClick={() => changeDay(1)}
+                            aria-label="Next day"
+                        >
+                            <i className="fas fa-chevron-right" aria-hidden="true" />
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div className="gizae-tabs">
-                <button 
-                    className="tab-btn active"
-                    onClick={() => document.getElementById('readings-tab').style.display = 'block'}
-                >
-                    Readings
-                </button>
-                <button 
-                    className="tab-btn"
-                    onClick={() => document.getElementById('bookmarks-tab').style.display = 'block'}
-                >
-                    Bookmarks
-                </button>
-            </div>
-
-            <div id="readings-tab" className="tab-content">
-                {loading ? (
-                    <div className="gizae-loading">
-                        <i className="fas fa-spinner fa-spin"></i> Loading readings...
-                    </div>
-                ) : error ? (
-                    <div className="gizae-error">
-                        <i className="fas fa-exclamation-circle"></i> {error}
-                    </div>
-                ) : readings.length === 0 ? (
+            <div className="readings-list">
+                {readings.length === 0 ? (
                     <div className="gizae-reading">
                         <div className="reading-title">
                             <i className="fas fa-book"></i> ለዚህ ቀን የተመዘገቡ ንባቦች የሉም
@@ -187,13 +142,11 @@ const Gizae = () => {
                     </div>
                 ) : (
                     readings.map((reading, index) => {
-                        const bookmarkKey = `${selectedMonth}-${selectedDay}-${reading.title}`;
-                        const isBookmarked = bookmarks.includes(bookmarkKey);
-                        const noteKey = `${selectedMonth}-${selectedDay}-${reading.title}`;
-                        const hasNote = notes[noteKey];
+                        const speechId = `gizae-${selectedMonth}-${selectedDay}-${reading._id || reading.title || index}`;
+                        const isSpeaking = activeSpeechId === speechId;
 
                         return (
-                            <div key={index} className="gizae-reading">
+                            <div key={speechId} className="gizae-reading">
                                 <div className="reading-header">
                                     <div className="reading-title">
                                         <i className="fas fa-book"></i> 
@@ -201,33 +154,24 @@ const Gizae = () => {
                                     </div>
                                     <div className="reading-actions">
                                         <button 
-                                            className={`action-btn ${isBookmarked ? 'bookmarked' : ''}`}
-                                            onClick={() => toggleBookmark(reading)}
-                                            title={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
-                                        >
-                                            <i className={`fas fa-${isBookmarked ? 'bookmark' : 'bookmark'}`}></i>
-                                        </button>
-                                        <button 
+                                            type="button"
                                             className="action-btn"
-                                            onClick={() => {
-                                                setCurrentNote({ reading: reading.title, text: notes[noteKey] || '' });
-                                                setShowNoteModal(true);
-                                            }}
-                                            title={hasNote ? 'Edit note' : 'Add note'}
+                                            onClick={() => toggleSpeech(
+                                                speechId,
+                                                reading.contentAmharic || reading.content
+                                            )}
+                                            title={isSpeaking ? 'Stop audio' : 'Listen'}
+                                            aria-label={`${isSpeaking ? 'Stop audio for' : 'Listen to'} ${reading.titleAmharic || reading.title}`}
+                                            aria-pressed={isSpeaking}
                                         >
-                                            <i className={`fas fa-${hasNote ? 'sticky-note' : 'sticky-note'}`}></i>
+                                            <i className={`fas ${isSpeaking ? 'fa-stop' : 'fa-volume-up'}`} aria-hidden="true"></i>
                                         </button>
                                         <button 
-                                            className="action-btn"
-                                            onClick={() => playAudio(reading)}
-                                            title="Listen"
-                                        >
-                                            <i className="fas fa-volume-up"></i>
-                                        </button>
-                                        <button 
+                                            type="button"
                                             className="action-btn"
                                             onClick={() => shareReading(reading)}
                                             title="Share"
+                                            aria-label={`Share ${reading.titleAmharic || reading.title}`}
                                         >
                                             <i className="fas fa-share-alt"></i>
                                         </button>
@@ -237,81 +181,15 @@ const Gizae = () => {
                                 <div className="reading-content">
                                     {reading.contentAmharic || reading.content}
                                 </div>
-                                
-                                {hasNote && (
-                                    <div className="reading-note">
-                                        <i className="fas fa-sticky-note"></i>
-                                        {notes[noteKey]}
-                                    </div>
-                                )}
-                                
+
                                 <div className="reading-reference">
                                     {reading.reference}
                                 </div>
-
-                                {reading.relatedReadings && (
-                                    <div className="related-readings">
-                                        <h4>Related Readings:</h4>
-                                        <ul>
-                                            {reading.relatedReadings.map((ref, i) => (
-                                                <li key={i}>{ref}</li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                )}
                             </div>
                         );
                     })
                 )}
             </div>
-
-            <div id="bookmarks-tab" className="tab-content" style={{ display: 'none' }}>
-                {bookmarks.length === 0 ? (
-                    <div className="no-bookmarks">
-                        <i className="fas fa-bookmark"></i>
-                        <p>No bookmarked readings yet</p>
-                    </div>
-                ) : (
-                    bookmarks.map(key => {
-                        const [month, day, title] = key.split('-');
-                        return (
-                            <div key={key} className="bookmark-item">
-                                <div className="bookmark-info">
-                                    <span className="bookmark-date">
-                                        {ethiopianMonths[parseInt(month)-1]} {toEthNum(parseInt(day))}
-                                    </span>
-                                    <span className="bookmark-title">{title}</span>
-                                </div>
-                                <button 
-                                    className="remove-bookmark"
-                                    onClick={() => toggleBookmark({ title })}
-                                >
-                                    <i className="fas fa-times"></i>
-                                </button>
-                            </div>
-                        );
-                    })
-                )}
-            </div>
-
-            {/* Note Modal */}
-            {showNoteModal && (
-                <div className="note-modal" onClick={() => setShowNoteModal(false)}>
-                    <div className="modal-content" onClick={e => e.stopPropagation()}>
-                        <h3>Add Note</h3>
-                        <textarea
-                            value={currentNote.text}
-                            onChange={(e) => setCurrentNote({ ...currentNote, text: e.target.value })}
-                            placeholder="Write your thoughts..."
-                            rows="5"
-                        />
-                        <div className="modal-actions">
-                            <button onClick={saveNote}>Save Note</button>
-                            <button onClick={() => setShowNoteModal(false)}>Cancel</button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </section>
     );
 };

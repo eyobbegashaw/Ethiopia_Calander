@@ -22,6 +22,8 @@
 #synaxarium {
   position: relative;
   overflow: hidden;
+  width: min(100%, 1120px);
+  margin: 2rem auto 0;
 }
 
 #synaxarium::before {
@@ -35,46 +37,6 @@
   pointer-events: none;
   font-family: serif;
   transform: rotate(15deg);
-}
-
-/* Today's Saints Section */
-.today-saints-section {
-  margin-bottom: 3rem;
-  animation: glowPulse 4s infinite;
-}
-
-@keyframes glowPulse {
-  0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.1); }
-  50% { box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); }
-}
-
-.section-subtitle {
-  font-size: 1.6rem;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
-  color: var(--gold-royal);
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  position: relative;
-  padding-left: 1rem;
-}
-
-.section-subtitle::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 4px;
-  height: 70%;
-  background: linear-gradient(to bottom, var(--gold-royal), var(--gold-light));
-  border-radius: 2px;
-}
-
-.section-subtitle i {
-  font-size: 1.8rem;
-  color: var(--gold-royal);
 }
 
 /* Saints List */
@@ -246,6 +208,43 @@
   margin-top: 1rem;
 }
 
+.saint-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.25rem;
+}
+
+.saint-action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 40px;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 12px;
+  background: rgba(212, 175, 55, 0.12);
+  color: var(--gold-light);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.saint-action-button:hover {
+  background: var(--gold-royal);
+  border-color: var(--gold-light);
+  color: var(--charcoal-deep);
+  transform: translateY(-1px);
+}
+
+.saint-action-button:focus-visible {
+  outline: 2px solid var(--gold-light);
+  outline-offset: 3px;
+}
+
 .saint-tag {
   background: rgba(212, 175, 55, 0.1);
   border: 1px solid rgba(212, 175, 55, 0.2);
@@ -265,41 +264,33 @@
 
 /* Synaxarium Controls */
 .synaxarium-controls {
-  display: flex;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
   margin: 2rem 0;
   padding: 1.5rem;
   background: rgba(42, 42, 42, 0.5);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border-radius: 24px;
+  border-radius: 22px;
   border: 1px solid var(--glass-border);
-  flex-wrap: wrap;
-  align-items: flex-end;
+  align-items: center;
 }
 
 .control-group {
-  flex: 1;
-  min-width: 200px;
-}
-
-.control-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: var(--gold-royal);
-  font-weight: 500;
-  font-size: 0.9rem;
-  letter-spacing: 0.5px;
+  min-width: 0;
 }
 
 .control-group select {
   width: 100%;
-  padding: 0.8rem 1rem;
-  background: var(--charcoal-soft);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
-  color: var(--cream-soft);
-  font-size: 1rem;
+  min-height: 54px;
+  padding: 0.85rem 2.75rem 0.85rem 1rem;
+  background-color: rgba(18, 28, 25, 0.9);
+  border: 1px solid rgba(230, 200, 124, 0.4);
+  border-radius: 14px;
+  color: #fff9e8;
+  font-size: 1.02rem;
+  font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
   appearance: none;
@@ -307,29 +298,105 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23d4af37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 1rem center;
-  padding-right: 2.5rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .control-group select:hover {
-  border-color: var(--gold-royal);
-  box-shadow: var(--shadow-gold);
+  border-color: var(--gold-light);
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.16);
   transform: translateY(-1px);
 }
 
 .control-group select:focus {
   outline: none;
-  border-color: var(--gold-royal);
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+  border-color: var(--gold-light);
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2);
+}
+
+.control-group select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.control-group select option {
+  background: #202923;
+  color: #fff9e8;
+}
+
+.date-stepper {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
+  align-items: center;
+  min-height: 54px;
+  overflow: hidden;
+  border: 1px solid rgba(230, 200, 124, 0.45);
+  border-radius: 14px;
+  background: rgba(18, 28, 25, 0.9);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 4px 12px rgba(0, 0, 0, 0.12);
+  transition: var(--transition);
+}
+
+.date-stepper:focus-within {
+  border-color: var(--gold-light);
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2);
+}
+
+.stepper-value {
+  overflow: hidden;
+  padding: 0.65rem 0.35rem;
+  color: #fff9e8;
+  font-size: 1.02rem;
+  font-weight: 700;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.control-group .stepper-arrow {
+  width: 48px;
+  height: 100%;
+  min-height: 52px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: rgba(212, 175, 55, 0.12);
+  color: var(--gold-light);
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.control-group .stepper-arrow:hover:not(:disabled) {
+  transform: none;
+  background: var(--gold-royal);
+  color: #241b05;
+  box-shadow: none;
+  filter: none;
+}
+
+.control-group .stepper-arrow:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.control-group .stepper-arrow:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: 2px solid var(--gold-light);
+  outline-offset: -3px;
 }
 
 .control-group button {
   width: 100%;
-  padding: 0.8rem 1.5rem;
+  min-height: 54px;
+  padding: 0.8rem 1.25rem;
   background: linear-gradient(135deg, var(--gold-royal), var(--gold-deep));
   border: none;
-  border-radius: 12px;
-  color: var(--charcoal-deep);
-  font-weight: 600;
+  border-radius: 14px;
+  color: #241b05;
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
   transition: var(--transition);
   display: flex;
@@ -390,14 +457,20 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  #synaxarium {
+    width: 100%;
+    margin-top: 1.25rem;
+  }
+
   .synaxarium-controls {
-    flex-direction: column;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
     padding: 1rem;
   }
   
   .control-group {
-    min-width: 100%;
+    width: 100%;
+    min-width: 0;
   }
   
   .saint-name {

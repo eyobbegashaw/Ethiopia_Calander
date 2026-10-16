@@ -1,37 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { toEthNum, ethiopianMonths, gcToEth } from '../utils/calendarUtils';
+import { toEthNum, ethiopianMonths, gcToEth, isEthLeap } from '../utils/calendarUtils';
 import { saintsData } from '../data/saintsData';
+import useSpeechPlayback from '../hooks/useSpeechPlayback';
 import './styles/Synaxarium.css';
 
 const Synaxarium = () => {
-    const [selectedMonth, setSelectedMonth] = useState(1);
-    const [selectedDay, setSelectedDay] = useState(1);
-    const [daysInMonth, setDaysInMonth] = useState(30);
-    const [todaySaints, setTodaySaints] = useState([]);
-    const [searchResults, setSearchResults] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const todayEth = gcToEth(new Date());
+    const [selectedMonth, setSelectedMonth] = useState(todayEth.month);
+    const [selectedDay, setSelectedDay] = useState(todayEth.day);
+    const [selectedYear, setSelectedYear] = useState(todayEth.year);
+    const { activeSpeechId, toggleSpeech } = useSpeechPlayback();
+
+    const daysInMonth = selectedMonth === 13
+        ? (isEthLeap(selectedYear) ? 6 : 5)
+        : 30;
 
     useEffect(() => {
-        // Update days in month when month changes
-        const days = selectedMonth === 13 ? 6 : 30;
-        setDaysInMonth(days);
-        
-        // Reset selected day if it's out of range
-        if (selectedDay > days) {
-            setSelectedDay(1);
-        }
-    }, [selectedMonth]);
-
-    useEffect(() => {
-        loadTodaysSaints();
-        
         // Listen for calendar day clicks
         const handleShowSaints = (e) => {
-            const { month, day } = e.detail;
+            const { month, day, year } = e.detail;
             setSelectedMonth(month);
             setSelectedDay(day);
-            searchSaints(month, day);
+            if (year) {
+                setSelectedYear(year);
+            }
             
             // Scroll to synaxarium
             document.getElementById('synaxarium')?.scrollIntoView({ behavior: 'smooth' });
@@ -41,77 +33,97 @@ const Synaxarium = () => {
         return () => window.removeEventListener('showSaintsForDate', handleShowSaints);
     }, []);
 
-    const loadTodaysSaints = async () => {
-        setLoading(true);
-        setError(null);
+    const changeMonth = (direction) => {
+        const nextMonth = selectedMonth + direction;
+        const wrappedMonth = nextMonth < 1 ? 13 : nextMonth > 13 ? 1 : nextMonth;
+        const nextYear = nextMonth < 1
+            ? selectedYear - 1
+            : nextMonth > 13
+                ? selectedYear + 1
+                : selectedYear;
+        const nextMonthDays = wrappedMonth === 13
+            ? (isEthLeap(nextYear) ? 6 : 5)
+            : 30;
+
+        setSelectedMonth(wrappedMonth);
+        setSelectedYear(nextYear);
+        setSelectedDay(Math.min(selectedDay, nextMonthDays));
+    };
+
+    const changeDay = (direction) => {
+        if (direction < 0 && selectedDay === 1) {
+            const previousMonth = selectedMonth === 1 ? 13 : selectedMonth - 1;
+            const previousYear = selectedMonth === 1 ? selectedYear - 1 : selectedYear;
+            const previousMonthDays = previousMonth === 13
+                ? (isEthLeap(previousYear) ? 6 : 5)
+                : 30;
+
+            setSelectedMonth(previousMonth);
+            setSelectedYear(previousYear);
+            setSelectedDay(previousMonthDays);
+            return;
+        }
+
+        if (direction > 0 && selectedDay === daysInMonth) {
+            const nextMonth = selectedMonth === 13 ? 1 : selectedMonth + 1;
+            setSelectedMonth(nextMonth);
+            if (selectedMonth === 13) {
+                setSelectedYear(selectedYear + 1);
+            }
+            setSelectedDay(1);
+            return;
+        }
+
+        setSelectedDay(selectedDay + direction);
+    };
+
+    const shareSaint = async (saint, date) => {
+        const name = saint.nameAmharic || saint.name || '';
+        const description = saint.descriptionAmharic || saint.description || '';
+        const text = `${date}\n${name}\n${description}`;
+        const shareData = {
+            title: name,
+            text,
+            url: window.location.href
+        };
+
         try {
-            const now = new Date();
-            const { month: eMonth, day: eDay } = gcToEth(now);
-            
-            setTodaySaints(saintsData[`${eMonth}-${eDay}`] || []);
-        } catch (err) {
-            console.error('Error loading today\'s saints:', err);
-            setError('Failed to load today\'s saints');
-            setTodaySaints([]);
-        } finally {
-            setLoading(false);
+            if (navigator.share) {
+                await navigator.share(shareData);
+            } else if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(text);
+                window.alert('Saint details copied to clipboard.');
+            } else {
+                window.alert('Sharing and clipboard access are not supported in this browser.');
+            }
+        } catch (error) {
+            if (error.name !== 'AbortError') {
+                console.error('Unable to share saint details:', error);
+                window.alert('Unable to share saint details. Please try again.');
+            }
         }
     };
 
-    const searchSaints = async (month = selectedMonth, day = selectedDay) => {
-        setLoading(true);
-        setError(null);
-        try {
-            setSearchResults(saintsData[`${month}-${day}`] || []);
-        } catch (err) {
-            console.error('Error searching saints:', err);
-            setError('Failed to search saints');
-            setSearchResults([]);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleSearch = () => {
-        searchSaints();
-    };
-
-    const generateDayOptions = () => {
-        return Array.from({ length: daysInMonth }, (_, i) => i + 1).map(day => (
-            <option key={day} value={day}>{toEthNum(day)}</option>
-        ));
-    };
-
-    const renderSaintsList = (saints, date, isToday = false) => {
-        if (loading) {
-            return (
-                <div className="saints-loading">
-                    <i className="fas fa-spinner fa-spin"></i> Loading...
-                </div>
-            );
-        }
-
-        if (error) {
-            return (
-                <div className="saints-error">
-                    <i className="fas fa-exclamation-circle"></i> {error}
-                </div>
-            );
-        }
-
+    const renderSaintsList = (saints, date) => {
         if (!saints || saints.length === 0) {
             return (
-                <div className={`saint-item ${isToday ? 'today-saints' : ''}`}>
+                <div className="saint-item">
                     <div className="saint-date">{date}</div>
                     <div className="saint-description">
-                        {isToday ? 'ለዛሬ የተመዘገቡ ቅዱሳን የሉም።' : 'ለዚህ ቀን የተመዘገቡ ቅዱሳን የሉም።'}
+                        ለዚህ ቀን የተመዘገቡ ቅዱሳን የሉም።
                     </div>
                 </div>
             );
         }
 
-        return saints.map((saint, index) => (
-            <div key={saint._id || index} className={`saint-item ${isToday ? 'today-saints' : ''}`}>
+        return saints.map((saint, index) => {
+            const speechId = `synaxarium-${selectedMonth}-${selectedDay}-${saint._id || saint.name || index}`;
+            const isSpeaking = activeSpeechId === speechId;
+            const name = saint.nameAmharic || saint.name || '';
+            const description = saint.descriptionAmharic || saint.description || '';
+
+            return (
+            <div key={speechId} className="saint-item">
                 <div className="saint-date">{date}</div>
                 <div className="saint-name">{saint.nameAmharic || saint.name}</div>
                 <div className="saint-description">{saint.descriptionAmharic || saint.description}</div>
@@ -120,69 +132,91 @@ const Synaxarium = () => {
                         <span key={i} className="saint-tag">{cat}</span>
                     ))}
                 </div>
+                <div className="saint-actions">
+                    <button
+                        type="button"
+                        className="saint-action-button"
+                        onClick={() => toggleSpeech(speechId, `${name}. ${description}`)}
+                        aria-label={`${isSpeaking ? 'Stop audio for' : 'Listen to'} ${name}`}
+                        aria-pressed={isSpeaking}
+                        title={isSpeaking ? 'Stop audio' : 'Listen'}
+                    >
+                        <i className={`fas ${isSpeaking ? 'fa-stop' : 'fa-volume-up'}`} aria-hidden="true" />
+                        <span>{isSpeaking ? 'Stop' : 'Listen'}</span>
+                    </button>
+                    <button
+                        type="button"
+                        className="saint-action-button"
+                        onClick={() => shareSaint(saint, date)}
+                        aria-label={`Share ${saint.nameAmharic || saint.name}`}
+                        title="Share"
+                    >
+                        <i className="fas fa-share-alt" aria-hidden="true" />
+                        <span>Share</span>
+                    </button>
+                </div>
             </div>
-        ));
+            );
+        });
     };
 
     return (
         <section className="card" id="synaxarium">
             <h2 className="section-title">ስንክሳር - Orthodox Synaxarium</h2>
             
-            {/* Today's Saints */}
-            <div className="today-saints-section">
-                <h3 className="section-subtitle">
-                    <i className="fas fa-calendar-day"></i> የዛሬ ቅዱሳን - Today's Saints
-                </h3>
-                <div className="saints-list">
-                    {renderSaintsList(
-                        todaySaints, 
-                        `${ethiopianMonths[gcToEth(new Date()).month - 1]} ${toEthNum(gcToEth(new Date()).day)}`,
-                        true
-                    )}
-                </div>
-            </div>
-
-            {/* Search Saints by Date */}
             <div className="synaxarium-controls">
                 <div className="control-group">
-                    <label htmlFor="month-select">ወር Select Month</label>
-                    <select 
-                        id="month-select" 
-                        value={selectedMonth}
-                        onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
-                        disabled={loading}
-                    >
-                        {ethiopianMonths.map((month, index) => (
-                            <option key={index + 1} value={index + 1}>
-                                {month}
-                            </option>
-                        ))}
-                    </select>
+                    <div className="date-stepper" role="group" aria-label="Select Ethiopian month">
+                        <button
+                            type="button"
+                            className="stepper-arrow"
+                            onClick={() => changeMonth(-1)}
+                            aria-label="Previous Ethiopian month"
+                        >
+                            <i className="fas fa-chevron-left" aria-hidden="true" />
+                        </button>
+                        <span className="stepper-value" aria-live="polite">
+                            {ethiopianMonths[selectedMonth - 1]}
+                        </span>
+                        <button
+                            type="button"
+                            className="stepper-arrow"
+                            onClick={() => changeMonth(1)}
+                            aria-label="Next Ethiopian month"
+                        >
+                            <i className="fas fa-chevron-right" aria-hidden="true" />
+                        </button>
+                    </div>
                 </div>
                 <div className="control-group">
-                    <label htmlFor="day-select">ቀን Select Day</label>
-                    <select 
-                        id="day-select" 
-                        value={selectedDay}
-                        onChange={(e) => setSelectedDay(parseInt(e.target.value))}
-                        disabled={loading}
-                    >
-                        {generateDayOptions()}
-                    </select>
-                </div>
-                <div className="control-group">
-                    <label>&nbsp;</label>
-                    <button onClick={handleSearch} disabled={loading}>
-                        <i className={`fas ${loading ? 'fa-spinner fa-spin' : 'fa-search'}`}></i> 
-                        {loading ? 'Searching...' : 'Search Saints'}
-                    </button>
+                    <div className="date-stepper" role="group" aria-label="Select Ethiopian day">
+                        <button
+                            type="button"
+                            className="stepper-arrow"
+                            onClick={() => changeDay(-1)}
+                            aria-label="Previous day"
+                        >
+                            <i className="fas fa-chevron-left" aria-hidden="true" />
+                        </button>
+                        <span className="stepper-value" aria-live="polite">
+                            {toEthNum(selectedDay)}
+                        </span>
+                        <button
+                            type="button"
+                            className="stepper-arrow"
+                            onClick={() => changeDay(1)}
+                            aria-label="Next day"
+                        >
+                            <i className="fas fa-chevron-right" aria-hidden="true" />
+                        </button>
+                    </div>
                 </div>
             </div>
 
             <div className="saints-list">
                 {renderSaintsList(
-                    searchResults,
-                    `${ethiopianMonths[selectedMonth-1]} ${toEthNum(selectedDay)}`
+                    saintsData[`${selectedMonth}-${selectedDay}`] || [],
+                    `${ethiopianMonths[selectedMonth - 1]} ${toEthNum(selectedDay)}`
                 )}
             </div>
         </section>
