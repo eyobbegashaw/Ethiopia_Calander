@@ -151,7 +151,7 @@
 
 /* Ethiopian numbers styling */
 .date-input select option {
-  font-family: 'Noto Sans Ethiopic', sans-serif;
+  font-family: 'Noto Serif Ethiopic', 'Inter', sans-serif;
 }
 
 /* Convert Button */

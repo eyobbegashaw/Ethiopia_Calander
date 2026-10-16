@@ -1,21 +1,13 @@
 /* App.css - Enhanced with Lalibela Background and Quiz Cards */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Ethiopic:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+Ethiopic:wght@400;500;600;700&display=swap');
 
 :root {
   --app-landscape-image: url('./assets/1.png');
+  --landscape-overlay: rgba(11, 34, 31, 0.45);
+  --site-header-height: 72px;
+  --mobile-bottom-nav-height: 70px;
 
-  /* Light Mode Variables */
-  --bg-primary-light: #f5f0e6;
-  --bg-secondary-light: #ffffff;
-  --text-primary-light: #1a1a1a;
-  --text-secondary-light: #2a2a2a;
-  --card-bg-light: rgba(255, 255, 255, 0.95);
-  --border-light: rgba(0, 0, 0, 0.1);
-  --icon-color-light: #d4af37;
-  --nav-text-light: #1a1a1a;
-  --nav-hover-light: #d4af37;
-  
   /* Dark Mode Variables */
   --bg-primary-dark: #1a1a1a;
   --bg-secondary-dark: #2a2a2a;
@@ -33,7 +25,6 @@
   --gold-deep: #b6942c;
   --gold-glow: rgba(212, 175, 55, 0.3);
   
-  /* Default to dark mode */
   --bg-primary: var(--bg-primary-dark);
   --bg-secondary: var(--bg-secondary-dark);
   --text-primary: var(--text-primary-dark);
@@ -58,28 +49,22 @@
   --border-radius-xl: 80px;
 }
 
-/* Light mode class */
-.light-mode {
-  --bg-primary: var(--bg-primary-light);
-  --bg-secondary: var(--bg-secondary-light);
-  --text-primary: var(--text-primary-light);
-  --text-secondary: var(--text-secondary-light);
-  --card-bg: var(--card-bg-light);
-  --border-color: var(--border-light);
-  --icon-color: var(--icon-color-light);
-  --nav-text: var(--nav-text-light);
-  --nav-hover: var(--nav-hover-light);
-}
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
 body {
-  font-family: 'Noto Sans Ethiopic', sans-serif;
-  background: var(--bg-primary);
+  font-family: 'Noto Serif Ethiopic', 'Inter', sans-serif;
+  background: transparent;
   color: var(--text-primary);
   line-height: 1.6;
   min-height: 100vh;
@@ -88,12 +73,7 @@ body {
   overflow-x: hidden;
 }
 
-body.light-mode {
-  background: var(--bg-primary-light);
-  color: var(--text-primary-light);
-}
-
-/* Enhanced Lalibela Church Background */
+/* Keep one shared landscape background with a stronger color wash */
 body::before {
   content: '';
   position: fixed;
@@ -101,37 +81,19 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: 
-    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+  background-image:
+    linear-gradient(var(--landscape-overlay), var(--landscape-overlay)),
     var(--app-landscape-image);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  opacity: 0.25;
-  z-index: -2;
-  pointer-events: none;
-}
-
-body.light-mode::before {
-  opacity: 0.16;
-}
-
-/* Improved overlay for better readability */
-body::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%);
   z-index: -1;
   pointer-events: none;
 }
 
-body.light-mode::after {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+body::after {
+  content: none;
 }
 
 /* Icon Styles */
@@ -157,9 +119,72 @@ i, .fas, .far, .fab, .fal {
   z-index: 1;
 }
 
+.home-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--site-header-height));
+  height: calc(100svh - var(--site-header-height));
+  margin-top: var(--site-header-height);
+  overflow: hidden;
+}
+
+body.home-page-active {
+  padding-bottom: 0;
+}
+
+.home-page > .hero {
+  height: auto;
+  flex: 1 1 0;
+  min-height: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 1rem 2rem;
+}
+
+.home-page > .hero::before {
+  content: none;
+}
+
+.home-page .hero h1 {
+  margin-bottom: 0;
+  font-size: clamp(2.25rem, 4.2vw, 4rem);
+}
+
+.home-page .current-date {
+  padding: 1.5rem 2rem 1.25rem;
+}
+
+.home-page .date-card-heading {
+  padding-bottom: 0.8rem;
+}
+
+.home-page .date-card-primary {
+  padding-top: 1rem;
+}
+
+.home-page .ethiopian-day-number {
+  font-size: 4.4rem;
+}
+
+.home-page .date-equivalent {
+  padding: 0.8rem 0;
+}
+
+.home-page .date-convert-link {
+  padding-top: 0.8rem;
+}
+
 .home-features-wrapper {
-  padding-top: 3.5rem;
-  padding-bottom: 5rem;
+  flex: 0 0 250px;
+  width: 100%;
+  max-width: 1400px;
+  min-height: 0;
+  padding: 0 2rem 0.75rem;
+  overflow: hidden;
+}
+
+.home-page .feature-grid {
+  margin-bottom: 0;
 }
 
 .features-heading {
@@ -167,7 +192,7 @@ i, .fas, .far, .fab, .fal {
   align-items: end;
   justify-content: space-between;
   gap: 2rem;
-  margin-bottom: 1.6rem;
+  margin-bottom: 0.65rem;
 }
 
 .features-eyebrow {
@@ -181,43 +206,80 @@ i, .fas, .far, .fab, .fal {
   line-height: 1.25;
 }
 
-.features-heading > p {
-  max-width: 300px;
-  margin-bottom: 0.2rem;
-  color: var(--text-secondary);
-  font-size: 0.95rem;
+.feature-grid {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0 1rem;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 0.25rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
 
-.feature-grid {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 1rem;
+.feature-grid::-webkit-scrollbar {
+  display: none;
 }
 
 .feature-card {
-  grid-column: span 2;
-  min-height: 210px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  flex: 0 0 min(82%, 880px);
+  min-width: 0;
+  height: 160px;
+  min-height: 160px;
   display: flex;
   align-items: flex-start;
   gap: 1rem;
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  padding: 1.35rem;
-  box-shadow: var(--shadow-sm);
-  color: inherit;
+  padding: 1.35rem 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 48px;
+  background: rgba(10, 18, 15, 0.08);
+  box-shadow:
+    0 20px 48px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  color: #f7f5ed;
   text-decoration: none;
-  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  scroll-snap-align: start;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
 }
 
-.feature-card:nth-child(4) {
-  grid-column: 2 / span 2;
+.feature-card::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  content: '';
+  pointer-events: none;
+  background: linear-gradient(
+    118deg,
+    transparent 0%,
+    transparent 39%,
+    rgba(255, 255, 255, 0.13) 39.4%,
+    rgba(255, 255, 255, 0.045) 55%,
+    transparent 55.5%,
+    transparent 100%
+  );
 }
 
 .feature-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--gold-royal);
-  box-shadow: var(--shadow-md);
+  border-color: rgba(247, 221, 157, 0.82);
+  box-shadow:
+    0 22px 54px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.feature-card:focus-visible {
+  outline: 2px solid #e6c87c;
+  outline-offset: 4px;
+}
+
+.feature-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 .feature-icon {
@@ -226,13 +288,13 @@ i, .fas, .far, .fab, .fal {
   flex: 0 0 42px;
   display: grid;
   place-items: center;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .feature-icon i {
-  color: var(--gold-deep);
+  color: #e6c87c;
   font-size: 1rem;
 }
 
@@ -245,21 +307,21 @@ i, .fas, .far, .fab, .fal {
 
 .feature-card h3 {
   margin: 0.15rem 0 0.5rem;
-  color: var(--text-primary);
+  color: #fff9e8;
   font-size: 1.08rem;
   font-weight: 700;
 }
 
 .feature-card p {
   margin-bottom: 1.2rem;
-  color: var(--text-secondary);
+  color: rgba(247, 245, 237, 0.78);
   font-size: 0.9rem;
   line-height: 1.6;
 }
 
 .feature-card-link {
   margin-top: auto;
-  color: var(--gold-deep);
+  color: #e6c87c;
   font-size: 0.82rem;
   font-weight: 700;
 }
@@ -275,35 +337,205 @@ i, .fas, .far, .fab, .fal {
 }
 
 @media (max-width: 900px) {
-  .feature-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .feature-card {
+    padding: 1.75rem 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --site-header-height: 60px;
+    --mobile-bottom-nav-height: calc(64px + env(safe-area-inset-bottom, 0px));
   }
 
-  .feature-card,
-  .feature-card:nth-child(4) {
-    grid-column: auto;
+  .home-page {
+    height: calc(100vh - var(--site-header-height) - var(--mobile-bottom-nav-height));
+    height: calc(100svh - var(--site-header-height) - var(--mobile-bottom-nav-height));
   }
 }
 
 @media (max-width: 600px) {
   .main-container.home-features-wrapper {
-    padding: 2.5rem 1.1rem 3rem;
+    flex-basis: 205px;
+    padding: 0 1.1rem 0.5rem;
+  }
+
+  .home-page > .hero {
+    padding: 0.5rem 1rem;
+  }
+
+  .home-page .hero-content {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+
+  .home-page .hero-kicker {
+    margin-bottom: 0.35rem;
+    font-size: 0.64rem;
+  }
+
+  .home-page .hero h1 {
+    font-size: clamp(1.7rem, 7.5vw, 2.4rem);
+    line-height: 1.06;
+  }
+
+  .home-page .hero-intro {
+    margin-top: 0.35rem;
+    font-size: 0.78rem;
+    line-height: 1.35;
+  }
+
+  .home-page .hero-cta {
+    margin-top: 0.5rem;
+    gap: 0.55rem;
+  }
+
+  .home-page .cta-button,
+  .home-page .install-app-button {
+    min-height: 38px;
+    padding: 0.45rem 0.7rem;
+    font-size: 0.78rem;
+  }
+
+  .home-page .current-date {
+    padding: 0.65rem 1rem;
+    border-radius: 28px;
+  }
+
+  .home-page .date-card-heading {
+    padding-bottom: 0.35rem;
+  }
+
+  .home-page .date-card-title {
+    gap: 0.6rem;
+    font-size: 0.82rem;
+    line-height: 1.3;
+  }
+
+  .home-page .date-card-tag {
+    font-size: 0.55rem;
+    line-height: 1.35;
+  }
+
+  .home-page .date-indicator {
+    width: 8px;
+    height: 8px;
+    flex-basis: 8px;
+  }
+
+  .home-page .date-card-primary {
+    gap: 0.75rem;
+    padding: 0.45rem 0 0.2rem;
+  }
+
+  .home-page .ethiopian-day-number {
+    font-size: 2.7rem;
+  }
+
+  .home-page .ethiopian-date-detail {
+    min-height: 2.8rem;
+    gap: 0.1rem;
+    padding-left: 0.65rem;
+  }
+
+  .home-page .ethiopian-month {
+    font-size: 0.95rem;
+  }
+
+  .home-page .ethiopian-year {
+    font-size: 0.62rem;
+  }
+
+  .home-page .date-weekday-row {
+    gap: 0.45rem;
+    padding-bottom: 0.35rem;
+  }
+
+  .home-page .date-weekday-amharic {
+    font-size: 0.75rem;
+  }
+
+  .home-page .date-weekday-english {
+    font-size: 0.63rem;
+  }
+
+  .home-page .date-equivalent {
+    gap: 0.2rem;
+    padding: 0.35rem 0;
+  }
+
+  .home-page .date-equivalent-label {
+    font-size: 0.58rem;
+  }
+
+  .home-page .date-equivalent-value {
+    font-size: 0.88rem;
+  }
+
+  .home-page .date-convert-link {
+    padding-top: 0.35rem;
+    font-size: 0.73rem;
+  }
+
+  .home-page .hero-bottomline {
+    display: none;
+  }
+
+  .features-heading {
+    margin-bottom: 0.35rem;
+  }
+
+  .features-eyebrow {
+    margin-bottom: 0.15rem;
+    font-size: 0.6rem;
+  }
+
+  .features-heading h2 {
+    font-size: 1.25rem;
   }
 
   .features-heading {
     display: block;
   }
 
-  .features-heading > p {
-    margin-top: 0.65rem;
-  }
-
-  .feature-grid {
-    grid-template-columns: 1fr;
-  }
-
   .feature-card {
-    min-height: 0;
+    flex-basis: 92%;
+    height: 145px;
+    min-height: 145px;
+    padding: 0.85rem;
+    border-radius: 28px;
+  }
+
+  .feature-card p {
+    margin-bottom: 0.45rem;
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 768px) and (max-height: 740px) {
+  .main-container.home-features-wrapper {
+    flex-basis: 180px;
+  }
+
+  .home-page .hero-intro {
+    display: none;
+  }
+
+  .home-page .current-date {
+    padding: 0.45rem 0.85rem;
+  }
+
+  .home-page .date-equivalent {
+    padding: 0.2rem 0;
+  }
+
+  .home-page .date-convert-link {
+    padding-top: 0.2rem;
+  }
+
+  .home-page .feature-card {
+    height: 130px;
+    min-height: 130px;
   }
 }
 
@@ -520,13 +752,16 @@ i, .fas, .far, .fab, .fal {
 
 /* Hero Section - Enhanced with Parallax */
 .hero {
-  min-height: 90vh;
+  height: calc(100vh - var(--site-header-height));
+  height: calc(100svh - var(--site-header-height));
+  min-height: 0;
   width: 100vw;
   position: relative;
   left: 50%;
   right: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
+  margin-top: var(--site-header-height);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -662,47 +897,70 @@ i, .fas, .far, .fab, .fal {
 
 /* Current Date Card */
 .current-date {
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 2px solid rgba(212, 175, 55, 0.4);
-  border-radius: var(--border-radius-xl);
-  padding: 3rem 4rem;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 50px var(--gold-glow);
-  animation: fadeInUp 1s ease-out 0.4s both;
-  max-width: 900px;
-  margin: 0 auto;
   position: relative;
+  isolation: isolate;
   overflow: hidden;
-  transition: var(--transition);
+  width: 100%;
+  max-width: 456px;
+  min-width: 0;
+  justify-self: end;
+  padding: 3rem 3.25rem 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 96px;
+  background: rgba(10, 18, 15, 0.08);
+  box-shadow:
+    0 20px 48px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  animation: fadeInUp 1s ease-out 0.4s both;
+  margin: 0 auto;
+  transition: border-color 250ms ease, box-shadow 250ms ease;
 }
 
 .current-date:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 35px 70px rgba(0, 0, 0, 0.6), 0 0 70px var(--gold-glow);
-  border-color: var(--gold-royal);
+  transform: translateY(-2px);
+  border-color: rgba(247, 221, 157, 0.98);
+  box-shadow:
+    0 22px 54px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
 .current-date::before {
   content: '';
   position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(135deg, var(--gold-royal), transparent, var(--gold-royal));
-  border-radius: var(--border-radius-xl);
-  z-index: -1;
-  animation: borderGlow 3s infinite;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    118deg,
+    transparent 0%,
+    transparent 39%,
+    rgba(255, 255, 255, 0.13) 39.4%,
+    rgba(255, 255, 255, 0.045) 55%,
+    transparent 55.5%,
+    transparent 100%
+  );
+  opacity: 0.95;
 }
 
-@keyframes borderGlow {
-  0%, 100% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 1;
-  }
+.current-date::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  left: 20%;
+  right: 20%;
+  bottom: -2px;
+  height: 3px;
+  background: rgba(255, 226, 158, 0.9);
+  filter: blur(5px);
+  box-shadow: 0 0 18px rgba(230, 200, 124, 0.42);
+  pointer-events: none;
+}
+
+.current-date > * {
+  position: relative;
+  z-index: 1;
 }
 
 .ethiopian-date {
@@ -710,7 +968,7 @@ i, .fas, .far, .fab, .fal {
   font-weight: 700;
   color: var(--gold-royal);
   margin-bottom: 1rem;
-  font-family: 'Noto Sans Ethiopic', 'Inter', sans-serif;
+  font-family: 'Noto Serif Ethiopic', 'Inter', sans-serif;
   text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
   letter-spacing: 2px;
 }
@@ -757,35 +1015,6 @@ i, .fas, .far, .fab, .fal {
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
-}
-
-/* Light mode adjustments */
-.light-mode .hero::before {
-  opacity: 0.9;
-}
-
-.light-mode .hero-overlay {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.9) 0%,
-    rgba(255, 255, 255, 0.75) 50%,
-    rgba(255, 255, 255, 0.9) 100%
-  );
-}
-
-.light-mode .current-date {
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1), 0 0 50px rgba(212, 175, 55, 0.3);
-}
-
-.light-mode .gregorian-date,
-.light-mode .day-name,
-.light-mode .hero-subtitle {
-  color: #1a1a1a;
-}
-
-.light-mode .ethiopian-date {
-  text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
 }
 
 /* Section Styling */
@@ -899,8 +1128,10 @@ button {
   }
   
   .hero {
-    min-height: 80vh;
-    padding: 4rem 1rem;
+    height: calc(100vh - var(--site-header-height) - var(--mobile-bottom-nav-height));
+    height: calc(100svh - var(--site-header-height) - var(--mobile-bottom-nav-height));
+    min-height: 0;
+    padding: 1rem;
   }
   
   .hero h1 {
@@ -1100,4 +1331,89 @@ html {
 ::selection {
   background: var(--gold-royal);
   color: #1a1a1a;
+}
+
+/* Shared transparent glass treatment for the main feature pages */
+#calendar.card,
+#converter.card,
+#gizae.card,
+#holidays.card,
+#synaxarium.card,
+#calendar .calendar-container,
+#calendar .calendar-weekdays div,
+#calendar .calendar-day:not(.empty),
+#converter .converter-option,
+#gizae .gizae-controls,
+#gizae .gizae-tabs,
+#gizae .gizae-reading,
+#gizae .reading-content,
+#holidays .calculator-form,
+#holidays .holiday-item,
+#synaxarium .synaxarium-controls,
+#synaxarium .saint-item,
+#synaxarium .saint-tags {
+  background: rgba(10, 18, 15, 0.08);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border-color: rgba(255, 255, 255, 0.26);
+  box-shadow:
+    0 20px 48px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+#calendar.card::before,
+#converter.card::before,
+#gizae.card::before,
+#holidays.card::before,
+#synaxarium.card::before {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.24);
+}
+
+#calendar .section-title,
+#calendar .calendar-header h3,
+#calendar .calendar-weekdays div,
+#calendar .day-number,
+#calendar .calendar-day small,
+#converter .section-title,
+#converter .converter-option h3,
+#converter .converter-option label,
+#converter .converter-option h3 i,
+#gizae .section-title,
+#gizae .control-group label,
+#gizae .tab-btn,
+#gizae .reading-title,
+#gizae .reading-title i,
+#holidays .section-title,
+#holidays p,
+#holidays .holiday-name,
+#synaxarium .section-title,
+#synaxarium .section-subtitle,
+#synaxarium .saint-date,
+#synaxarium .saint-name,
+#synaxarium .saint-description {
+  color: #fff9e8;
+  -webkit-text-fill-color: currentColor;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+}
+
+#calendar .calendar-day.today {
+  background: rgba(230, 200, 124, 0.2);
+  border-color: rgba(230, 200, 124, 0.7);
+}
+
+#calendar .calendar-day.today::before {
+  background: rgba(10, 18, 15, 0.5);
+  color: #fff9e8;
+}
+
+#converter .result {
+  background: rgba(10, 18, 15, 0.08);
+}
+
+#holidays .holiday-date,
+#synaxarium .saint-tag {
+  color: #ffe5a2;
+  background: rgba(230, 200, 124, 0.12);
 }

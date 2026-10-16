@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { useTheme } from '../contexts/ThemeContext';
 import './styles/Header.css';
 
 const Header = () => {
-    const { isDarkMode, toggleTheme } = useTheme();
     const [scrolled, setScrolled] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState(null);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -35,15 +33,6 @@ const Header = () => {
             document.removeEventListener('click', handleClickOutside);
         };
     }, []);
-
-    // Apply light/dark mode class to body
-    useEffect(() => {
-        if (isDarkMode) {
-            document.body.classList.remove('light-mode');
-        } else {
-            document.body.classList.add('light-mode');
-        }
-    }, [isDarkMode]);
 
     useEffect(() => {
         const handleInstallPrompt = (event) => {
@@ -85,7 +74,7 @@ const Header = () => {
     };
 
     return (
-        <header className={`header ${scrolled ? 'scrolled' : ''} ${isDarkMode ? '' : 'light-mode'}`}>
+        <header className={`header ${scrolled ? 'scrolled' : ''}`}>
             <div className="header-container">
                 {/* Logo */}
                 <div className="logo-wrapper">
@@ -185,21 +174,8 @@ const Header = () => {
 
                     </ul>
 
-                    {/* Mobile User Controls */}
-                    <div className="mobile-user-controls">
-                        <button className="theme-toggle-mobile" onClick={toggleTheme}>
-                            <i className={`fas fa-${isDarkMode ? 'sun' : 'moon'}`}></i>
-                            <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
-                        </button>
-                    </div>
                 </nav>
 
-                {/* Desktop User Controls */}
-                <div className="user-controls">
-                    <button className="theme-toggle" onClick={toggleTheme} title={isDarkMode ? 'Light Mode' : 'Dark Mode'}>
-                        <i className={`fas fa-${isDarkMode ? 'sun' : 'moon'}`}></i>
-                    </button>
-                </div>
             </div>
             <nav className="mobile-bottom-nav" aria-label="Mobile navigation">
                 <NavLink to="/" end className={({ isActive }) => `mobile-nav-link${isActive ? ' active' : ''}`} onClick={() => setMoreMenuOpen(false)}>
@@ -220,9 +196,6 @@ const Header = () => {
                 {moreMenuOpen && <div className="mobile-more-menu" id="mobile-more-menu">
                     <NavLink to="/gizae" onClick={() => setMoreMenuOpen(false)}><i className="fas fa-scroll" aria-hidden="true" /> Gizae readings</NavLink>
                     <NavLink to="/holidays" onClick={() => setMoreMenuOpen(false)}><i className="fas fa-star" aria-hidden="true" /> Feast days</NavLink>
-                    <button type="button" onClick={() => { toggleTheme(); setMoreMenuOpen(false); }}>
-                        <i className={`fas fa-${isDarkMode ? 'sun' : 'moon'}`} aria-hidden="true" /> {isDarkMode ? 'Light mode' : 'Dark mode'}
-                    </button>
                     {!isInstalled && (installPrompt || isIOS) && <button type="button" onClick={installApp}>
                         <i className="fas fa-download" aria-hidden="true" /> Install app
                     </button>}
