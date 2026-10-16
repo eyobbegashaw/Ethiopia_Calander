@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { useFont } from '../contexts/FontContext';
 import './styles/Header.css';
 
 const Header = () => {
+    const { fontSize, decreaseFontSize, increaseFontSize } = useFont();
     const [scrolled, setScrolled] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState(null);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -13,6 +15,7 @@ const Header = () => {
         window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone
     ));
     const [showIOSInstallHelp, setShowIOSInstallHelp] = useState(false);
+    const [shareStatus, setShareStatus] = useState('');
 
     useEffect(() => {
         const handleScroll = () => {
@@ -73,9 +76,78 @@ const Header = () => {
         if (outcome === 'accepted') setInstallPrompt(null);
     };
 
+    const shareApp = async () => {
+        const shareData = {
+            title: 'Ethiopian Calendar',
+            text: 'Explore the Ethiopian calendar, readings, and feast days.',
+            url: window.location.origin
+        };
+        setShareStatus('');
+
+        if (navigator.share) {
+            try {
+                await navigator.share(shareData);
+                setShareStatus('Thanks for sharing!');
+            } catch (error) {
+                if (error.name !== 'AbortError') {
+                    setShareStatus('Unable to share this app right now.');
+                }
+            }
+            return;
+        }
+
+        if (!navigator.clipboard?.writeText) {
+            setShareStatus('Sharing and copying links are not available in this browser.');
+            return;
+        }
+
+        try {
+            await navigator.clipboard.writeText(shareData.url);
+            setShareStatus('App link copied to clipboard.');
+        } catch {
+            setShareStatus('Unable to copy the app link. Please copy it from your browser address bar.');
+        }
+    };
+
     return (
         <header className={`header ${scrolled ? 'scrolled' : ''}`}>
             <div className="header-container">
+                <div className="mobile-more">
+                    <button
+                        className={`mobile-more-toggle${moreMenuOpen ? ' active' : ''}`}
+                        type="button"
+                        aria-label="More options"
+                        aria-expanded={moreMenuOpen}
+                        aria-controls="mobile-more-menu"
+                        onClick={() => setMoreMenuOpen((open) => !open)}
+                    >
+                        <i className="fas fa-ellipsis-h" aria-hidden="true" />
+                    </button>
+                    {moreMenuOpen && <div className="mobile-more-menu" id="mobile-more-menu">
+                        <div className="font-size-controls" aria-label="Font size controls">
+                            <span className="more-menu-label">Font size</span>
+                            <div className="font-size-buttons">
+                                <button type="button" aria-label="Decrease font size" onClick={decreaseFontSize}>
+                                    <i className="fas fa-minus" aria-hidden="true" />
+                                </button>
+                                <span aria-live="polite">{fontSize}px</span>
+                                <button type="button" aria-label="Increase font size" onClick={increaseFontSize}>
+                                    <i className="fas fa-plus" aria-hidden="true" />
+                                </button>
+                            </div>
+                        </div>
+                        <button type="button" onClick={shareApp}>
+                            <i className="fas fa-share-alt" aria-hidden="true" /> Share this app
+                        </button>
+                        <a href="https://eyobbegashawe.vercel.app" target="_blank" rel="noopener noreferrer" onClick={() => setMoreMenuOpen(false)}>
+                            <i className="fas fa-user" aria-hidden="true" /> About · Developed by ዲ/ን ኢዮብ በጋሻው
+                        </a>
+                        {!isInstalled && (installPrompt || isIOS) && <button type="button" onClick={installApp}>
+                            <i className="fas fa-download" aria-hidden="true" /> Install app
+                        </button>}
+                        {shareStatus && <p className="share-status" role="status">{shareStatus}</p>}
+                    </div>}
+                </div>
                 {/* Logo */}
                 <div className="logo-wrapper">
                     <Link to="/" className="logo" onClick={closeMobileMenu}>
@@ -188,18 +260,14 @@ const Header = () => {
                     <i className="fas fa-exchange-alt" aria-hidden="true" /><span>Convert</span>
                 </NavLink>
                 <NavLink to="/synaxarium" className={({ isActive }) => `mobile-nav-link${isActive ? ' active' : ''}`} onClick={() => setMoreMenuOpen(false)}>
-                    <i className="fas fa-book-open" aria-hidden="true" /><span>Read</span>
+                    <i className="fas fa-book-open" aria-hidden="true" /><span>ስንክሳር</span>
                 </NavLink>
-                <button className={`mobile-nav-link${moreMenuOpen ? ' active' : ''}`} type="button" aria-expanded={moreMenuOpen} aria-controls="mobile-more-menu" onClick={() => setMoreMenuOpen((open) => !open)}>
-                    <i className="fas fa-ellipsis-h" aria-hidden="true" /><span>More</span>
-                </button>
-                {moreMenuOpen && <div className="mobile-more-menu" id="mobile-more-menu">
-                    <NavLink to="/gizae" onClick={() => setMoreMenuOpen(false)}><i className="fas fa-scroll" aria-hidden="true" /> Gizae readings</NavLink>
-                    <NavLink to="/holidays" onClick={() => setMoreMenuOpen(false)}><i className="fas fa-star" aria-hidden="true" /> Feast days</NavLink>
-                    {!isInstalled && (installPrompt || isIOS) && <button type="button" onClick={installApp}>
-                        <i className="fas fa-download" aria-hidden="true" /> Install app
-                    </button>}
-                </div>}
+                <NavLink to="/gizae" className={({ isActive }) => `mobile-nav-link${isActive ? ' active' : ''}`} onClick={() => setMoreMenuOpen(false)}>
+                    <i className="fas fa-scroll" aria-hidden="true" /><span>ግጻዊ</span>
+                </NavLink>
+                <NavLink to="/holidays" className={({ isActive }) => `mobile-nav-link${isActive ? ' active' : ''}`} onClick={() => setMoreMenuOpen(false)}>
+                    <i className="fas fa-star" aria-hidden="true" /><span>ባህረ-ሀሳብ</span>
+                </NavLink>
             </nav>
             {showIOSInstallHelp && <div className="ios-install-backdrop" role="presentation" onClick={() => setShowIOSInstallHelp(false)}>
                 <section className="ios-install-dialog" role="dialog" aria-modal="true" aria-labelledby="ios-install-title">

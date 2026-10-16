@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState } from 'react';
 import { 
     toEthNum, ethToGC, isEthLeap, gcToEth,
     ethiopianMonths, gregorianMonths 
@@ -18,13 +18,7 @@ const Calendar = () => {
         };
     });
 
-    const [calendarDays, setCalendarDays] = useState([]);
-
-    useEffect(() => {
-        renderCalendar();
-    }, [currentDate.year, currentDate.month]);
-
-    const renderCalendar = () => {
+    const calendarDays = useMemo(() => {
         const days = [];
         const { year, month } = currentDate;
         
@@ -76,8 +70,8 @@ const Calendar = () => {
             });
         }
         
-        setCalendarDays(days);
-    };
+        return days;
+    }, [currentDate]);
 
     const previousMonth = () => {
         setCurrentDate(prev => {
@@ -190,7 +184,13 @@ const Calendar = () => {
                                 <>
                                     <div className="day-number">{toEthNum(day.day)}</div>
                                     <small className="gregorian-date">
-                                        {day.gDate.getDate()} {gregorianMonths[day.gDate.getMonth()]}
+                                        <span>{day.gDate.getDate()}</span>
+                                        <span className="gregorian-month-full">
+                                            {gregorianMonths[day.gDate.getMonth()]}
+                                        </span>
+                                        <span className="gregorian-month-short">
+                                            {gregorianMonths[day.gDate.getMonth()].slice(0, 3)}
+                                        </span>
                                     </small>
                                     {day.holiday && (
                                         <div className="holiday-text">{day.holiday}</div>

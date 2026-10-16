@@ -55,6 +55,10 @@
   box-sizing: border-box;
 }
 
+html {
+  font-size: var(--font-size, 16px);
+}
+
 button,
 input,
 select,
@@ -345,7 +349,7 @@ body.home-page-active {
 @media (max-width: 768px) {
   :root {
     --site-header-height: 60px;
-    --mobile-bottom-nav-height: calc(64px + env(safe-area-inset-bottom, 0px));
+    --mobile-bottom-nav-height: calc(80px + env(safe-area-inset-bottom, 0px));
   }
 
   .home-page {
